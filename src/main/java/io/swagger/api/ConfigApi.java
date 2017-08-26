@@ -126,7 +126,7 @@ public interface ConfigApi {
     @RequestMapping(value = "/config",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Void> getConfig();
+    ResponseEntity<Config> getConfig();
 
 
     @ApiOperation(value = "Get defaults config.", notes = "", response = Void.class, tags={  })
@@ -225,7 +225,7 @@ public interface ConfigApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Void> newFrontend(@ApiParam(value = "The frontend to create." ,required=true )  @Valid @RequestBody Frontend frontend);
+    ResponseEntity<Frontend> newFrontend(@ApiParam(value = "The frontend to create." ,required=true )  @Valid @RequestBody Frontend frontend);
 
 
     @ApiOperation(value = "Add server config.", notes = "", response = Void.class, tags={  })

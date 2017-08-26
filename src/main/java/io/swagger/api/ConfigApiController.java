@@ -17,25 +17,29 @@ import io.swagger.model.Global1;
 
 import io.swagger.annotations.*;
 
+import org.apache.log4j.spi.LoggerFactory;
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
-import javax.validation.constraints.*;
 import javax.validation.Valid;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-25T10:11:42.178Z")
 
 @Controller
 public class ConfigApiController implements ConfigApi {
 
+    private Logger logger = org.slf4j.LoggerFactory.getLogger(ConfigApiController.class);
+
+
+    private static Config config = new Config();
+
+    public ConfigApiController() {
+        //TODO 로딩.
+        config = new Config();
+    }
 
 
     public ResponseEntity<Void> deleteAcl(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,
@@ -81,9 +85,9 @@ public class ConfigApiController implements ConfigApi {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Void> getConfig() {
+    public ResponseEntity<Config> getConfig() {
         // do some magic!
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        return new ResponseEntity<Config>(config, HttpStatus.OK);
     }
 
     public ResponseEntity<Void> getDefaults() {
@@ -128,9 +132,24 @@ public class ConfigApiController implements ConfigApi {
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Void> newFrontend(@ApiParam(value = "The frontend to create." ,required=true )  @Valid @RequestBody Frontend frontend) {
+    public ResponseEntity<Frontend> newFrontend(@ApiParam(value = "The frontend to create." ,required=true )  @Valid @RequestBody Frontend frontend) {
         // do some magic!
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        boolean isUniq = true;
+        logger.info("config.getFrontends() : {}", config.getFrontends());
+        if(config.getFrontends() != null) {
+            for (Object o : config.getFrontends()) {
+                Frontend f = (Frontend) o;
+                if (f.getName().equals(frontend.getName())) {
+                    isUniq = false;
+                    break;
+                }
+            }
+        }
+
+        if (isUniq) {
+            config.addFrontendsItem(frontend);
+        }
+        return new ResponseEntity<Frontend>(frontend, HttpStatus.OK);
     }
 
     public ResponseEntity<Void> newServer(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId,
