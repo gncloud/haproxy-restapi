@@ -1,0 +1,728 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: HAProxy Rest API
+  description: This is a rest api for haproxy.
+  termsOfService: 'http://www.gncloud.kr'
+  contact:
+    email: support@gncloud.kr
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: haproxy.gncloud.io
+basePath: /v1
+schemes:
+  - http
+paths:
+  /stats:
+    get:
+      summary: Get haproxy stat.
+      description: ''
+      responses:
+        '200':
+          description: OK
+  /config:
+    get:
+      summary: Get haproxy config.
+      description: ''
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Overwrite haproxy config.
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: config
+          description: The config to write.
+          required: true
+          schema:
+            $ref: '#/definitions/Config'
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Update haproxy config
+      description: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: config
+          description: The config to update.
+          required: true
+          schema:
+            $ref: '#/definitions/Config'
+      responses:
+        '200':
+          description: OK
+  /config/global:
+    get:
+      summary: Get global config.
+      description: ''
+      operationId: getGlobal
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Set global config.
+      description: ''
+      operationId: setGlobal
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: global
+          description: The global to set.
+          required: true
+          schema:
+            $ref: '#/definitions/Global'
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Update global config.
+      description: ''
+      operationId: updateGlobal
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: global
+          description: The global to update.
+          required: true
+          schema:
+            $ref: '#/definitions/Global'
+      responses:
+        '200':
+          description: OK
+  /config/defaults:
+    get:
+      summary: Get defaults config.
+      description: ''
+      operationId: getDefaults
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Set defaults config.
+      description: ''
+      operationId: setDefaults
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: defaults
+          description: The defaults to set.
+          required: true
+          schema:
+            $ref: '#/definitions/Defaults'
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Update defaults config.
+      description: ''
+      operationId: updateDefaults
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: defaults
+          description: The defaults to update.
+          required: true
+          schema:
+            $ref: '#/definitions/Defaults'
+      responses:
+        '200':
+          description: OK
+  /config/frontends:
+    get:
+      summary: Get frontend config list.
+      description: ''
+      operationId: getFrontends
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Add new frontend.
+      description: ''
+      operationId: newFrontend
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: frontend
+          description: The frontend to create.
+          required: true
+          schema:
+            $ref: '#/definitions/Frontend'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Frontends'
+    put:
+      summary: Update frontends config.
+      description: ''
+      operationId: updateFrontends
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: The frontends to update.
+          required: true
+          schema:
+            $ref: '#/definitions/Frontends'
+      responses:
+        '200':
+          description: OK
+  '/config/frontends/{frontendId}':
+    get:
+      summary: Get frontend config.
+      description: ''
+      operationId: getFrontend
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: frontendId
+          in: path
+          description: ID of frontend to return
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Update frontend config.
+      description: ''
+      operationId: updateFrontend
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: frontendId
+          in: path
+          description: ID of frontend to return
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: The frontend to update.
+          required: true
+          schema:
+            $ref: '#/definitions/Frontend'
+      responses:
+        '200':
+          description: OK
+    delete:
+      summary: Delete frontend config.
+      description: ''
+      operationId: deleteFrontend
+      parameters:
+        - name: frontendId
+          in: path
+          description: ID of frontend to return
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+  '/config/frontends/{frontendId}/acls':
+    get:
+      summary: Get acl config list.
+      description: ''
+      operationId: getAcls
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: frontendId
+          in: path
+          description: ID of frontend to return
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Add acl config.
+      description: ''
+      operationId: newAcl
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: frontendId
+          in: path
+          description: ID of frontend to return
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: The acl to update.
+          required: true
+          schema:
+            $ref: '#/definitions/ACL'
+      responses:
+        '200':
+          description: OK
+  '/config/frontends/{frontendId}/acls/{aclId}':
+    get:
+      summary: Get acl config.
+      description: ''
+      operationId: getAcl
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: frontendId
+          in: path
+          description: ID of frontend to return
+          required: true
+          type: string
+        - name: aclId
+          in: path
+          description: ID of acl to return
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Update acl config.
+      description: ''
+      operationId: updateAcl
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: frontendId
+          in: path
+          description: ID of frontend to return
+          required: true
+          type: string
+        - name: aclId
+          in: path
+          description: ID of acl to return
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: The acl to update.
+          required: true
+          schema:
+            $ref: '#/definitions/ACL'
+      responses:
+        '200':
+          description: OK
+    delete:
+      summary: Delete acl config.
+      description: ''
+      operationId: deleteAcl
+      parameters:
+        - name: frontendId
+          in: path
+          description: ID of frontend to return
+          required: true
+          type: string
+        - name: aclId
+          in: path
+          description: ID of acl to return
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+  /config/backends:
+    get:
+      summary: Get backend config list.
+      description: ''
+      operationId: getBackends
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Backends'
+    post:
+      summary: Add new backend.
+      description: ''
+      operationId: newBackend
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: backend
+          description: The backend to create.
+          required: true
+          schema:
+            $ref: '#/definitions/Backend'
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Update backends config.
+      description: ''
+      operationId: updateBackends
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: The backends to update.
+          required: true
+          schema:
+            $ref: '#/definitions/Backends'
+      responses:
+        '200':
+          description: OK
+  '/config/backends/{backendId}':
+    get:
+      summary: Get backend config.
+      description: ''
+      operationId: getBackend
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: backendId
+          in: path
+          description: ID of backend
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Update backend config.
+      description: ''
+      operationId: updateBackend
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: backendId
+          in: path
+          description: ID of backend
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: The backend to update.
+          required: true
+          schema:
+            $ref: '#/definitions/Backend'
+      responses:
+        '200':
+          description: OK
+    delete:
+      summary: Delete backend config.
+      description: ''
+      operationId: deleteBackend
+      parameters:
+        - name: backendId
+          in: path
+          description: ID of backend
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+  '/config/backends/{backendId}/servers':
+    get:
+      summary: Get server config list.
+      description: ''
+      operationId: getServers
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: backendId
+          in: path
+          description: ID of backend
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Servers'
+    post:
+      summary: Add server config.
+      description: ''
+      operationId: newServer
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: backendId
+          in: path
+          description: ID of backend
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: The server to add.
+          required: true
+          schema:
+            $ref: '#/definitions/Server'
+      responses:
+        '200':
+          description: OK
+  '/config/backends/{backendId}/servers/{serverId}':
+    get:
+      summary: Get server config.
+      description: ''
+      operationId: getServer
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: backendId
+          in: path
+          description: ID of backend
+          required: true
+          type: string
+        - name: serverId
+          in: path
+          description: ID of server
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Update server config.
+      description: ''
+      operationId: updateServer
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: backendId
+          in: path
+          description: ID of backend
+          required: true
+          type: string
+        - name: serverId
+          in: path
+          description: ID of server
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: The backend to update.
+          required: true
+          schema:
+            $ref: '#/definitions/Server'
+      responses:
+        '200':
+          description: OK
+    delete:
+      summary: Delete server config.
+      description: ''
+      operationId: deleteServer
+      parameters:
+        - name: backendId
+          in: path
+          description: ID of backend
+          required: true
+          type: string
+        - name: serverId
+          in: path
+          description: ID of server
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+definitions:
+  Config:
+    type: object
+    properties:
+      global:
+        type: object
+        format: Global
+      defaults:
+        type: object
+        format: Defaults
+      frontends:
+        type: object
+        format: Frontends
+      backends:
+        type: object
+        format: Backends
+  Global:
+    type: object
+    properties:
+      name:
+        type: string
+      mode:
+        type: string
+      option:
+        type: object
+      maxconn:
+        type: integer
+        format: int64
+  Defaults:
+    type: object
+    properties:
+      mode:
+        type: string
+      timeoutConnect:
+        type: string
+      timeoutClient:
+        type: string
+      timeoutServer:
+        type: string
+  Frontends:
+    type: object
+    additionalProperties:
+      $ref: '#/definitions/Frontend'
+  Frontend:
+    type: object
+    properties:
+      name:
+        type: string
+      mode:
+        type: string
+      bindPort:
+        type: integer
+        format: int64
+      bindIp:
+        type: string
+      defaultBackend:
+        type: string
+      timeoutConnect:
+        type: string
+      timeoutClient:
+        type: string
+      timeoutServer:
+        type: string
+      options:
+        type: object
+      acls:
+        type: array
+        items:
+          type: object
+          format: '$ref:''#/definitions/ACL'''
+      httpSpikeLimit:
+        type: object
+        format: '$ref:''#/definitions/SpikeLimit'''
+      tcpSpikeLimit:
+        type: object
+        format: '$ref:''#/definitions/SpikeLimit'''
+  ACL:
+    type: object
+    properties:
+      name:
+        type: string
+      backend:
+        type: string
+      pattern:
+        type: string
+  SpikeLimit:
+    type: object
+    properties:
+      sampleTime:
+        type: string
+      expiryTime:
+        type: string
+      rate:
+        type: integer
+        format: int64
+  Backends:
+    type: object
+    additionalProperties:
+      $ref: '#/definitions/Backend'
+  Backend:
+    type: object
+    properties:
+      name:
+        type: string
+      mode:
+        type: string
+      servers:
+        type: object
+        format: Servers
+      options:
+        type: object
+  Servers:
+    type: object
+    additionalProperties:
+      $ref: '#/definitions/Server'
+  Server:
+    type: object
+    properties:
+      name:
+        type: string
+      host:
+        type: string
+      port:
+        type: integer
+        format: int64
+      weight:
+        type: integer
+        format: int64
+      maxconn:
+        type: integer
+        format: int64
+      check:
+        type: boolean
+      checkInterval:
+        type: integer
+        format: int64
