@@ -32,9 +32,7 @@ import javax.validation.Valid;
 
 
 public class ConfigApiController implements ConfigApi {
-
-
-
+    
     public ResponseEntity<Config> configGet() {
         // do some magic!
         return new ResponseEntity<Config>(HttpStatus.OK);
