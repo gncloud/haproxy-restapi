@@ -13,6 +13,9 @@ host: haproxy.gncloud.io
 basePath: /v1
 schemes:
   - http
+produces:
+  - application/json
+
 paths:
   /stats:
     get:
@@ -25,17 +28,15 @@ paths:
     get:
       summary: Get haproxy config.
       description: ''
-      produces:
-        - application/json
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Config'
     post:
       summary: Overwrite haproxy config.
       description: ''
       consumes:
-        - application/json
-      produces:
         - application/json
       parameters:
         - in: body
@@ -47,12 +48,12 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Config'
     put:
       summary: Update haproxy config
       description: ''
       consumes:
-        - application/json
-      produces:
         - application/json
       parameters:
         - in: body
@@ -64,6 +65,9 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Config'
+
   /config/global:
     get:
       summary: Get global config.
@@ -71,18 +75,16 @@ paths:
       operationId: getGlobal
       consumes:
         - application/json
-      produces:
-        - application/json
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Global'
     post:
       summary: Set global config.
       description: ''
       operationId: setGlobal
       consumes:
-        - application/json
-      produces:
         - application/json
       parameters:
         - in: body
@@ -94,13 +96,13 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Global'
     put:
       summary: Update global config.
       description: ''
       operationId: updateGlobal
       consumes:
-        - application/json
-      produces:
         - application/json
       parameters:
         - in: body
@@ -112,6 +114,9 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Global'
+
   /config/defaults:
     get:
       summary: Get defaults config.
@@ -119,18 +124,16 @@ paths:
       operationId: getDefaults
       consumes:
         - application/json
-      produces:
-        - application/json
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Defaults'
     post:
       summary: Set defaults config.
       description: ''
       operationId: setDefaults
       consumes:
-        - application/json
-      produces:
         - application/json
       parameters:
         - in: body
@@ -142,13 +145,14 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Defaults'
+
     put:
       summary: Update defaults config.
       description: ''
       operationId: updateDefaults
       consumes:
-        - application/json
-      produces:
         - application/json
       parameters:
         - in: body
@@ -160,6 +164,9 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Defaults'
+
   /config/frontends:
     get:
       summary: Get frontend config list.
@@ -167,18 +174,16 @@ paths:
       operationId: getFrontends
       consumes:
         - application/json
-      produces:
-        - application/json
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Frontends'
     post:
       summary: Add new frontend.
       description: ''
       operationId: newFrontend
       consumes:
-        - application/json
-      produces:
         - application/json
       parameters:
         - in: body
@@ -191,14 +196,12 @@ paths:
         '200':
           description: OK
           schema:
-            $ref: '#/definitions/Frontends'
+            $ref: '#/definitions/Frontend'
     put:
       summary: Update frontends config.
       description: ''
       operationId: updateFrontends
       consumes:
-        - application/json
-      produces:
         - application/json
       parameters:
         - in: body
@@ -210,14 +213,15 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Frontends'
+
   '/config/frontends/{frontendId}':
     get:
       summary: Get frontend config.
       description: ''
       operationId: getFrontend
       consumes:
-        - application/json
-      produces:
         - application/json
       parameters:
         - name: frontendId
@@ -228,13 +232,13 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Frontend'
     put:
       summary: Update frontend config.
       description: ''
       operationId: updateFrontend
       consumes:
-        - application/json
-      produces:
         - application/json
       parameters:
         - name: frontendId
@@ -251,6 +255,8 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Frontend'
     delete:
       summary: Delete frontend config.
       description: ''
@@ -271,8 +277,6 @@ paths:
       operationId: getAcls
       consumes:
         - application/json
-      produces:
-        - application/json
       parameters:
         - name: frontendId
           in: path
@@ -282,13 +286,13 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/ACLs'
     post:
       summary: Add acl config.
       description: ''
       operationId: newAcl
       consumes:
-        - application/json
-      produces:
         - application/json
       parameters:
         - name: frontendId
@@ -305,6 +309,8 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/ACL'
   '/config/frontends/{frontendId}/acls/{aclId}':
     get:
       summary: Get acl config.
@@ -312,8 +318,6 @@ paths:
       operationId: getAcl
       consumes:
         - application/json
-      produces:
-        - application/json
       parameters:
         - name: frontendId
           in: path
@@ -328,13 +332,13 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/ACL'
     put:
       summary: Update acl config.
       description: ''
       operationId: updateAcl
       consumes:
-        - application/json
-      produces:
         - application/json
       parameters:
         - name: frontendId
@@ -356,6 +360,8 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/ACL'
     delete:
       summary: Delete acl config.
       description: ''
@@ -381,8 +387,6 @@ paths:
       operationId: getBackends
       consumes:
         - application/json
-      produces:
-        - application/json
       responses:
         '200':
           description: OK
@@ -394,8 +398,6 @@ paths:
       operationId: newBackend
       consumes:
         - application/json
-      produces:
-        - application/json
       parameters:
         - in: body
           name: backend
@@ -406,13 +408,13 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Backend'
     put:
       summary: Update backends config.
       description: ''
       operationId: updateBackends
       consumes:
-        - application/json
-      produces:
         - application/json
       parameters:
         - in: body
@@ -424,14 +426,14 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Backends'
   '/config/backends/{backendId}':
     get:
       summary: Get backend config.
       description: ''
       operationId: getBackend
       consumes:
-        - application/json
-      produces:
         - application/json
       parameters:
         - name: backendId
@@ -442,13 +444,13 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Backend'
     put:
       summary: Update backend config.
       description: ''
       operationId: updateBackend
       consumes:
-        - application/json
-      produces:
         - application/json
       parameters:
         - name: backendId
@@ -465,6 +467,8 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Backend'
     delete:
       summary: Delete backend config.
       description: ''
@@ -485,8 +489,6 @@ paths:
       operationId: getServers
       consumes:
         - application/json
-      produces:
-        - application/json
       parameters:
         - name: backendId
           in: path
@@ -504,8 +506,6 @@ paths:
       operationId: newServer
       consumes:
         - application/json
-      produces:
-        - application/json
       parameters:
         - name: backendId
           in: path
@@ -521,14 +521,14 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Server'
   '/config/backends/{backendId}/servers/{serverId}':
     get:
       summary: Get server config.
       description: ''
       operationId: getServer
       consumes:
-        - application/json
-      produces:
         - application/json
       parameters:
         - name: backendId
@@ -544,13 +544,13 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Server'
     put:
       summary: Update server config.
       description: ''
       operationId: updateServer
       consumes:
-        - application/json
-      produces:
         - application/json
       parameters:
         - name: backendId
@@ -572,6 +572,8 @@ paths:
       responses:
         '200':
           description: OK
+          schema:
+            $ref: '#/definitions/Server'
     delete:
       summary: Delete server config.
       description: ''
@@ -590,22 +592,19 @@ paths:
       responses:
         '200':
           description: OK
+
 definitions:
   Config:
     type: object
     properties:
       global:
-        type: object
-        format: Global
+        $ref: '#/definitions/Global'
       defaults:
-        type: object
-        format: Defaults
+        $ref: '#/definitions/Defaults'
       frontends:
-        type: object
-        format: Frontends
+        $ref: '#/definitions/Frontends'
       backends:
-        type: object
-        format: Backends
+        $ref: '#/definitions/Backends'
   Global:
     type: object
     properties:
@@ -613,11 +612,11 @@ definitions:
         type: string
       mode:
         type: string
-      option:
-        type: object
       maxconn:
         type: integer
         format: int64
+    additionalProperties:
+      $ref: '#/definitions/Options'
   Defaults:
     type: object
     properties:
@@ -629,6 +628,8 @@ definitions:
         type: string
       timeoutServer:
         type: string
+    additionalProperties:
+      $ref: '#/definitions/Options'
   Frontends:
     type: object
     additionalProperties:
@@ -653,19 +654,18 @@ definitions:
         type: string
       timeoutServer:
         type: string
-      options:
-        type: object
       acls:
-        type: array
-        items:
-          type: object
-          format: '$ref:''#/definitions/ACL'''
+        $ref: '#/definitions/ACLs'
       httpSpikeLimit:
-        type: object
-        format: '$ref:''#/definitions/SpikeLimit'''
+        $ref: '#/definitions/SpikeLimit'
       tcpSpikeLimit:
-        type: object
-        format: '$ref:''#/definitions/SpikeLimit'''
+        $ref: '#/definitions/SpikeLimit'
+    additionalProperties:
+      $ref: '#/definitions/Options'
+  ACLs:
+      type: object
+      additionalProperties:
+        $ref: '#/definitions/ACL'
   ACL:
     type: object
     properties:
@@ -675,6 +675,7 @@ definitions:
         type: string
       pattern:
         type: string
+
   SpikeLimit:
     type: object
     properties:
@@ -697,10 +698,9 @@ definitions:
       mode:
         type: string
       servers:
-        type: object
-        format: Servers
-      options:
-        type: object
+        $ref: '#/definitions/Servers'
+    additionalProperties:
+      $ref: '#/definitions/Options'
   Servers:
     type: object
     additionalProperties:
@@ -726,3 +726,7 @@ definitions:
       checkInterval:
         type: integer
         format: int64
+  Options:
+    type: array
+    items:
+      type: object

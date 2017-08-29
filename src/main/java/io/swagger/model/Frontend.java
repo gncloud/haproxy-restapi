@@ -5,17 +5,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.ArrayList;
-import java.util.List;
+import io.swagger.model.ACLs;
+import io.swagger.model.Options;
+import io.swagger.model.SpikeLimit;
+import java.util.HashMap;
+import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * Frontend
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-25T10:11:42.178Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-29T05:51:56.514Z")
 
-public class Frontend   {
+public class Frontend extends HashMap<String, Options>  {
   @JsonProperty("name")
   private String name = null;
 
@@ -40,17 +43,14 @@ public class Frontend   {
   @JsonProperty("timeoutServer")
   private String timeoutServer = null;
 
-  @JsonProperty("options")
-  private Object options = null;
-
   @JsonProperty("acls")
-  private List<Object> acls = null;
+  private ACLs acls = null;
 
   @JsonProperty("httpSpikeLimit")
-  private Object httpSpikeLimit = null;
+  private SpikeLimit httpSpikeLimit = null;
 
   @JsonProperty("tcpSpikeLimit")
-  private Object tcpSpikeLimit = null;
+  private SpikeLimit tcpSpikeLimit = null;
 
   public Frontend name(String name) {
     this.name = name;
@@ -212,36 +212,8 @@ public class Frontend   {
     this.timeoutServer = timeoutServer;
   }
 
-  public Frontend options(Object options) {
-    this.options = options;
-    return this;
-  }
-
-   /**
-   * Get options
-   * @return options
-  **/
-  @ApiModelProperty(value = "")
-
-
-  public Object getOptions() {
-    return options;
-  }
-
-  public void setOptions(Object options) {
-    this.options = options;
-  }
-
-  public Frontend acls(List<Object> acls) {
+  public Frontend acls(ACLs acls) {
     this.acls = acls;
-    return this;
-  }
-
-  public Frontend addAclsItem(Object aclsItem) {
-    if (this.acls == null) {
-      this.acls = new ArrayList<Object>();
-    }
-    this.acls.add(aclsItem);
     return this;
   }
 
@@ -251,16 +223,17 @@ public class Frontend   {
   **/
   @ApiModelProperty(value = "")
 
+  @Valid
 
-  public List<Object> getAcls() {
+  public ACLs getAcls() {
     return acls;
   }
 
-  public void setAcls(List<Object> acls) {
+  public void setAcls(ACLs acls) {
     this.acls = acls;
   }
 
-  public Frontend httpSpikeLimit(Object httpSpikeLimit) {
+  public Frontend httpSpikeLimit(SpikeLimit httpSpikeLimit) {
     this.httpSpikeLimit = httpSpikeLimit;
     return this;
   }
@@ -271,16 +244,17 @@ public class Frontend   {
   **/
   @ApiModelProperty(value = "")
 
+  @Valid
 
-  public Object getHttpSpikeLimit() {
+  public SpikeLimit getHttpSpikeLimit() {
     return httpSpikeLimit;
   }
 
-  public void setHttpSpikeLimit(Object httpSpikeLimit) {
+  public void setHttpSpikeLimit(SpikeLimit httpSpikeLimit) {
     this.httpSpikeLimit = httpSpikeLimit;
   }
 
-  public Frontend tcpSpikeLimit(Object tcpSpikeLimit) {
+  public Frontend tcpSpikeLimit(SpikeLimit tcpSpikeLimit) {
     this.tcpSpikeLimit = tcpSpikeLimit;
     return this;
   }
@@ -291,12 +265,13 @@ public class Frontend   {
   **/
   @ApiModelProperty(value = "")
 
+  @Valid
 
-  public Object getTcpSpikeLimit() {
+  public SpikeLimit getTcpSpikeLimit() {
     return tcpSpikeLimit;
   }
 
-  public void setTcpSpikeLimit(Object tcpSpikeLimit) {
+  public void setTcpSpikeLimit(SpikeLimit tcpSpikeLimit) {
     this.tcpSpikeLimit = tcpSpikeLimit;
   }
 
@@ -318,22 +293,22 @@ public class Frontend   {
         Objects.equals(this.timeoutConnect, frontend.timeoutConnect) &&
         Objects.equals(this.timeoutClient, frontend.timeoutClient) &&
         Objects.equals(this.timeoutServer, frontend.timeoutServer) &&
-        Objects.equals(this.options, frontend.options) &&
         Objects.equals(this.acls, frontend.acls) &&
         Objects.equals(this.httpSpikeLimit, frontend.httpSpikeLimit) &&
-        Objects.equals(this.tcpSpikeLimit, frontend.tcpSpikeLimit);
+        Objects.equals(this.tcpSpikeLimit, frontend.tcpSpikeLimit) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, mode, bindPort, bindIp, defaultBackend, timeoutConnect, timeoutClient, timeoutServer, options, acls, httpSpikeLimit, tcpSpikeLimit);
+    return Objects.hash(name, mode, bindPort, bindIp, defaultBackend, timeoutConnect, timeoutClient, timeoutServer, acls, httpSpikeLimit, tcpSpikeLimit, super.hashCode());
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Frontend {\n");
-    
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    bindPort: ").append(toIndentedString(bindPort)).append("\n");
@@ -342,7 +317,6 @@ public class Frontend   {
     sb.append("    timeoutConnect: ").append(toIndentedString(timeoutConnect)).append("\n");
     sb.append("    timeoutClient: ").append(toIndentedString(timeoutClient)).append("\n");
     sb.append("    timeoutServer: ").append(toIndentedString(timeoutServer)).append("\n");
-    sb.append("    options: ").append(toIndentedString(options)).append("\n");
     sb.append("    acls: ").append(toIndentedString(acls)).append("\n");
     sb.append("    httpSpikeLimit: ").append(toIndentedString(httpSpikeLimit)).append("\n");
     sb.append("    tcpSpikeLimit: ").append(toIndentedString(tcpSpikeLimit)).append("\n");

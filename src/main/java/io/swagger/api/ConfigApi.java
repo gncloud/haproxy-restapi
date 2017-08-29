@@ -5,7 +5,17 @@
  */
 package io.swagger.api;
 
-import io.swagger.model.*;
+import io.swagger.model.ACL;
+import io.swagger.model.ACLs;
+import io.swagger.model.Backend;
+import io.swagger.model.Backends;
+import io.swagger.model.Config;
+import io.swagger.model.Defaults;
+import io.swagger.model.Frontend;
+import io.swagger.model.Frontends;
+import io.swagger.model.Global;
+import io.swagger.model.Server;
+import io.swagger.model.Servers;
 
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
@@ -21,16 +31,49 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import javax.validation.constraints.*;
 import javax.validation.Valid;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-25T10:11:42.178Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-29T05:51:56.514Z")
 
 @Api(value = "config", description = "the config API")
 public interface ConfigApi {
+
+    @ApiOperation(value = "Get haproxy config.", notes = "", response = Config.class, tags={  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "OK", response = Config.class) })
+    
+    @RequestMapping(value = "/config",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    ResponseEntity<Config> configGet();
+
+
+    @ApiOperation(value = "Overwrite haproxy config.", notes = "", response = Config.class, tags={  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "OK", response = Config.class) })
+    
+    @RequestMapping(value = "/config",
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
+        method = RequestMethod.POST)
+    ResponseEntity<Config> configPost(@ApiParam(value = "The config to write." ,required=true )  @Valid @RequestBody Config config);
+
+
+    @ApiOperation(value = "Update haproxy config", notes = "", response = Config.class, tags={  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "OK", response = Config.class) })
+    
+    @RequestMapping(value = "/config",
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
+        method = RequestMethod.PUT)
+    ResponseEntity<Config> configPut(@ApiParam(value = "The config to update." ,required=true )  @Valid @RequestBody Config config);
+
 
     @ApiOperation(value = "Delete acl config.", notes = "", response = Void.class, tags={  })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "OK", response = Void.class) })
     
     @RequestMapping(value = "/config/frontends/{frontendId}/acls/{aclId}",
+        produces = { "application/json" }, 
         method = RequestMethod.DELETE)
     ResponseEntity<Void> deleteAcl(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,@ApiParam(value = "ID of acl to return",required=true ) @PathVariable("aclId") String aclId);
 
@@ -40,6 +83,7 @@ public interface ConfigApi {
         @ApiResponse(code = 200, message = "OK", response = Void.class) })
     
     @RequestMapping(value = "/config/backends/{backendId}",
+        produces = { "application/json" }, 
         method = RequestMethod.DELETE)
     ResponseEntity<Void> deleteBackend(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId);
 
@@ -49,6 +93,7 @@ public interface ConfigApi {
         @ApiResponse(code = 200, message = "OK", response = Void.class) })
     
     @RequestMapping(value = "/config/frontends/{frontendId}",
+        produces = { "application/json" }, 
         method = RequestMethod.DELETE)
     ResponseEntity<Void> deleteFrontend(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId);
 
@@ -58,13 +103,14 @@ public interface ConfigApi {
         @ApiResponse(code = 200, message = "OK", response = Void.class) })
     
     @RequestMapping(value = "/config/backends/{backendId}/servers/{serverId}",
+        produces = { "application/json" }, 
         method = RequestMethod.DELETE)
     ResponseEntity<Void> deleteServer(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId,@ApiParam(value = "ID of server",required=true ) @PathVariable("serverId") String serverId);
 
 
-    @ApiOperation(value = "Get acl config.", notes = "", response = Void.class, tags={  })
+    @ApiOperation(value = "Get acl config.", notes = "", response = ACL.class, tags={  })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = Void.class) })
+        @ApiResponse(code = 200, message = "OK", response = ACL.class) })
     
     @RequestMapping(value = "/config/frontends/{frontendId}/acls/{aclId}",
         produces = { "application/json" }, 
@@ -73,20 +119,20 @@ public interface ConfigApi {
     ResponseEntity<ACL> getAcl(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,@ApiParam(value = "ID of acl to return",required=true ) @PathVariable("aclId") String aclId);
 
 
-    @ApiOperation(value = "Get acl config list.", notes = "", response = Void.class, tags={  })
+    @ApiOperation(value = "Get acl config list.", notes = "", response = ACLs.class, tags={  })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = Void.class) })
+        @ApiResponse(code = 200, message = "OK", response = ACLs.class) })
     
     @RequestMapping(value = "/config/frontends/{frontendId}/acls",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.GET)
-    ResponseEntity<List<ACL>> getAcls(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId);
+    ResponseEntity<ACLs> getAcls(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId);
 
 
-    @ApiOperation(value = "Get backend config.", notes = "", response = Void.class, tags={  })
+    @ApiOperation(value = "Get backend config.", notes = "", response = Backend.class, tags={  })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = Void.class) })
+        @ApiResponse(code = 200, message = "OK", response = Backend.class) })
     
     @RequestMapping(value = "/config/backends/{backendId}",
         produces = { "application/json" }, 
@@ -95,30 +141,20 @@ public interface ConfigApi {
     ResponseEntity<Backend> getBackend(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId);
 
 
-    @ApiOperation(value = "Get backend config list.", notes = "", response = Void.class, tags={  })
+    @ApiOperation(value = "Get backend config list.", notes = "", response = Backends.class, tags={  })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = Void.class) })
+        @ApiResponse(code = 200, message = "OK", response = Backends.class) })
     
     @RequestMapping(value = "/config/backends",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.GET)
-    ResponseEntity<List<Backend>> getBackends();
+    ResponseEntity<Backends> getBackends();
 
 
-    @ApiOperation(value = "Get haproxy config.", notes = "", response = Void.class, tags={  })
+    @ApiOperation(value = "Get defaults config.", notes = "", response = Defaults.class, tags={  })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = Void.class) })
-    
-    @RequestMapping(value = "/config",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<Config> getConfig();
-
-
-    @ApiOperation(value = "Get defaults config.", notes = "", response = Void.class, tags={  })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = Void.class) })
+        @ApiResponse(code = 200, message = "OK", response = Defaults.class) })
     
     @RequestMapping(value = "/config/defaults",
         produces = { "application/json" }, 
@@ -127,9 +163,9 @@ public interface ConfigApi {
     ResponseEntity<Defaults> getDefaults();
 
 
-    @ApiOperation(value = "Get frontend config.", notes = "", response = Void.class, tags={  })
+    @ApiOperation(value = "Get frontend config.", notes = "", response = Frontend.class, tags={  })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = Void.class) })
+        @ApiResponse(code = 200, message = "OK", response = Frontend.class) })
     
     @RequestMapping(value = "/config/frontends/{frontendId}",
         produces = { "application/json" }, 
@@ -138,15 +174,15 @@ public interface ConfigApi {
     ResponseEntity<Frontend> getFrontend(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId);
 
 
-    @ApiOperation(value = "Get frontend config list.", notes = "", response = List.class, tags={  })
+    @ApiOperation(value = "Get frontend config list.", notes = "", response = Frontends.class, tags={  })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = List.class) })
+        @ApiResponse(code = 200, message = "OK", response = Frontends.class) })
     
     @RequestMapping(value = "/config/frontends",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.GET)
-    ResponseEntity<List<Object>> getFrontends();
+    ResponseEntity<Frontends> getFrontends();
 
 
     @ApiOperation(value = "Get global config.", notes = "", response = Global.class, tags={  })
@@ -171,15 +207,15 @@ public interface ConfigApi {
     ResponseEntity<Server> getServer(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId,@ApiParam(value = "ID of server",required=true ) @PathVariable("serverId") String serverId);
 
 
-    @ApiOperation(value = "Get server config list.", notes = "", response = List.class, tags={  })
+    @ApiOperation(value = "Get server config list.", notes = "", response = Servers.class, tags={  })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = List.class) })
+        @ApiResponse(code = 200, message = "OK", response = Servers.class) })
     
     @RequestMapping(value = "/config/backends/{backendId}/servers",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.GET)
-    ResponseEntity<List<Server>> getServers(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId);
+    ResponseEntity<Servers> getServers(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId);
 
 
     @ApiOperation(value = "Add acl config.", notes = "", response = ACL.class, tags={  })
@@ -190,7 +226,7 @@ public interface ConfigApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<ACL> newAcl(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,@ApiParam(value = "The acl to update." ,required=true )  @Valid @RequestBody Body1 body);
+    ResponseEntity<ACL> newAcl(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,@ApiParam(value = "The acl to update." ,required=true )  @Valid @RequestBody ACL body);
 
 
     @ApiOperation(value = "Add new backend.", notes = "", response = Backend.class, tags={  })
@@ -223,29 +259,7 @@ public interface ConfigApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Server> newServer(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId,@ApiParam(value = "The server to add." ,required=true )  @Valid @RequestBody Body4 body);
-
-
-    @ApiOperation(value = "Overwrite haproxy config.", notes = "", response = Config.class, tags={  })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = Config.class) })
-    
-    @RequestMapping(value = "/config",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<Config> postConfig(@ApiParam(value = "The config to write." ,required=true )  @Valid @RequestBody Config1 config);
-
-
-    @ApiOperation(value = "Update haproxy config", notes = "", response = Config.class, tags={  })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = Config.class) })
-    
-    @RequestMapping(value = "/config",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.PUT)
-    ResponseEntity<Config> putConfig(@ApiParam(value = "The config to update." ,required=true )  @Valid @RequestBody Config config);
+    ResponseEntity<Server> newServer(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId,@ApiParam(value = "The server to add." ,required=true )  @Valid @RequestBody Server body);
 
 
     @ApiOperation(value = "Set defaults config.", notes = "", response = Defaults.class, tags={  })
@@ -256,7 +270,7 @@ public interface ConfigApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Defaults> setDefaults(@ApiParam(value = "The defaults to set." ,required=true )  @Valid @RequestBody Defaults1 defaults);
+    ResponseEntity<Defaults> setDefaults(@ApiParam(value = "The defaults to set." ,required=true )  @Valid @RequestBody Defaults defaults);
 
 
     @ApiOperation(value = "Set global config.", notes = "", response = Global.class, tags={  })
@@ -267,7 +281,7 @@ public interface ConfigApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Global> setGlobal(@ApiParam(value = "The global to set." ,required=true )  @Valid @RequestBody Global1 global);
+    ResponseEntity<Global> setGlobal(@ApiParam(value = "The global to set." ,required=true )  @Valid @RequestBody Global global);
 
 
     @ApiOperation(value = "Update acl config.", notes = "", response = ACL.class, tags={  })
@@ -278,7 +292,7 @@ public interface ConfigApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    ResponseEntity<ACL> updateAcl(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,@ApiParam(value = "ID of acl to return",required=true ) @PathVariable("aclId") String aclId,@ApiParam(value = "The acl to update." ,required=true )  @Valid @RequestBody Body2 body);
+    ResponseEntity<ACL> updateAcl(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,@ApiParam(value = "ID of acl to return",required=true ) @PathVariable("aclId") String aclId,@ApiParam(value = "The acl to update." ,required=true )  @Valid @RequestBody ACL body);
 
 
     @ApiOperation(value = "Update backend config.", notes = "", response = Backend.class, tags={  })
@@ -289,7 +303,18 @@ public interface ConfigApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    ResponseEntity<Backend> updateBackend(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId,@ApiParam(value = "The backend to update." ,required=true )  @Valid @RequestBody Body3 body);
+    ResponseEntity<Backend> updateBackend(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId,@ApiParam(value = "The backend to update." ,required=true )  @Valid @RequestBody Backend body);
+
+
+    @ApiOperation(value = "Update backends config.", notes = "", response = Backends.class, tags={  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "OK", response = Backends.class) })
+    
+    @RequestMapping(value = "/config/backends",
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
+        method = RequestMethod.PUT)
+    ResponseEntity<Backends> updateBackends(@ApiParam(value = "The backends to update." ,required=true )  @Valid @RequestBody Backends body);
 
 
     @ApiOperation(value = "Update defaults config.", notes = "", response = Defaults.class, tags={  })
@@ -311,7 +336,18 @@ public interface ConfigApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    ResponseEntity<Frontend> updateFrontend(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,@ApiParam(value = "The frontend to update." ,required=true )  @Valid @RequestBody Body body);
+    ResponseEntity<Frontend> updateFrontend(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,@ApiParam(value = "The frontend to update." ,required=true )  @Valid @RequestBody Frontend body);
+
+
+    @ApiOperation(value = "Update frontends config.", notes = "", response = Frontends.class, tags={  })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "OK", response = Frontends.class) })
+    
+    @RequestMapping(value = "/config/frontends",
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
+        method = RequestMethod.PUT)
+    ResponseEntity<Frontends> updateFrontends(@ApiParam(value = "The frontends to update." ,required=true )  @Valid @RequestBody Frontends body);
 
 
     @ApiOperation(value = "Update global config.", notes = "", response = Global.class, tags={  })
@@ -333,6 +369,6 @@ public interface ConfigApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    ResponseEntity<Server> updateServer(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId,@ApiParam(value = "ID of server",required=true ) @PathVariable("serverId") String serverId,@ApiParam(value = "The backend to update." ,required=true )  @Valid @RequestBody Body5 body);
+    ResponseEntity<Server> updateServer(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId,@ApiParam(value = "ID of server",required=true ) @PathVariable("serverId") String serverId,@ApiParam(value = "The backend to update." ,required=true )  @Valid @RequestBody Server body);
 
 }

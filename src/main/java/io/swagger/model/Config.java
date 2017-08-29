@@ -5,30 +5,32 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.ArrayList;
-import java.util.List;
+import io.swagger.model.Backends;
+import io.swagger.model.Defaults;
+import io.swagger.model.Frontends;
+import io.swagger.model.Global;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * Config
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-25T10:11:42.178Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-29T05:51:56.514Z")
 
 public class Config   {
   @JsonProperty("global")
-  private Object global = null;
+  private Global global = null;
 
   @JsonProperty("defaults")
-  private Object defaults = null;
+  private Defaults defaults = null;
 
   @JsonProperty("frontends")
-  private List<Object> frontends = null;
+  private Frontends frontends = null;
 
   @JsonProperty("backends")
-  private List<Object> backends = null;
+  private Backends backends = null;
 
-  public Config global(Object global) {
+  public Config global(Global global) {
     this.global = global;
     return this;
   }
@@ -39,16 +41,17 @@ public class Config   {
   **/
   @ApiModelProperty(value = "")
 
+  @Valid
 
-  public Object getGlobal() {
+  public Global getGlobal() {
     return global;
   }
 
-  public void setGlobal(Object global) {
+  public void setGlobal(Global global) {
     this.global = global;
   }
 
-  public Config defaults(Object defaults) {
+  public Config defaults(Defaults defaults) {
     this.defaults = defaults;
     return this;
   }
@@ -59,25 +62,18 @@ public class Config   {
   **/
   @ApiModelProperty(value = "")
 
+  @Valid
 
-  public Object getDefaults() {
+  public Defaults getDefaults() {
     return defaults;
   }
 
-  public void setDefaults(Object defaults) {
+  public void setDefaults(Defaults defaults) {
     this.defaults = defaults;
   }
 
-  public Config frontends(List<Object> frontends) {
+  public Config frontends(Frontends frontends) {
     this.frontends = frontends;
-    return this;
-  }
-
-  public Config addFrontendsItem(Object frontendsItem) {
-    if (this.frontends == null) {
-      this.frontends = new ArrayList<Object>();
-    }
-    this.frontends.add(frontendsItem);
     return this;
   }
 
@@ -87,25 +83,18 @@ public class Config   {
   **/
   @ApiModelProperty(value = "")
 
+  @Valid
 
-  public List<Object> getFrontends() {
+  public Frontends getFrontends() {
     return frontends;
   }
 
-  public void setFrontends(List<Object> frontends) {
+  public void setFrontends(Frontends frontends) {
     this.frontends = frontends;
   }
 
-  public Config backends(List<Object> backends) {
+  public Config backends(Backends backends) {
     this.backends = backends;
-    return this;
-  }
-
-  public Config addBackendsItem(Object backendsItem) {
-    if (this.backends == null) {
-      this.backends = new ArrayList<Object>();
-    }
-    this.backends.add(backendsItem);
     return this;
   }
 
@@ -115,12 +104,13 @@ public class Config   {
   **/
   @ApiModelProperty(value = "")
 
+  @Valid
 
-  public List<Object> getBackends() {
+  public Backends getBackends() {
     return backends;
   }
 
-  public void setBackends(List<Object> backends) {
+  public void setBackends(Backends backends) {
     this.backends = backends;
   }
 

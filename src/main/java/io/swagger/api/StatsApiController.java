@@ -17,14 +17,14 @@ import java.util.List;
 
 import javax.validation.constraints.*;
 import javax.validation.Valid;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-25T10:11:42.178Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-29T05:51:56.514Z")
 
 @Controller
 public class StatsApiController implements StatsApi {
 
 
 
-    public ResponseEntity<Void> getStats() {
+    public ResponseEntity<Void> statsGet() {
         // do some magic!
         return new ResponseEntity<Void>(HttpStatus.OK);
     }

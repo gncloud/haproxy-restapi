@@ -1,17 +1,18 @@
 package io.swagger.model;
 
 import java.util.Objects;
+import io.swagger.model.ACL;
 import java.util.HashMap;
 import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * Backends
+ * ACLs
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-26T15:15:22.594Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-29T05:51:56.514Z")
 
-public class Backends extends HashMap<String, Object>  {
+public class ACLs extends HashMap<String, ACL>  {
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -32,7 +33,7 @@ public class Backends extends HashMap<String, Object>  {
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class Backends {\n");
+    sb.append("class ACLs {\n");
     sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("}");
     return sb.toString();

@@ -5,15 +5,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.model.Options;
+import java.util.HashMap;
+import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * Defaults
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-25T10:11:42.178Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-29T05:51:56.514Z")
 
-public class Defaults   {
+public class Defaults extends HashMap<String, Options>  {
   @JsonProperty("mode")
   private String mode = null;
 
@@ -119,19 +122,20 @@ public class Defaults   {
     return Objects.equals(this.mode, defaults.mode) &&
         Objects.equals(this.timeoutConnect, defaults.timeoutConnect) &&
         Objects.equals(this.timeoutClient, defaults.timeoutClient) &&
-        Objects.equals(this.timeoutServer, defaults.timeoutServer);
+        Objects.equals(this.timeoutServer, defaults.timeoutServer) &&
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(mode, timeoutConnect, timeoutClient, timeoutServer);
+    return Objects.hash(mode, timeoutConnect, timeoutClient, timeoutServer, super.hashCode());
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Defaults {\n");
-    
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    timeoutConnect: ").append(toIndentedString(timeoutConnect)).append("\n");
     sb.append("    timeoutClient: ").append(toIndentedString(timeoutClient)).append("\n");
