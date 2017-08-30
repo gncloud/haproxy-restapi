@@ -5,6 +5,7 @@ import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.core.ParseException;
 import freemarker.template.*;
+import io.swagger.model.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,7 +51,6 @@ public class TempleteEngine {
             writer.flush();
             writer.close();
 
-            fileWrite(stringBuffer);
 
         } catch (TemplateException e) {
             logger.debug("TemplateException =>" + e.getMessage());
@@ -75,7 +75,7 @@ public class TempleteEngine {
         if(!tempDir.isDirectory()){
             tempDir.mkdirs();
         }
-        File tempHaproxy = new File(tempPath  + tempFileName);
+        File tempHaproxy = new File(tempPath  + tempFileName + ".temp");
         if(!tempHaproxy.isFile()){
             tempHaproxy.createNewFile();
         }
@@ -85,5 +85,64 @@ public class TempleteEngine {
         bufferedOutputStream.flush();
         bufferedOutputStream.close();
     }
+
+    public void dataWrite(Config config) throws IOException {
+
+        File tempDir = new File(tempPath);
+        if(!tempDir.isDirectory()){
+            tempDir.mkdirs();
+        }
+        File tempHaproxy = null;
+        FileOutputStream fileOutputStream = null;
+        ObjectOutput objectOutput = null;
+
+        tempHaproxy = new File(tempPath  + tempFileName + ".data");
+        if(!tempHaproxy.isFile()){
+            tempHaproxy.createNewFile();
+        }
+
+        fileOutputStream = new FileOutputStream(tempHaproxy);
+        objectOutput = new ObjectOutputStream(fileOutputStream);
+        objectOutput.writeObject(config);
+        objectOutput.flush();
+        objectOutput.close();
+        fileOutputStream.close();
+
+    }
+
+    public Config dateReader() {
+        File tempHaproxy = new File(tempPath  + tempFileName + ".data");
+        if(!tempHaproxy.isFile()){
+            return new Config();
+        }
+        FileInputStream fileInputStream = null;
+        ObjectInputStream objectInputStream = null;
+        Config config = null;
+        try {
+            fileInputStream = new FileInputStream(tempHaproxy);
+            objectInputStream = new ObjectInputStream(fileInputStream);
+
+            System.out.println(objectInputStream.readObject());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.debug("datareader fail {}", e.getMessage());
+        } catch (ClassNotFoundException e) {
+            logger.debug("datareader fail {}", e.getMessage());
+        } finally {
+            try {
+                if(objectInputStream != null){
+                    objectInputStream.close();
+                }
+                if(fileInputStream != null){
+                    fileInputStream.close();
+                }
+            } catch (IOException e){
+                logger.debug("datareader fail {}", e.getMessage());
+            }
+        }
+        return config;
+    }
+
 
 }

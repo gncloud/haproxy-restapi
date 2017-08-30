@@ -2,27 +2,42 @@ package io.swagger;
 
 import io.swagger.annotations.ApiParam;
 import io.swagger.api.ConfigApi;
+import io.swagger.freemarker.TempleteEngine;
 import io.swagger.model.*;
+import io.swagger.process.HaproxyProcess;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-29T05:33:12.063Z")
 
-@Controller
+@RestController
 public class HaproxyApiController implements ConfigApi {
 
-    private Logger logger = org.slf4j.LoggerFactory.getLogger(HaproxyApiController.class);
+    private static Logger logger = org.slf4j.LoggerFactory.getLogger(HaproxyApiController.class);
+
+    @Autowired
+    private TempleteEngine templeteEngine;
+
+    @Autowired
+    private HaproxyProcess haproxyProcess;
 
 
     private static Config config = new Config();
+
+    public HaproxyApiController() {
+        //TODO 로딩.
+        config = new Config();
+    }
 
     public ResponseEntity<Config> configGet() {
         // do some magic!
@@ -31,7 +46,20 @@ public class HaproxyApiController implements ConfigApi {
 
     public ResponseEntity<Config> configPost(@ApiParam(value = "The config to write." ,required=true )  @Valid @RequestBody Config config) {
         // do some magic!
-        return new ResponseEntity<Config>(HttpStatus.OK);
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        this.config = config;
+
+        this.config.getGlobal().setMaxconn(100l);
+        this.config.getGlobal().setName("test");
+        this.config.getGlobal().setMode("aaaa");
+
+        Options options = new Options();
+        options.add(config.getGlobal());
+
+        this.config.getGlobal().put("demon",options);
+
+
+        return new ResponseEntity<Config>(this.config, HttpStatus.OK);
     }
 
     public ResponseEntity<Config> configPut(@ApiParam(value = "The config to update." ,required=true )  @Valid @RequestBody Config config) {
@@ -154,7 +182,25 @@ public class HaproxyApiController implements ConfigApi {
 
     public ResponseEntity<Global> setGlobal(@ApiParam(value = "The global to set." ,required=true )  @Valid @RequestBody Global global) {
         // do some magic!
-        return new ResponseEntity<Global>(HttpStatus.OK);
+
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+        Options options = new Options();
+        options.add(global);
+        //config.global(global);
+        config = config.global(global);
+
+        try {
+            templeteEngine.dataWrite(this.config);
+        } catch (IOException e) {
+
+        }
+        Config config1 = templeteEngine.dateReader();
+
+
+        System.out.println(config1);
+
+        return new ResponseEntity<Global>(global, HttpStatus.OK);
     }
 
     public ResponseEntity<ACL> updateAcl(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,

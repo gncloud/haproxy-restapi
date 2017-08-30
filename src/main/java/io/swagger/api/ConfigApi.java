@@ -5,31 +5,11 @@
  */
 package io.swagger.api;
 
-import io.swagger.model.ACL;
-import io.swagger.model.ACLs;
-import io.swagger.model.Backend;
-import io.swagger.model.Backends;
-import io.swagger.model.Config;
-import io.swagger.model.Defaults;
-import io.swagger.model.Frontend;
-import io.swagger.model.Frontends;
-import io.swagger.model.Global;
-import io.swagger.model.Server;
-import io.swagger.model.Servers;
-
 import io.swagger.annotations.*;
+import io.swagger.model.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import javax.validation.constraints.*;
 import javax.validation.Valid;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-29T05:51:56.514Z")
 
@@ -38,8 +18,7 @@ public interface ConfigApi {
 
     @ApiOperation(value = "Get haproxy config.", notes = "", response = Config.class, tags={  })
     @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "OK", response = Config.class) })
-    
+    @ApiResponse(code = 200, message = "OK", response = Config.class) })
     @RequestMapping(value = "/config",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
@@ -281,7 +260,7 @@ public interface ConfigApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Global> setGlobal(@ApiParam(value = "The global to set." ,required=true )  @Valid @RequestBody Global global);
+    ResponseEntity<Global> setGlobal(@ApiParam(value = "The global to set." ,required=false )  @Valid @RequestBody Global global);
 
 
     @ApiOperation(value = "Update acl config.", notes = "", response = ACL.class, tags={  })

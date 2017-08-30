@@ -1,38 +1,42 @@
 package io.swagger.api;
 
-import io.swagger.model.ACL;
-import io.swagger.model.ACLs;
-import io.swagger.model.Backend;
-import io.swagger.model.Backends;
-import io.swagger.model.Config;
-import io.swagger.model.Defaults;
-import io.swagger.model.Frontend;
-import io.swagger.model.Frontends;
-import io.swagger.model.Global;
-import io.swagger.model.Server;
-import io.swagger.model.Servers;
-
-import io.swagger.annotations.*;
-
+import io.swagger.annotations.ApiParam;
+import io.swagger.freemarker.TempleteEngine;
+import io.swagger.model.*;
+import io.swagger.process.HaproxyProcess;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
-import javax.validation.constraints.*;
 import javax.validation.Valid;
+import java.io.IOException;
+
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-29T05:51:56.514Z")
 
-
 public class ConfigApiController implements ConfigApi {
-    
+
+    private static Logger logger = LoggerFactory.getLogger(ConfigApiController.class);
+
+    @Autowired
+    private TempleteEngine templeteEngine;
+
+    @Autowired
+    private HaproxyProcess haproxyProcess;
+
+
+    private static Config config = new Config();
+
+    public ConfigApiController() {
+        //TODO 로딩.
+        config = new Config();
+    }
+
+
     public ResponseEntity<Config> configGet() {
         // do some magic!
         return new ResponseEntity<Config>(HttpStatus.OK);
@@ -40,6 +44,7 @@ public class ConfigApiController implements ConfigApi {
 
     public ResponseEntity<Config> configPost(@ApiParam(value = "The config to write." ,required=true )  @Valid @RequestBody Config config) {
         // do some magic!
+        logger.debug("The config to write..");
         return new ResponseEntity<Config>(HttpStatus.OK);
     }
 
