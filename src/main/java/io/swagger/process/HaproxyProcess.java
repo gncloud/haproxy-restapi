@@ -21,17 +21,28 @@ public class HaproxyProcess {
     @Value("${freemarker.temp.filename}")
     private String filename;
 
-    @Value("${haproxy.config}")
-    private String haproxyConfig;
+    @Value("${app.home}")
+    private String appHomePath;
+
+    @Value("${haproxy.config.path}")
+    private String haproxyConfigPath;
+
+    @Value("${haproxy.binary.path}")
+    private String haproxyBinPath;
+
+    @Value("${haproxy.binary.path}/haproxy.pid")
+    private String pidFilePath;
+
+    private Process haproxyProcess;
 
     public boolean start(){
 
         logger.debug("start..");
         logger.debug("tempFile : {}", tempPath + filename);
-        logger.debug("configFile : {}", haproxyConfig);
+        logger.debug("configFile : {}", haproxyConfigPath);
         try{
             File tempFile = new File(tempPath + filename);
-            File haproxyFile = new File(haproxyConfig);
+            File haproxyFile = new File(haproxyConfigPath);
 
             if(!haproxyFile.isFile()){
                 haproxyFile.createNewFile();
@@ -45,7 +56,9 @@ public class HaproxyProcess {
             argument.add("docker");
             argument.add("ps");
 
-            ProcessBuilder processBuilder = new ProcessBuilder(argument);
+//            ProcessBuilder processBuilder = new ProcessBuilder(argument);
+            String pidFilePath = appHomePath+"/haproxy.pid";
+            ProcessBuilder processBuilder = new ProcessBuilder(haproxyBinPath, "-p", pidFilePath, "-sf", "$(cat "+pidFilePath+")");
             processBuilder.inheritIO();
             processBuilder.start();
         } catch(IOException e){
@@ -55,17 +68,25 @@ public class HaproxyProcess {
         return true;
     }
 
-    public boolean stop() {
-        List<String> argument = new LinkedList<>();
-        argument.add("kill -9 $(cat pid.txt)");
-        ProcessBuilder processBuilder = new ProcessBuilder(argument);
-        try{
-            processBuilder.inheritIO();
-            processBuilder.start();
-        } catch(IOException e){
-            logger.debug("process stop fail : {}", e.getMessage());
-            return false;
+    public boolean restart(File tempFile) throws Exception {
+        File haproxyFile = new File(haproxyConfigPath);
+
+        if(!haproxyFile.isFile()){
+            haproxyFile.createNewFile();
         }
+        FileCopyUtils.copy(tempFile, haproxyFile);
+
+
+        ProcessBuilder processBuilder = new ProcessBuilder(haproxyBinPath, "-p", pidFilePath, "-sf", "$(cat "+pidFilePath+")");
+        processBuilder.inheritIO();
+        haproxyProcess = processBuilder.start();
+
+        return true;
+
+    }
+
+    public boolean stop() {
+        haproxyProcess.destroy();
         return true;
     }
 }

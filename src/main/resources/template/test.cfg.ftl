@@ -1,22 +1,28 @@
-<#--<#macro myMacro>foo</#macro>-->
-<#--<#assign x>-->
-    <#--<#list 1..3 as n>-->
-    <#--${n} <@myMacro />-->
-    <#--</#list>-->
-<#--</#assign>-->
-<#--Number of words: ${x?word_list?size}-->
-<#--${x}-->
-<#--${ggdata}-->
+global
 
-<#if test1?exists>
-    ${test1}
-</#if>
-<#if test2?exists>
-${test2}
-</#if>
-<#if test3?exists>
-${test3}
-</#if>
-<#if test4?exists>
-${test4}
-</#if>
+    deamon
+    stat skjflsjf
+
+defults
+    <#if $mode != nyull >
+    mode <#vale>
+    \</#if>
+
+
+
+
+<#for $config.get(frontend)>
+frontend <#fe.name>
+
+    <#for acl>
+    acl
+    use_backend dskjflj
+    </#for>
+
+</#for>
+
+
+
+backend
+
+
