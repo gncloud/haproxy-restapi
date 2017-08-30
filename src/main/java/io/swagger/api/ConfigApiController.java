@@ -51,7 +51,7 @@ public class ConfigApiController implements ConfigApi {
     }
 
     public ResponseEntity<Void> deleteAcl(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,
-        @ApiParam(value = "ID of acl to return",required=true ) @PathVariable("aclId") String aclId) {
+                                          @ApiParam(value = "ID of acl to return",required=true ) @PathVariable("aclId") String aclId) {
         // do some magic!
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
@@ -67,13 +67,13 @@ public class ConfigApiController implements ConfigApi {
     }
 
     public ResponseEntity<Void> deleteServer(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId,
-        @ApiParam(value = "ID of server",required=true ) @PathVariable("serverId") String serverId) {
+                                             @ApiParam(value = "ID of server",required=true ) @PathVariable("serverId") String serverId) {
         // do some magic!
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
     public ResponseEntity<ACL> getAcl(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,
-        @ApiParam(value = "ID of acl to return",required=true ) @PathVariable("aclId") String aclId) {
+                                      @ApiParam(value = "ID of acl to return",required=true ) @PathVariable("aclId") String aclId) {
         // do some magic!
         return new ResponseEntity<ACL>(HttpStatus.OK);
     }
@@ -114,7 +114,7 @@ public class ConfigApiController implements ConfigApi {
     }
 
     public ResponseEntity<Server> getServer(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId,
-        @ApiParam(value = "ID of server",required=true ) @PathVariable("serverId") String serverId) {
+                                            @ApiParam(value = "ID of server",required=true ) @PathVariable("serverId") String serverId) {
         // do some magic!
         return new ResponseEntity<Server>(HttpStatus.OK);
     }
@@ -125,7 +125,7 @@ public class ConfigApiController implements ConfigApi {
     }
 
     public ResponseEntity<ACL> newAcl(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,
-        @ApiParam(value = "The acl to update." ,required=true )  @Valid @RequestBody ACL body) {
+                                      @ApiParam(value = "The acl to update." ,required=true )  @Valid @RequestBody ACL body) {
         // do some magic!
         return new ResponseEntity<ACL>(HttpStatus.OK);
     }
@@ -141,7 +141,7 @@ public class ConfigApiController implements ConfigApi {
     }
 
     public ResponseEntity<Server> newServer(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId,
-        @ApiParam(value = "The server to add." ,required=true )  @Valid @RequestBody Server body) {
+                                            @ApiParam(value = "The server to add." ,required=true )  @Valid @RequestBody Server body) {
         // do some magic!
         return new ResponseEntity<Server>(HttpStatus.OK);
     }
@@ -157,14 +157,14 @@ public class ConfigApiController implements ConfigApi {
     }
 
     public ResponseEntity<ACL> updateAcl(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,
-        @ApiParam(value = "ID of acl to return",required=true ) @PathVariable("aclId") String aclId,
-        @ApiParam(value = "The acl to update." ,required=true )  @Valid @RequestBody ACL body) {
+                                         @ApiParam(value = "ID of acl to return",required=true ) @PathVariable("aclId") String aclId,
+                                         @ApiParam(value = "The acl to update." ,required=true )  @Valid @RequestBody ACL body) {
         // do some magic!
         return new ResponseEntity<ACL>(HttpStatus.OK);
     }
 
     public ResponseEntity<Backend> updateBackend(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId,
-        @ApiParam(value = "The backend to update." ,required=true )  @Valid @RequestBody Backend body) {
+                                                 @ApiParam(value = "The backend to update." ,required=true )  @Valid @RequestBody Backend body) {
         // do some magic!
         return new ResponseEntity<Backend>(HttpStatus.OK);
     }
@@ -180,7 +180,7 @@ public class ConfigApiController implements ConfigApi {
     }
 
     public ResponseEntity<Frontend> updateFrontend(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,
-        @ApiParam(value = "The frontend to update." ,required=true )  @Valid @RequestBody Frontend body) {
+                                                   @ApiParam(value = "The frontend to update." ,required=true )  @Valid @RequestBody Frontend body) {
         // do some magic!
         return new ResponseEntity<Frontend>(HttpStatus.OK);
     }
@@ -196,8 +196,8 @@ public class ConfigApiController implements ConfigApi {
     }
 
     public ResponseEntity<Server> updateServer(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId,
-        @ApiParam(value = "ID of server",required=true ) @PathVariable("serverId") String serverId,
-        @ApiParam(value = "The backend to update." ,required=true )  @Valid @RequestBody Server body) {
+                                               @ApiParam(value = "ID of server",required=true ) @PathVariable("serverId") String serverId,
+                                               @ApiParam(value = "The backend to update." ,required=true )  @Valid @RequestBody Server body) {
         // do some magic!
         return new ResponseEntity<Server>(HttpStatus.OK);
     }

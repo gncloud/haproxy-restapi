@@ -1,5 +1,6 @@
 package io.swagger.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -17,7 +18,7 @@ import javax.validation.constraints.*;
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-30T06:16:08.273Z")
 
-public class Config   {
+public class Config implements Serializable{
   @JsonProperty("global")
   private Global global = null;
 
@@ -29,6 +30,14 @@ public class Config   {
 
   @JsonProperty("backends")
   private Backends backends = null;
+
+
+  public Config(){
+    this.global = new Global();
+    this.defaults = new Defaults();
+    this.frontends = new Frontends();
+    this.backends = new Backends();
+  }
 
   public Config global(Global global) {
     this.global = global;
