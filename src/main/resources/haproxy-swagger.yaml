@@ -615,8 +615,10 @@ definitions:
       maxconn:
         type: integer
         format: int64
-    additionalProperties:
-      $ref: '#/definitions/Options'
+      etc:
+        type: array
+        items:
+          type: string
   Defaults:
     type: object
     properties:
@@ -628,8 +630,10 @@ definitions:
         type: string
       timeoutServer:
         type: string
-    additionalProperties:
-      $ref: '#/definitions/Options'
+      etc:
+        type: array
+        items:
+          type: string
   Frontends:
     type: object
     additionalProperties:
@@ -660,8 +664,10 @@ definitions:
         $ref: '#/definitions/SpikeLimit'
       tcpSpikeLimit:
         $ref: '#/definitions/SpikeLimit'
-    additionalProperties:
-      $ref: '#/definitions/Options'
+      etc:
+        type: array
+        items:
+          type: string
   ACLs:
       type: object
       additionalProperties:
@@ -699,8 +705,10 @@ definitions:
         type: string
       servers:
         $ref: '#/definitions/Servers'
-    additionalProperties:
-      $ref: '#/definitions/Options'
+      etc:
+        type: array
+        items:
+          type: string
   Servers:
     type: object
     additionalProperties:
@@ -726,7 +734,4 @@ definitions:
       checkInterval:
         type: integer
         format: int64
-  Options:
-    type: array
-    items:
-      type: object
+

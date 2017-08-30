@@ -10,7 +10,7 @@ import javax.validation.constraints.*;
 /**
  * ACLs
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-29T05:51:56.514Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-30T06:16:08.273Z")
 
 public class ACLs extends HashMap<String, ACL>  {
 

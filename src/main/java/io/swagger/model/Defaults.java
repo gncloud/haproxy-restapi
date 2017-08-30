@@ -5,18 +5,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.model.Options;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * Defaults
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-29T05:51:56.514Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-30T06:16:08.273Z")
 
-public class Defaults extends HashMap<String, Options>  {
+public class Defaults   {
   @JsonProperty("mode")
   private String mode = null;
 
@@ -28,6 +27,9 @@ public class Defaults extends HashMap<String, Options>  {
 
   @JsonProperty("timeoutServer")
   private String timeoutServer = null;
+
+  @JsonProperty("etc")
+  private List<String> etc = null;
 
   public Defaults mode(String mode) {
     this.mode = mode;
@@ -109,6 +111,34 @@ public class Defaults extends HashMap<String, Options>  {
     this.timeoutServer = timeoutServer;
   }
 
+  public Defaults etc(List<String> etc) {
+    this.etc = etc;
+    return this;
+  }
+
+  public Defaults addEtcItem(String etcItem) {
+    if (this.etc == null) {
+      this.etc = new ArrayList<String>();
+    }
+    this.etc.add(etcItem);
+    return this;
+  }
+
+   /**
+   * Get etc
+   * @return etc
+  **/
+  @ApiModelProperty(value = "")
+
+
+  public List<String> getEtc() {
+    return etc;
+  }
+
+  public void setEtc(List<String> etc) {
+    this.etc = etc;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -123,23 +153,24 @@ public class Defaults extends HashMap<String, Options>  {
         Objects.equals(this.timeoutConnect, defaults.timeoutConnect) &&
         Objects.equals(this.timeoutClient, defaults.timeoutClient) &&
         Objects.equals(this.timeoutServer, defaults.timeoutServer) &&
-        super.equals(o);
+        Objects.equals(this.etc, defaults.etc);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(mode, timeoutConnect, timeoutClient, timeoutServer, super.hashCode());
+    return Objects.hash(mode, timeoutConnect, timeoutClient, timeoutServer, etc);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Defaults {\n");
-    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    timeoutConnect: ").append(toIndentedString(timeoutConnect)).append("\n");
     sb.append("    timeoutClient: ").append(toIndentedString(timeoutClient)).append("\n");
     sb.append("    timeoutServer: ").append(toIndentedString(timeoutServer)).append("\n");
+    sb.append("    etc: ").append(toIndentedString(etc)).append("\n");
     sb.append("}");
     return sb.toString();
   }

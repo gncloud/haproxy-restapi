@@ -5,19 +5,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.model.Options;
 import io.swagger.model.Servers;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * Backend
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-29T05:51:56.514Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-30T06:16:08.273Z")
 
-public class Backend extends HashMap<String, Options>  {
+public class Backend   {
   @JsonProperty("name")
   private String name = null;
 
@@ -26,6 +25,9 @@ public class Backend extends HashMap<String, Options>  {
 
   @JsonProperty("servers")
   private Servers servers = null;
+
+  @JsonProperty("etc")
+  private List<String> etc = null;
 
   public Backend name(String name) {
     this.name = name;
@@ -88,6 +90,34 @@ public class Backend extends HashMap<String, Options>  {
     this.servers = servers;
   }
 
+  public Backend etc(List<String> etc) {
+    this.etc = etc;
+    return this;
+  }
+
+  public Backend addEtcItem(String etcItem) {
+    if (this.etc == null) {
+      this.etc = new ArrayList<String>();
+    }
+    this.etc.add(etcItem);
+    return this;
+  }
+
+   /**
+   * Get etc
+   * @return etc
+  **/
+  @ApiModelProperty(value = "")
+
+
+  public List<String> getEtc() {
+    return etc;
+  }
+
+  public void setEtc(List<String> etc) {
+    this.etc = etc;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -101,22 +131,23 @@ public class Backend extends HashMap<String, Options>  {
     return Objects.equals(this.name, backend.name) &&
         Objects.equals(this.mode, backend.mode) &&
         Objects.equals(this.servers, backend.servers) &&
-        super.equals(o);
+        Objects.equals(this.etc, backend.etc);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, mode, servers, super.hashCode());
+    return Objects.hash(name, mode, servers, etc);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Backend {\n");
-    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    servers: ").append(toIndentedString(servers)).append("\n");
+    sb.append("    etc: ").append(toIndentedString(etc)).append("\n");
     sb.append("}");
     return sb.toString();
   }

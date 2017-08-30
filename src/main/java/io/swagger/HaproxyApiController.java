@@ -3,7 +3,6 @@ package io.swagger;
 import io.swagger.annotations.ApiParam;
 import io.swagger.api.ConfigApi;
 import io.swagger.model.*;
-import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,22 +10,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
-import java.util.Iterator;
-import java.util.Map;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-29T05:33:12.063Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-30T06:16:08.273Z")
 
 @Controller
 public class HaproxyApiController implements ConfigApi {
-
-    private Logger logger = org.slf4j.LoggerFactory.getLogger(HaproxyApiController.class);
-
 
     private static Config config = new Config();
 
     public ResponseEntity<Config> configGet() {
         // do some magic!
-        return new ResponseEntity<Config>(config, HttpStatus.OK);
+        return new ResponseEntity<Config>(HttpStatus.OK);
     }
 
     public ResponseEntity<Config> configPost(@ApiParam(value = "The config to write." ,required=true )  @Valid @RequestBody Config config) {
@@ -113,32 +107,20 @@ public class HaproxyApiController implements ConfigApi {
         return new ResponseEntity<Servers>(HttpStatus.OK);
     }
 
-    public ResponseEntity<ACL> newAcl(@ApiParam(value = "ID of frontend to return", required = true) @PathVariable("frontendId") String frontendId,
-                                      @ApiParam(value = "The acl to update.", required = true) @Valid @RequestBody ACL body) {
+    public ResponseEntity<ACL> newAcl(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,
+        @ApiParam(value = "The acl to update." ,required=true )  @Valid @RequestBody ACL body) {
         // do some magic!
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<ACL>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Backend> newBackend(@ApiParam(value = "The backend to create.", required = true) @Valid @RequestBody Backend backend) {
+    public ResponseEntity<Backend> newBackend(@ApiParam(value = "The backend to create." ,required=true )  @Valid @RequestBody Backend backend) {
         // do some magic!
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<Backend>(HttpStatus.OK);
     }
 
     public ResponseEntity<Frontend> newFrontend(@ApiParam(value = "The frontend to create." ,required=true )  @Valid @RequestBody Frontend frontend) {
         // do some magic!
-        boolean isUniq = true;
-        logger.info("config.getFrontends() : {}", config.getFrontends());
-        if(config.getFrontends() != null) {
-            Iterator<Map.Entry<String,Frontend>> iter = config.getFrontends().entrySet().iterator();
-            while(iter.hasNext()) {
-                Map.Entry<String,Frontend> e = iter.next();
-                String key = e.getKey();
-                Frontend f = (Frontend) e.getValue();
-                config.getFrontends().put(frontend.getName(), frontend);
-            }
-        }
-
-        return new ResponseEntity<Frontend>(frontend, HttpStatus.OK);
+        return new ResponseEntity<Frontend>(HttpStatus.OK);
     }
 
     public ResponseEntity<Server> newServer(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId,
@@ -164,15 +146,15 @@ public class HaproxyApiController implements ConfigApi {
         return new ResponseEntity<ACL>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Backend> updateBackend(@ApiParam(value = "ID of backend", required = true) @PathVariable("backendId") String backendId,
-                                                 @ApiParam(value = "The backend to update.", required = true) @Valid @RequestBody Backend body) {
+    public ResponseEntity<Backend> updateBackend(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId,
+        @ApiParam(value = "The backend to update." ,required=true )  @Valid @RequestBody Backend body) {
         // do some magic!
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<Backend>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Backends> updateBackends(@ApiParam(value = "The backends to update.", required = true) @Valid @RequestBody Backends body) {
+    public ResponseEntity<Backends> updateBackends(@ApiParam(value = "The backends to update." ,required=true )  @Valid @RequestBody Backends body) {
         // do some magic!
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<Backends>(HttpStatus.OK);
     }
 
     public ResponseEntity<Defaults> updateDefaults(@ApiParam(value = "The defaults to update." ,required=true )  @Valid @RequestBody Defaults defaults) {
@@ -180,15 +162,15 @@ public class HaproxyApiController implements ConfigApi {
         return new ResponseEntity<Defaults>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Frontend> updateFrontend(@ApiParam(value = "ID of frontend to return", required = true) @PathVariable("frontendId") String frontendId,
-                                                   @ApiParam(value = "The frontend to update.", required = true) @Valid @RequestBody Frontend body) {
+    public ResponseEntity<Frontend> updateFrontend(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,
+        @ApiParam(value = "The frontend to update." ,required=true )  @Valid @RequestBody Frontend body) {
         // do some magic!
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<Frontend>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Frontends> updateFrontends(@ApiParam(value = "The frontends to update.", required = true) @Valid @RequestBody Frontends body) {
+    public ResponseEntity<Frontends> updateFrontends(@ApiParam(value = "The frontends to update." ,required=true )  @Valid @RequestBody Frontends body) {
         // do some magic!
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<Frontends>(HttpStatus.OK);
     }
 
     public ResponseEntity<Global> updateGlobal(@ApiParam(value = "The global to update." ,required=true )  @Valid @RequestBody Global global) {

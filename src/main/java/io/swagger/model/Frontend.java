@@ -6,19 +6,18 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.model.ACLs;
-import io.swagger.model.Options;
 import io.swagger.model.SpikeLimit;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
  * Frontend
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-29T05:51:56.514Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-30T06:16:08.273Z")
 
-public class Frontend extends HashMap<String, Options>  {
+public class Frontend   {
   @JsonProperty("name")
   private String name = null;
 
@@ -51,6 +50,9 @@ public class Frontend extends HashMap<String, Options>  {
 
   @JsonProperty("tcpSpikeLimit")
   private SpikeLimit tcpSpikeLimit = null;
+
+  @JsonProperty("etc")
+  private List<String> etc = null;
 
   public Frontend name(String name) {
     this.name = name;
@@ -275,6 +277,34 @@ public class Frontend extends HashMap<String, Options>  {
     this.tcpSpikeLimit = tcpSpikeLimit;
   }
 
+  public Frontend etc(List<String> etc) {
+    this.etc = etc;
+    return this;
+  }
+
+  public Frontend addEtcItem(String etcItem) {
+    if (this.etc == null) {
+      this.etc = new ArrayList<String>();
+    }
+    this.etc.add(etcItem);
+    return this;
+  }
+
+   /**
+   * Get etc
+   * @return etc
+  **/
+  @ApiModelProperty(value = "")
+
+
+  public List<String> getEtc() {
+    return etc;
+  }
+
+  public void setEtc(List<String> etc) {
+    this.etc = etc;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -296,19 +326,19 @@ public class Frontend extends HashMap<String, Options>  {
         Objects.equals(this.acls, frontend.acls) &&
         Objects.equals(this.httpSpikeLimit, frontend.httpSpikeLimit) &&
         Objects.equals(this.tcpSpikeLimit, frontend.tcpSpikeLimit) &&
-        super.equals(o);
+        Objects.equals(this.etc, frontend.etc);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, mode, bindPort, bindIp, defaultBackend, timeoutConnect, timeoutClient, timeoutServer, acls, httpSpikeLimit, tcpSpikeLimit, super.hashCode());
+    return Objects.hash(name, mode, bindPort, bindIp, defaultBackend, timeoutConnect, timeoutClient, timeoutServer, acls, httpSpikeLimit, tcpSpikeLimit, etc);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Frontend {\n");
-    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    bindPort: ").append(toIndentedString(bindPort)).append("\n");
@@ -320,6 +350,7 @@ public class Frontend extends HashMap<String, Options>  {
     sb.append("    acls: ").append(toIndentedString(acls)).append("\n");
     sb.append("    httpSpikeLimit: ").append(toIndentedString(httpSpikeLimit)).append("\n");
     sb.append("    tcpSpikeLimit: ").append(toIndentedString(tcpSpikeLimit)).append("\n");
+    sb.append("    etc: ").append(toIndentedString(etc)).append("\n");
     sb.append("}");
     return sb.toString();
   }
