@@ -16,57 +16,12 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-30T06:16:08.273Z")
 
 public class Global   {
-  @JsonProperty("name")
-  private String name = null;
-
-  @JsonProperty("mode")
-  private String mode = null;
 
   @JsonProperty("maxconn")
   private Long maxconn = null;
 
   @JsonProperty("etc")
   private List<String> etc = null;
-
-  public Global name(String name) {
-    this.name = name;
-    return this;
-  }
-
-   /**
-   * Get name
-   * @return name
-  **/
-  @ApiModelProperty(value = "")
-
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public Global mode(String mode) {
-    this.mode = mode;
-    return this;
-  }
-
-   /**
-   * Get mode
-   * @return mode
-  **/
-  @ApiModelProperty(value = "")
-
-
-  public String getMode() {
-    return mode;
-  }
-
-  public void setMode(String mode) {
-    this.mode = mode;
-  }
 
   public Global maxconn(Long maxconn) {
     this.maxconn = maxconn;
@@ -126,15 +81,13 @@ public class Global   {
       return false;
     }
     Global global = (Global) o;
-    return Objects.equals(this.name, global.name) &&
-        Objects.equals(this.mode, global.mode) &&
-        Objects.equals(this.maxconn, global.maxconn) &&
+    return Objects.equals(this.maxconn, global.maxconn) &&
         Objects.equals(this.etc, global.etc);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, mode, maxconn, etc);
+    return Objects.hash(maxconn, etc);
   }
 
   @Override
@@ -142,8 +95,6 @@ public class Global   {
     StringBuilder sb = new StringBuilder();
     sb.append("class Global {\n");
     
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    maxconn: ").append(toIndentedString(maxconn)).append("\n");
     sb.append("    etc: ").append(toIndentedString(etc)).append("\n");
     sb.append("}");

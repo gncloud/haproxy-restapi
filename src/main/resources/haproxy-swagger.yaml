@@ -608,10 +608,6 @@ definitions:
   Global:
     type: object
     properties:
-      name:
-        type: string
-      mode:
-        type: string
       maxconn:
         type: integer
         format: int64
