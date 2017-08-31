@@ -12,7 +12,7 @@ import javax.validation.constraints.*;
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-30T06:16:08.273Z")
 
-public class Servers extends HashMap<String, Server>  {
+public class Servers  {
 
   @Override
   public boolean equals(java.lang.Object o) {
