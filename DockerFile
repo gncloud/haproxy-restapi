@@ -56,8 +56,8 @@ RUN mkdir -p /var/lib/haproxy-restapi/bin
 RUN mkdir -p /var/lib/haproxy-restapi/conf
 COPY haproxy /var/lib/haproxy-restapi/bin/haproxy
 COPY haproxy.cfg /var/lib/haproxy-restapi/conf/haproxy.cfg
-COPY /swagger-spring-1.0.0.jar /swagger-spring-1.0.0.jar
+COPY target/haproxy-restapi-1.0.jar /haproxy-restapi.jar
 
 EXPOSE 9999
 
-CMD ["java", "-jar", "/swagger-spring-1.0.0.jar"]
+CMD ["java", "-jar", "/haproxy-restapi.jar"]
