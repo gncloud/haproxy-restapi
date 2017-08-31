@@ -5,6 +5,7 @@ import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 
@@ -28,6 +29,7 @@ public class ProxyHelper {
     private String tempFilePath = System.getProperty("java.io.tmpdir");
     private String TEMPLATE_NAME = "haproxy.cfg.ftl";
 
+    @Value("${}")
     private String appHome           = "/var/lib/haproxy-restapi";
     private String haproxyBinaryPath = appHome + "/bin/haproxy";
     private String haproxyConfigPath = appHome + "/conf/haproxy.cfg";
@@ -48,9 +50,6 @@ public class ProxyHelper {
 
         try {
             Template temp = cfg.getTemplate(TEMPLATE_NAME);
-//            Writer out = new OutputStreamWriter(System.out);
-//            temp.process(c, out);
-
 
             //1. 임시 저장
             String tempFileName = Long.toString(random.nextLong());
@@ -59,7 +58,11 @@ public class ProxyHelper {
             temp.process(c, out);
 
             //2. validate
-            process = new ProcessBuilder(haproxyBinaryPath, "-c", "-f", tempFile.getPath()).inheritIO().start();
+            process = new ProcessBuilder(haproxyBinaryPath
+                                        , "-c"
+                                        , "-f"
+                                        , tempFile.getPath())
+                                        .inheritIO().start();
             process.waitFor();
             if(process.exitValue() != 0){
                 throw new Exception("haproxy.cfg invalidate");
@@ -70,8 +73,24 @@ public class ProxyHelper {
             FileCopyUtils.copy(tempFile, configFile);
 
 
-            //4. restart -sf
-            process = new ProcessBuilder(haproxyBinaryPath, "-d", "-f", haproxyConfigPath).inheritIO().start();
+            //4. PID정보 수집
+            String pid = "";
+            File pidFile = new File(pidFilePath);
+            if(pidFile.isFile()){
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(pidFile));
+                String tmp = new String();
+                while( (tmp = bufferedReader.readLine()) != null){
+                    pid += tmp + " ";
+                }
+                bufferedReader.close();
+            }
+
+            //5. restart -sf
+            process = new ProcessBuilder(haproxyBinaryPath
+                    , "-f", haproxyConfigPath
+                    , "-p", pidFilePath
+                    , "-sf", pid)
+                    .inheritIO().start();
             logger.info("haproxy update ok");
 
         } catch (Exception e) {
