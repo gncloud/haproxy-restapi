@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-@Component
 public class TempleteEngine {
 
     private static Logger logger = LoggerFactory.getLogger(TempleteEngine.class);

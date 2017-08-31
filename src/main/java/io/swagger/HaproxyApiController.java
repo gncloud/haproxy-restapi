@@ -1,8 +1,8 @@
 package io.swagger;
 
 import io.swagger.model.*;
-import io.swagger.process.HaproxyRuntime;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * Created by swsong on 17. 8. 31..
@@ -26,10 +27,17 @@ public class HaproxyApiController implements HaproxyApi {
 
 
     Map<String, Object> config;
+    ReentrantReadWriteLock lock;
 
-    public HaproxyApiController(){
-        //TODO load
-        config = new HashMap<>();
+    @Autowired
+    private TemplateHelper templateHelper;
+    @Autowired
+    private ConfigFileHelper configFileHelper;
+
+    public HaproxyApiController() {
+
+        config = configFileHelper.loadObjectFile();
+        lock = new ReentrantReadWriteLock();
     }
 
     private void loadConfig() {
@@ -40,66 +48,89 @@ public class HaproxyApiController implements HaproxyApi {
 
     }
 
+    private void applyConfig(Map<String, Object> newConfig) {
+
+        String configStr = templateHelper.format(newConfig);
+
+        logger.info("configStr : \n{}", configStr);
+
+        //1. 임시 저장
+        File tempFile = configFileHelper.saveTempFile(configStr);
+
+        //2. validation.
+
+
+        //3. overwrite
+
+
+        //4. restart haproxy
+
+
+    }
 
     @Override
     public ResponseEntity<Map<String, Object>> getConfig() {
-
-        return new ResponseEntity<Map<String, Object>>(config, HttpStatus.OK);
+        ReentrantReadWriteLock.WriteLock readLock = lock.writeLock();
+        readLock.lock();
+        try {
+            return new ResponseEntity<Map<String, Object>>(config, HttpStatus.OK);
+        } finally {
+            readLock.unlock();
+        }
     }
 
     @Override
     public ResponseEntity<Map<String, Object>> postService(@PathVariable("id") String id, @Valid @RequestBody Service service) {
-        logger.info("service={}", service);
+        ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
+        writeLock.lock();
+        try {
+            Map<String, Object> newConfig = cloneConfig();
+            Map<String, Frontend> frontends = (Map<String, Frontend>) newConfig.get("frontends");
+            Map<String, Backend> backends = (Map<String, Backend>) newConfig.get("backends");
 
-        Map<String, Object> newConfig = cloneConfig();
-        Map<String, Frontend> frontends = (Map<String, Frontend>) newConfig.get("frontends");
-        Map<String, Backend> backends = (Map<String, Backend>) newConfig.get("backends");
-
-        Frontend frontend = service.getFrontend();
-        if(frontend != null) {
-            String name = frontend.getName();
-            if(name == null) {
-
-                //ERROR
+            Frontend frontend = service.getFrontend();
+            if (frontend != null) {
+                Frontend old = frontends.put(id, frontend);
+                if (old != null) {
+                    logger.warn("frontend replaced : {}", id);
+                }
             }
-            Frontend oldFrontend = frontends.get(name);
-            if(oldFrontend != null) {
-                //merge oldFrontend if http
 
-                //error if tcp
-            } else {
-                frontends.put(name, frontend);
+            Backend backend = service.getBackend();
+            if (backend != null) {
+                Backend old = backends.put(id, backend);
+                if (old != null) {
+                    logger.warn("backend replaced : {}", id);
+                }
             }
+
+            applyConfig(newConfig);
+            return new ResponseEntity<Map<String, Object>>(config, HttpStatus.OK);
+        } finally {
+            writeLock.unlock();
         }
-
-        Backend backend = service.getBackend();
-        if(backend != null) {
-            String name = backend.getName();
-            if(name == null) {
-
-                //ERROR
-            }
-            Backend oldBackend = backends.get(name);
-            if(oldBackend != null) {
-                //error
-                logger.warn("backend replaced : {}", name);
-            }
-            backends.put(name,backend);
-        }
-
-        config = newConfig;
-
-        //TODO 적용.
-
-        return new ResponseEntity<Map<String, Object>>(config, HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> deleteService() {
-//        Frontend frontend = service.getFrontend();
-//        if(frontend != null) {
-        return null;
+    public ResponseEntity<Map<String, Object>> deleteService(@PathVariable("id") String id) {
+        ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
+        writeLock.lock();
+        try {
+            Map<String, Object> newConfig = cloneConfig();
+            Map<String, Frontend> frontends = (Map<String, Frontend>) newConfig.get("frontends");
+            Map<String, Backend> backends = (Map<String, Backend>) newConfig.get("backends");
+
+            frontends.remove(id);
+            backends.remove(id);
+
+            applyConfig(newConfig);
+
+            return new ResponseEntity<Map<String, Object>>(config, HttpStatus.OK);
+        } finally {
+            writeLock.unlock();
+        }
     }
+
 
     private Map<String, Object> cloneConfig() {
 
@@ -112,9 +143,9 @@ public class HaproxyApiController implements HaproxyApi {
         Map<String, Frontend> newFrontends = new HashMap<String, Frontend>();
         newConfig.put("frontends", newFrontends);
 
-        if(frontends != null) {
+        if (frontends != null) {
             Iterator<Map.Entry<String, Frontend>> iter = frontends.entrySet().iterator();
-            while(iter.hasNext()) {
+            while (iter.hasNext()) {
                 Map.Entry<String, Frontend> e = iter.next();
                 String key = e.getKey();
                 Frontend fe = e.getValue();
@@ -128,25 +159,8 @@ public class HaproxyApiController implements HaproxyApi {
                 newFe.setTimeoutConnect(fe.getTimeoutConnect());
                 newFe.setTimeoutServer(fe.getTimeoutServer());
                 newFe.setDefaultBackend(fe.getDefaultBackend());
-
-                Map<String, ACL> acls = fe.getAcls();
-
-                if(acls != null) {
-                    Map<String, ACL> newAcls = new HashMap<String, ACL>();
-
-                    Iterator<Map.Entry<String, ACL>> aclIter = acls.entrySet().iterator();
-                    while(aclIter.hasNext()) {
-                        Map.Entry<String, ACL> e2 = aclIter.next();
-                        String name = e2.getKey();
-                        ACL acl = e2.getValue();
-                        ACL newAcl = new ACL();
-                        newAcl.setName(acl.getName());
-                        newAcl.setPattern(acl.getPattern());
-                        newAcl.setBackend(acl.getBackend());
-                        newAcls.put(name, newAcl);
-                    }
-                    fe.setAcls(newAcls);
-                }
+                newFe.setAclBackend(fe.getAclBackend());
+                newFe.setAclPattern(fe.getAclPattern());
 
                 newFrontends.put(key, newFe);
             }
@@ -154,12 +168,12 @@ public class HaproxyApiController implements HaproxyApi {
 
 
         //backends
-        Map<String, Backend> newBackends = new HashMap<String, Backend> ();
+        Map<String, Backend> newBackends = new HashMap<String, Backend>();
         newConfig.put("backends", newBackends);
 
-        if(backends != null) {
+        if (backends != null) {
             Iterator<Map.Entry<String, Backend>> iter = backends.entrySet().iterator();
-            while(iter.hasNext()) {
+            while (iter.hasNext()) {
                 Map.Entry<String, Backend> e = iter.next();
                 String key = e.getKey();
                 Backend be = e.getValue();
@@ -169,10 +183,10 @@ public class HaproxyApiController implements HaproxyApi {
                 newBe.setMode(be.getMode());
                 Map<String, Server> servers = be.getServers();
 
-                if(servers != null) {
+                if (servers != null) {
                     Map<String, Server> newServers = new HashMap<String, Server>();
                     Iterator<Map.Entry<String, Server>> serverIter = servers.entrySet().iterator();
-                    while(serverIter.hasNext()) {
+                    while (serverIter.hasNext()) {
                         Map.Entry<String, Server> e2 = serverIter.next();
                         String name = e2.getKey();
                         Server server = e2.getValue();
