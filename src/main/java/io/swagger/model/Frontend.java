@@ -46,6 +46,13 @@ public class Frontend {
   @JsonProperty("acls")
   private Map<String, ACL> acls = null;
 
+  @JsonProperty("aclPattern")
+  private String aclPattern = null;
+
+  @JsonProperty("aclBackend")
+  private String aclBackend = null;
+
+
   public Frontend name(String name) {
     this.name = name;
     return this;
@@ -211,6 +218,27 @@ public class Frontend {
     return this;
   }
 
+
+  @ApiModelProperty(value = "")
+  public String getAclBackend() {
+    return aclBackend;
+  }
+
+  public void setAclBackend(String aclBackend) {
+    this.aclBackend = aclBackend;
+  }
+
+  @ApiModelProperty(value = "")
+  public String getAclPattern() {
+    return aclPattern;
+  }
+
+  public void setAclPattern(String aclPattern) {
+    this.aclPattern = aclPattern;
+  }
+
+
+
    /**
    * Get acls
    * @return acls
@@ -249,7 +277,7 @@ public class Frontend {
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, mode, bindPort, bindIp, defaultBackend, timeoutConnect, timeoutClient, timeoutServer, acls);
+    return Objects.hash(name, mode, bindPort, bindIp, defaultBackend, timeoutConnect, timeoutClient, timeoutServer);
   }
 
   @Override
@@ -265,6 +293,8 @@ public class Frontend {
     sb.append("    timeoutConnect: ").append(toIndentedString(timeoutConnect)).append("\n");
     sb.append("    timeoutClient: ").append(toIndentedString(timeoutClient)).append("\n");
     sb.append("    timeoutServer: ").append(toIndentedString(timeoutServer)).append("\n");
+    sb.append("    aclBackend: ").append(toIndentedString(aclBackend)).append("\n");
+    sb.append("    aclPattern: ").append(toIndentedString(aclPattern)).append("\n");
     sb.append("    acls: ").append(toIndentedString(acls)).append("\n");
     sb.append("}");
     return sb.toString();
