@@ -5,6 +5,7 @@
  */
 package io.swagger.api;
 
+import io.swagger.ConfigInvalidException;
 import io.swagger.annotations.*;
 import io.swagger.model.*;
 import org.springframework.http.ResponseEntity;
@@ -227,7 +228,7 @@ public interface ConfigApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.POST)
-    ResponseEntity<Frontend> newFrontend(@ApiParam(value = "The frontend to create." ,required=true )  @Valid @RequestBody Frontend frontend);
+    ResponseEntity<Frontend> newFrontend(@ApiParam(value = "The frontend to create." ,required=true )  @Valid @RequestBody Frontend frontend) throws ConfigInvalidException;
 
 
     @ApiOperation(value = "Add server config.", notes = "", response = Server.class, tags={  })
@@ -271,7 +272,7 @@ public interface ConfigApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    ResponseEntity<ACL> updateAcl(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,@ApiParam(value = "ID of acl to return",required=true ) @PathVariable("aclId") String aclId,@ApiParam(value = "The acl to update." ,required=true )  @Valid @RequestBody ACL body);
+    ResponseEntity<ACL> updateAcl(@ApiParam(value = "ID of frontend to return",required=true ) @PathVariable("frontendId") String frontendId,@ApiParam(value = "ID of acl to return",required=true ) @PathVariable("aclId") String aclId,@ApiParam(value = "The acl to update." ,required=true )  @Valid @RequestBody ACL body) ;
 
 
     @ApiOperation(value = "Update backend config.", notes = "", response = Backend.class, tags={  })

@@ -26,15 +26,11 @@ public class TempleteEngine {
 
     private static Logger logger = LoggerFactory.getLogger(TempleteEngine.class);
 
-//    @Value("${freemarker.template.path}")
-//    private String templatePath;
-//    @Value("${freemarker.temp.path}")
-//    private String tempPath;
-//    @Value("${freemarker.temp.filename}")
-//    private String tempFileName;
+    @Value("${freemarker.template.path}")
+    private String templatePath;
+    private String subffix;
 
 
-    private String templatePath = "template/temp/";
     private String tempPath     = "";
     private String tempFileName = "";
 
@@ -103,15 +99,7 @@ public class TempleteEngine {
 
         logger.debug("haproxy result => {}",stringBuffer.toString());
 
-        File tempDir = new File(tempPath);
-        if(!tempDir.isDirectory()){
-            tempDir.mkdirs();
-        }
-        File tempHaproxy = new File(tempPath  + tempFileName + ".temp");
-        if(!tempHaproxy.isFile()){
-            tempHaproxy.createNewFile();
-        }
-
+        File tempHaproxy = null;
         BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(tempHaproxy));
         bufferedOutputStream.write(stringBuffer.toString().getBytes());
         bufferedOutputStream.flush();
@@ -120,18 +108,9 @@ public class TempleteEngine {
 
     public void dataWrite(Config config) throws IOException {
 
-        File tempDir = new File(tempPath);
-        if(!tempDir.isDirectory()){
-            tempDir.mkdirs();
-        }
         File tempHaproxy = null;
         FileOutputStream fileOutputStream = null;
         ObjectOutput objectOutput = null;
-
-        tempHaproxy = new File(tempPath  + tempFileName + ".data");
-        if(!tempHaproxy.isFile()){
-            tempHaproxy.createNewFile();
-        }
 
         fileOutputStream = new FileOutputStream(tempHaproxy);
         objectOutput = new ObjectOutputStream(fileOutputStream);
@@ -143,7 +122,7 @@ public class TempleteEngine {
     }
 
     public Config dateReader() {
-        File tempHaproxy = new File(tempPath  + tempFileName + ".data");
+        File tempHaproxy = null;//;;new File(tempPath  + tempFileName + ".data");
         if(!tempHaproxy.isFile()){
             return new Config();
         }

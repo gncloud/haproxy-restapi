@@ -32,14 +32,10 @@ public class HaproxyRuntime {
 
     public boolean start(){
 
+        logger.debug("start..");
+        logger.debug("configFile : {}", haproxyConfigPath);
         try{
-
-
-
-
-
-
-            File tempFile = new File("");
+            File tempFile = null;//new File(tempPath + filename);
             File haproxyFile = new File(haproxyConfigPath);
 
             if(!haproxyFile.isFile()){
