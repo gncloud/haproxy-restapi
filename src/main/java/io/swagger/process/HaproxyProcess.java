@@ -15,11 +15,6 @@ public class HaproxyProcess {
 
     private static Logger logger = org.slf4j.LoggerFactory.getLogger(HaproxyProcess.class);
 
-    @Value("${freemarker.temp.path}")
-    private String tempPath;
-
-    @Value("${freemarker.temp.filename}")
-    private String filename;
 
     @Value("${app.home}")
     private String appHomePath;
@@ -38,10 +33,9 @@ public class HaproxyProcess {
     public boolean start(){
 
         logger.debug("start..");
-        logger.debug("tempFile : {}", tempPath + filename);
         logger.debug("configFile : {}", haproxyConfigPath);
         try{
-            File tempFile = new File(tempPath + filename);
+            File tempFile = null;//new File(tempPath + filename);
             File haproxyFile = new File(haproxyConfigPath);
 
             if(!haproxyFile.isFile()){

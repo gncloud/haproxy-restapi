@@ -1,6 +1,7 @@
 package io.swagger;
 
 import io.swagger.annotations.ApiParam;
+import io.swagger.api.ApiException;
 import io.swagger.api.ConfigApi;
 import io.swagger.freemarker.TempleteEngine;
 import io.swagger.model.*;
@@ -15,10 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-30T06:16:08.273Z")
@@ -27,6 +25,9 @@ import java.util.Map;
 public class HaproxyApiController implements ConfigApi {
 
     private static Logger logger = org.slf4j.LoggerFactory.getLogger(HaproxyApiController.class);
+
+    @Autowired
+    private ProxyHelper proxyHelper;
 
     @Autowired
     private TempleteEngine templeteEngine;
@@ -289,9 +290,29 @@ public class HaproxyApiController implements ConfigApi {
         return new ResponseEntity<Backend>(HttpStatus.OK);
     }
 
-    public ResponseEntity<Frontend> newFrontend(@ApiParam(value = "The frontend to create." ,required=true )  @Valid @RequestBody Frontend frontend) {
+    public ResponseEntity<Frontend> newFrontend(@ApiParam(value = "The frontend to create." ,required=true )  @Valid @RequestBody Frontend frontend) throws ConfigInvalidException {
         // do some magic!
-        return new ResponseEntity<Frontend>(HttpStatus.OK);
+        Config c = cloneConfig();
+        String name = frontend.getName();
+        if(name == null) {
+            throw new ResourceException(HttpStatus.BAD_REQUEST, "Name attribute is empty.");
+        }
+        Frontend oldFrontend = c.getFrontends().get(name);
+        if(oldFrontend != null) {
+            throw new ResourceException(HttpStatus.BAD_REQUEST, String.format("Frontend %s already exists.", name));
+        }
+
+        c.getFrontends().put(name, frontend);
+
+        Map m = new HashMap();
+        Map fes = new HashMap();
+        m.put("frontends", fes);
+        fes.put("a","1");
+        fes.put("b","2");
+        fes.put("c","3");
+        proxyHelper.applyConfig(m);
+
+        return new ResponseEntity<Frontend>(frontend, HttpStatus.OK);
     }
 
     public ResponseEntity<Server> newServer(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId,
@@ -327,8 +348,28 @@ public class HaproxyApiController implements ConfigApi {
         @ApiParam(value = "ID of acl to return",required=true ) @PathVariable("aclId") String aclId,
         @ApiParam(value = "The acl to update." ,required=true )  @Valid @RequestBody ACL body) {
         // do some magic!
-        return new ResponseEntity<ACL>(HttpStatus.OK);
+        Config c = cloneConfig();
+        Frontend fe = c.getFrontends().get(frontendId);
+        if(fe == null) {
+            throw new ResourceException(HttpStatus.BAD_REQUEST, String.format("Frontend %s is not found.", frontendId));
+        }
+
+        ACLs acls = fe.getAcls();
+
+        ACL acl = acls.get(aclId);
+        if(acl != null) {
+            acls.put(aclId, body);
+        } else {
+            //acl not found.
+//                return new ResponseEntity<ACL>(HttpStatus.NOT_FOUND);
+            throw new ResourceException(HttpStatus.BAD_REQUEST, String.format("ACL %s is not found.", aclId));
+        }
+
+//        proxyHelper.applyConfig(c);
+
+        return new ResponseEntity<ACL>(acl, HttpStatus.OK);
     }
+
 
     public ResponseEntity<Backend> updateBackend(@ApiParam(value = "ID of backend",required=true ) @PathVariable("backendId") String backendId,
         @ApiParam(value = "The backend to update." ,required=true )  @Valid @RequestBody Backend body) {
