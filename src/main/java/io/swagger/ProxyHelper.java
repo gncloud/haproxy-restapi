@@ -5,6 +5,7 @@ import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 
@@ -12,6 +13,9 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Logger;
 
 /**
@@ -35,6 +39,9 @@ public class ProxyHelper {
 
     private Process process;
 
+    private final ReadWriteLock lock = new ReentrantReadWriteLock(false);
+    private final Lock writeLock = lock.writeLock();
+
     public ProxyHelper() throws IOException {
         cfg = new Configuration(Configuration.VERSION_2_3_25);
 //        cfg.setDirectoryForTemplateLoading(new File("/where/you/store/templates"));
@@ -45,12 +52,11 @@ public class ProxyHelper {
         cfg.setObjectWrapper(new DefaultObjectWrapper(Configuration.VERSION_2_3_25));
     }
     public boolean applyConfig(Map c) throws ConfigInvalidException {
+        writeLock.lock();
 
         try {
-            Template temp = cfg.getTemplate(TEMPLATE_NAME);
-//            Writer out = new OutputStreamWriter(System.out);
-//            temp.process(c, out);
 
+            Template temp = cfg.getTemplate(TEMPLATE_NAME);
 
             //1. 임시 저장
             String tempFileName = Long.toString(random.nextLong());
@@ -59,7 +65,11 @@ public class ProxyHelper {
             temp.process(c, out);
 
             //2. validate
-            process = new ProcessBuilder(haproxyBinaryPath, "-c", "-f", tempFile.getPath()).inheritIO().start();
+            process = new ProcessBuilder(haproxyBinaryPath
+                                        , "-c"
+                                        , "-f"
+                                        , tempFile.getPath())
+                                        .inheritIO().start();
             process.waitFor();
             if(process.exitValue() != 0){
                 throw new Exception("haproxy.cfg invalidate");
@@ -70,14 +80,31 @@ public class ProxyHelper {
             FileCopyUtils.copy(tempFile, configFile);
 
 
-            //4. restart -sf
-            process = new ProcessBuilder(haproxyBinaryPath, "-d", "-f", haproxyConfigPath).inheritIO().start();
+            //4. PID정보 수집
+            String pid = "";
+            File pidFile = new File(pidFilePath);
+            if(pidFile.isFile()){
+                BufferedReader bufferedReader = new BufferedReader(new FileReader(pidFile));
+                String tmp = new String();
+                while( (tmp = bufferedReader.readLine()) != null){
+                    pid += tmp + " ";
+                }
+                bufferedReader.close();
+            }
+
+            //5. restart -sf
+            process = new ProcessBuilder(haproxyBinaryPath
+                    , "-f", haproxyConfigPath
+                    , "-p", pidFilePath
+                    , "-sf", pid)
+                    .inheritIO().start();
             logger.info("haproxy update ok");
+
 
         } catch (Exception e) {
             throw new ConfigInvalidException(e);
         }
-
+        writeLock.unlock();
         return true;
     }
 
