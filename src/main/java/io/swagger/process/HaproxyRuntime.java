@@ -1,5 +1,6 @@
 package io.swagger.process;
 
+import io.swagger.model.Config;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -11,10 +12,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Component
-public class HaproxyProcess {
+public class HaproxyRuntime {
 
-    private static Logger logger = org.slf4j.LoggerFactory.getLogger(HaproxyProcess.class);
-
+    private static Logger logger = org.slf4j.LoggerFactory.getLogger(HaproxyRuntime.class);
 
     @Value("${app.home}")
     private String appHomePath;
@@ -44,13 +44,7 @@ public class HaproxyProcess {
             FileCopyUtils.copy(tempFile, haproxyFile);
             List<String> argument = new LinkedList<>();
 
-            //argument.add("haproxy -f " + haproxyConfig + " -p pid.txt -sf $(cat pid.txt)");
-//            argument.add("/bin/bash");
-//            argument.add("docker ps");
-            argument.add("docker");
-            argument.add("ps");
 
-//            ProcessBuilder processBuilder = new ProcessBuilder(argument);
             String pidFilePath = appHomePath+"/haproxy.pid";
             ProcessBuilder processBuilder = new ProcessBuilder(haproxyBinPath, "-p", pidFilePath, "-sf", "$(cat "+pidFilePath+")");
             processBuilder.inheritIO();
@@ -81,6 +75,11 @@ public class HaproxyProcess {
 
     public boolean stop() {
         haproxyProcess.destroy();
+        return true;
+    }
+
+    public boolean validCheck(Config config){
+        //TODO 유효성 검사
         return true;
     }
 }

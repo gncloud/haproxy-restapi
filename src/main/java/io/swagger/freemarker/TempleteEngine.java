@@ -1,17 +1,23 @@
 package io.swagger.freemarker;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.core.ParseException;
 import freemarker.template.*;
 import io.swagger.model.Config;
+import io.swagger.model.Frontend;
+import io.swagger.model.Global;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -23,7 +29,13 @@ public class TempleteEngine {
     private String templatePath;
     private String subffix;
 
-    public synchronized String getHaproxy(String ftlFile, Map<String, String> data){
+
+    private String templatePath = "template/temp/";
+    private String tempPath     = "";
+    private String tempFileName = "";
+
+
+    public synchronized String renderTemplate(Config regiConfig){
 
         Configuration config = null;
         Writer writer = null;
@@ -31,21 +43,36 @@ public class TempleteEngine {
         try {
             config = new Configuration(Configuration.VERSION_2_3_23);
             config.setObjectWrapper(Configuration.getDefaultObjectWrapper(Configuration.VERSION_2_3_23));
-            FileTemplateLoader fileTemplateLoader = new FileTemplateLoader(new File(templatePath));
+            FileTemplateLoader fileTemplateLoader = new FileTemplateLoader(new File("/Users/joonwookim/Projects/haproxy-restapi/src/main/resources/template/"));
 
             TemplateLoader[] templateLoader = new TemplateLoader[]{fileTemplateLoader};
             MultiTemplateLoader multiTemplateLoader = new MultiTemplateLoader(templateLoader);
             config.setTemplateLoader(multiTemplateLoader);
 
-            Template template = config.getTemplate(ftlFile + subffix);
+            Template template = config.getTemplate("test.cfg.ftl");
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            Map<String, Object> renderData = new HashMap<>();
+            renderData.put("global", objectMapper.convertValue(regiConfig.getGlobal(),Map.class));
+            renderData.put("defaults", objectMapper.convertValue(regiConfig.getDefaults(),Map.class));
+
+            Iterator<Map.Entry<String,Frontend>> iterator = regiConfig.getFrontends().entrySet().iterator();
+            Map<String, Object> typeConvertMap = new HashMap<>();
+            while (iterator.hasNext()){
+                Map.Entry<String, Frontend> entry = iterator.next();
+                typeConvertMap.put(entry.getKey(), objectMapper.convertValue(entry.getValue(),Map.class));
+            }
+
+            renderData.put("frontends", typeConvertMap);
+
+            renderData.put("backend", objectMapper.convertValue(regiConfig.getBackends(),Map.class));
 
             writer = new StringWriter();
-            template.process(data, writer);
+            template.process(renderData, writer);
             stringBuffer.append(writer.toString());
 
             writer.flush();
             writer.close();
-
 
         } catch (TemplateException e) {
             logger.debug("TemplateException =>" + e.getMessage());
