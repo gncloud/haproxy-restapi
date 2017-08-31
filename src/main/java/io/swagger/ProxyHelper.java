@@ -5,18 +5,15 @@ import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.logging.Logger;
 
 /**
  * Created by swsong on 17. 8. 30..
@@ -63,6 +60,7 @@ public class ProxyHelper {
             File tempFile = new File(tempFilePath, tempFileName);
             Writer out = new OutputStreamWriter(new FileOutputStream(tempFile));
             temp.process(c, out);
+            out.close();
 
             //2. validate
             process = new ProcessBuilder(haproxyBinaryPath
