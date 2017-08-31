@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -25,47 +26,33 @@ public class HaproxyApiController implements HaproxyApi {
 
     private static Logger logger = org.slf4j.LoggerFactory.getLogger(HaproxyApiController.class);
 
+    private Map<String, Object> config;
+    private ReentrantReadWriteLock lock;
 
-    Map<String, Object> config;
-    ReentrantReadWriteLock lock;
-
-    @Autowired
-    private TemplateHelper templateHelper;
     @Autowired
     private ConfigFileHelper configFileHelper;
+    @Autowired
+    private ProxyHelper proxyHelper;
 
     public HaproxyApiController() {
 
-        config = configFileHelper.loadObjectFile();
+        try {
+            config = configFileHelper.loadObjectFile();
+        } catch (Exception e) {
+
+        }
         lock = new ReentrantReadWriteLock();
     }
 
-    private void loadConfig() {
-
-    }
-
-    private void saveConfig() {
-
-    }
-
     private void applyConfig(Map<String, Object> newConfig) {
-
-        String configStr = templateHelper.format(newConfig);
-
-        logger.info("configStr : \n{}", configStr);
-
-        //1. 임시 저장
-        File tempFile = configFileHelper.saveTempFile(configStr);
-
-        //2. validation.
-
-
-        //3. overwrite
-
-
-        //4. restart haproxy
-
-
+        //1. 적용.
+        proxyHelper.applyConfig(newConfig);
+        //2. 메모리 객체 덤프
+        try {
+            File tempFile = configFileHelper.saveObjectFile(newConfig);
+        } catch (IOException e) {
+            logger.error("Cannot save memory file.", e);
+        }
     }
 
     @Override

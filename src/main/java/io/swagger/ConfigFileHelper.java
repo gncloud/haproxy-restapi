@@ -1,11 +1,11 @@
 package io.swagger;
 
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * Created by swsong on 17. 8. 31..
@@ -14,58 +14,40 @@ import java.util.Random;
 public class ConfigFileHelper {
     private static Logger logger = org.slf4j.LoggerFactory.getLogger(ConfigFileHelper.class);
 
-    private Random random = new Random(System.nanoTime());
-    private String tempFilePath = System.getProperty("java.io.tmpdir");
-
-
-    private String objectFilePath = "";
-
+    @Value("${haproxy.config.bin.path}")
+    private String configBinPath;
 
     public ConfigFileHelper() {
-
     }
 
-    public void saveObjectFile(Map<String, Object> config) throws IOException {
+    public File saveObjectFile(Map<String, Object> config) throws IOException {
         try {
-//            OutputStream os = new ObjectOutputStream();
-            //TODO
-        } catch(Exception e) {
-            logger.error("", e);
+            File file = new File(configBinPath);
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
+            oos.writeObject(config);
+            oos.flush();
+            oos.close();
+            logger.info("Saved object file = {}", file.getAbsolutePath(), file.length());
+            return file;
+        } catch (Exception e) {
+            logger.error("Error when save config bin file.", e);
             throw e;
         }
     }
 
-    public Map<String, Object> loadObjectFile() {
+    public Map<String, Object> loadObjectFile() throws Exception {
         try {
-//            InputStream os = new ObjectInputStream();
-            //TODO
-        } catch(Exception e) {
-            logger.error("", e);
+            File file = new File(configBinPath);
+            if(!file.exists()) {
+                return null;
+            }
+            ObjectInputStream is = new ObjectInputStream(new FileInputStream(configBinPath));
+            Map<String, Object> config = (Map<String, Object>) is.readObject();
+            return config;
+        } catch (Exception e) {
+            logger.error("Error when save config bin file.", e);
             throw e;
         }
-
-
-        return null;
     }
-
-
-
-
-    public File saveTempFile(String configStr) {
-        try {
-            String tempFileName = Long.toString(random.nextLong());
-            File tempFile = new File(tempFilePath, tempFileName);
-            Writer out = new OutputStreamWriter(new FileOutputStream(tempFile));
-            out.write(configStr);
-            out.close();
-            return tempFile;
-        } catch(Exception e) {
-            logger.error("", e);
-        }
-
-        return null;
-    }
-
-
 
 }

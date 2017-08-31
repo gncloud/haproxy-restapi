@@ -39,30 +39,37 @@ public class ProxyHelper {
 
     private Process process;
 
-    private final ReadWriteLock lock = new ReentrantReadWriteLock(false);
-    private final Lock writeLock = lock.writeLock();
+    private final ReadWriteLock lock;
+    private final Lock writeLock;
 
     public ProxyHelper() throws IOException {
         cfg = new Configuration(Configuration.VERSION_2_3_25);
-//        cfg.setDirectoryForTemplateLoading(new File("/where/you/store/templates"));
         cfg.setClassForTemplateLoading(this.getClass(), "/templates/");
         cfg.setDefaultEncoding("UTF-8");
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         cfg.setLogTemplateExceptions(false);
         cfg.setObjectWrapper(new DefaultObjectWrapper(Configuration.VERSION_2_3_25));
+
+        lock = new ReentrantReadWriteLock();
+        writeLock = lock.writeLock();
     }
-    public boolean applyConfig(Map c) throws ConfigInvalidException {
+    public String applyConfig(Map config) throws ConfigInvalidException {
         writeLock.lock();
 
         try {
-
-            Template temp = cfg.getTemplate(TEMPLATE_NAME);
-
             //1. 임시 저장
+            StringWriter writer = new StringWriter();
+            Template temp = cfg.getTemplate(TEMPLATE_NAME);
+            temp.process(config, writer);
+            String configString = writer.toString();
+            logger.info("config : \n{}", configString);
+
             String tempFileName = Long.toString(random.nextLong());
             File tempFile = new File(tempFilePath, tempFileName);
-            Writer out = new OutputStreamWriter(new FileOutputStream(tempFile));
-            temp.process(c, out);
+            Writer fileWriter = new OutputStreamWriter(new FileOutputStream(tempFile));
+            fileWriter.write(configString);
+            fileWriter.close();
+
 
             //2. validate
             process = new ProcessBuilder(haproxyBinaryPath
@@ -74,6 +81,7 @@ public class ProxyHelper {
             if(process.exitValue() != 0){
                 throw new Exception("haproxy.cfg invalidate");
             }
+
 
             //3. 덮어쓰기.
             File configFile = new File(haproxyConfigPath);
@@ -98,14 +106,15 @@ public class ProxyHelper {
                     , "-p", pidFilePath
                     , "-sf", pid)
                     .inheritIO().start();
-            logger.info("haproxy update ok");
+            logger.info("haproxy update ok!. prevPid[{}]", pid);
 
+            return configString;
 
         } catch (Exception e) {
             throw new ConfigInvalidException(e);
+        } finally {
+            writeLock.unlock();
         }
-        writeLock.unlock();
-        return true;
     }
 
 }

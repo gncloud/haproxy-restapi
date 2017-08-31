@@ -1,5 +1,4 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.freemarker.TempleteEngine;
 import io.swagger.model.*;
 import org.junit.Test;
 
@@ -11,9 +10,6 @@ public class RestapiTest {
 
     @Test
     public void api(){
-
-
-        TempleteEngine templeteEngine = new TempleteEngine();
 
         Config config = new Config();
 
@@ -66,11 +62,6 @@ public class RestapiTest {
 
         System.out.println("config data: => ");
         System.out.print(config);
-        String result = templeteEngine.renderTemplate(config);
-        System.out.println(result);
-
-
-
 
     }
 
