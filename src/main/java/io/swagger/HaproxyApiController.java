@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.api.ConfigApi;
 import io.swagger.freemarker.TempleteEngine;
 import io.swagger.model.*;
-import io.swagger.process.HaproxyProcess;
+import io.swagger.process.HaproxyRuntime;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,7 +32,7 @@ public class HaproxyApiController implements ConfigApi {
     private TempleteEngine templeteEngine;
 
     @Autowired
-    private HaproxyProcess haproxyProcess;
+    private HaproxyRuntime HaproxyRuntime;
 
 
     private static Config config = new Config();

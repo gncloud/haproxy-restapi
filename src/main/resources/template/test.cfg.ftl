@@ -1,8 +1,5 @@
 <#--<#compress>-->
 
-#haproxy.cfg
-#========================================================================================================================
-
 global
 
     daemon
@@ -55,7 +52,7 @@ defaults
     </#list>
 </#if>
 
-------------------------------------------------------------
+#ex)------------------------------------------------------------
 #frontend web80
 #       bind *:80
 #       acl acl1 hdr_beg(host) www.
@@ -66,20 +63,16 @@ defaults
 
 #backend back1
 #       server name1 127.0.0.1:9999 check
-------------------------------------------------------------
+#------------------------------------------------------------
 
 
 <#list frontends?keys as fkey>
+    <#assign frontend = frontends[fkey]>
 frontend ${fkey}
-<#if frontends[fkey]?exists>
-    <#list frontends[fkey]?keys as finKey>
-    ${finKey}
-    </#list>
-</#if>
-
-
-
+    bind ${frontend.bindIp?if_exists}:${frontend.bindPort?if_exists}
 </#list>
 
-#========================================================================================================================
+
+
+
 <#--</#compress>-->

@@ -19,8 +19,6 @@ public class RestapiTest {
 
 //      global
         Global global = config.getGlobal();
-        global.setMode("");
-        global.setName(null);
         global.setMaxconn(1000l);
         List<String> getc = new ArrayList<String>();
         getc.add("global etc 1");
@@ -62,7 +60,7 @@ public class RestapiTest {
         acLs.put("acl2", acl2);
         frontend.setAcls(acLs);
 
-        config.getFrontends().put("web80", null);
+        config.getFrontends().put("web80", frontend);
 
 
 
