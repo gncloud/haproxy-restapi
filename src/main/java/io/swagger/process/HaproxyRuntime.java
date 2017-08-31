@@ -11,12 +11,12 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-@Component
+
 public class HaproxyRuntime {
 
     private static Logger logger = org.slf4j.LoggerFactory.getLogger(HaproxyRuntime.class);
 
-    @Value("${app.home}")
+
     private String appHomePath;
 
     @Value("${haproxy.config.path}")
@@ -78,8 +78,10 @@ public class HaproxyRuntime {
         return true;
     }
 
-    public boolean validCheck(Config config){
-        //TODO 유효성 검사
-        return true;
+    public int validCheck(File configFile)throws IOException{
+        String configPath = configFile.getPath();
+        ProcessBuilder processBuilder = new ProcessBuilder("haproxyBinPath -c -f " + configFile.getPath());
+        processBuilder.inheritIO();
+        return processBuilder.start().exitValue();
     }
 }
