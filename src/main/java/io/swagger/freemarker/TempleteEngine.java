@@ -6,6 +6,7 @@ import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.core.ParseException;
 import freemarker.template.*;
+import io.swagger.model.ACLs;
 import io.swagger.model.Config;
 import io.swagger.model.Frontend;
 import io.swagger.model.Global;
@@ -57,12 +58,18 @@ public class TempleteEngine {
 
             Iterator<Map.Entry<String,Frontend>> iterator = regiConfig.getFrontends().entrySet().iterator();
             Map<String, Object> typeConvertMap = new HashMap<>();
+
+            Map<String, Object> acls = new HashMap<>();
             while (iterator.hasNext()){
                 Map.Entry<String, Frontend> entry = iterator.next();
+                if(entry.getValue() != null && entry.getValue().getAcls() != null && !entry.getValue().getAcls().isEmpty()){
+                    acls.put(entry.getKey(), objectMapper.convertValue(entry.getValue().getAcls(), Map.class));
+                }
                 typeConvertMap.put(entry.getKey(), objectMapper.convertValue(entry.getValue(),Map.class));
             }
 
             renderData.put("frontends", typeConvertMap);
+            renderData.put("acls", acls);
 
             renderData.put("backend", objectMapper.convertValue(regiConfig.getBackends(),Map.class));
 

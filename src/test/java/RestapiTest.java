@@ -60,7 +60,7 @@ public class RestapiTest {
         acLs.put("acl2", acl2);
         frontend.setAcls(acLs);
 
-        config.getFrontends().put("web80", null);
+        config.getFrontends().put("web80", frontend);
 
 
 

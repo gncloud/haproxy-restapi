@@ -1,6 +1,7 @@
 package io.swagger;
 
 import io.swagger.model.*;
+import io.swagger.process.HaproxyRuntime;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
