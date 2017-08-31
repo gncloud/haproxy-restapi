@@ -13,6 +13,9 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Logger;
 
 /**
@@ -29,13 +32,15 @@ public class ProxyHelper {
     private String tempFilePath = System.getProperty("java.io.tmpdir");
     private String TEMPLATE_NAME = "haproxy.cfg.ftl";
 
-    @Value("${}")
     private String appHome           = "/var/lib/haproxy-restapi";
     private String haproxyBinaryPath = appHome + "/bin/haproxy";
     private String haproxyConfigPath = appHome + "/conf/haproxy.cfg";
     private String pidFilePath       = appHome + "/bin/haproxy.pid";
 
     private Process process;
+
+    private final ReadWriteLock lock = new ReentrantReadWriteLock(false);
+    private final Lock writeLock = lock.writeLock();
 
     public ProxyHelper() throws IOException {
         cfg = new Configuration(Configuration.VERSION_2_3_25);
@@ -47,8 +52,10 @@ public class ProxyHelper {
         cfg.setObjectWrapper(new DefaultObjectWrapper(Configuration.VERSION_2_3_25));
     }
     public boolean applyConfig(Map c) throws ConfigInvalidException {
+        writeLock.lock();
 
         try {
+
             Template temp = cfg.getTemplate(TEMPLATE_NAME);
 
             //1. 임시 저장
@@ -93,10 +100,11 @@ public class ProxyHelper {
                     .inheritIO().start();
             logger.info("haproxy update ok");
 
+
         } catch (Exception e) {
             throw new ConfigInvalidException(e);
         }
-
+        writeLock.unlock();
         return true;
     }
 
