@@ -21,7 +21,9 @@ public class ProxyHelper {
 
     private Configuration cfg;
     private Random random = new Random(System.nanoTime());
-    private String tempFilePath = System.getProperty("tmp.dir");
+    private String tempFilePath = System.getProperty("java.io.tmpdir");
+
+    private String TEMPLATE_NAME = "haproxy.cfg.ftl";
     public ProxyHelper() throws IOException {
         cfg = new Configuration(Configuration.VERSION_2_3_25);
 //        cfg.setDirectoryForTemplateLoading(new File("/where/you/store/templates"));
@@ -36,7 +38,7 @@ public class ProxyHelper {
 
         try {
 
-            Template temp = cfg.getTemplate("haproxy.cfg.ftl");
+            Template temp = cfg.getTemplate(TEMPLATE_NAME);
             Writer out = new OutputStreamWriter(System.out);
             temp.process(c, out);
 
