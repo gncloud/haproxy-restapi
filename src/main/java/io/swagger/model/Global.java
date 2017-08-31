@@ -1,21 +1,17 @@
 package io.swagger.model;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.ArrayList;
+
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import java.util.Objects;
 
 /**
  * Global
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-30T06:16:08.273Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-29T05:51:56.514Z")
 
-public class Global   {
+public class Global {
   @JsonProperty("name")
   private String name = null;
 
@@ -26,7 +22,15 @@ public class Global   {
   private Long maxconn = null;
 
   @JsonProperty("etc")
-  private List<String> etc = null;
+  private List<String> etc;
+
+  public List<String> getEtc() {
+    return etc;
+  }
+
+  public void setEtc(List<String> etc) {
+    this.etc = etc;
+  }
 
   public Global name(String name) {
     this.name = name;
@@ -88,34 +92,6 @@ public class Global   {
     this.maxconn = maxconn;
   }
 
-  public Global etc(List<String> etc) {
-    this.etc = etc;
-    return this;
-  }
-
-  public Global addEtcItem(String etcItem) {
-    if (this.etc == null) {
-      this.etc = new ArrayList<String>();
-    }
-    this.etc.add(etcItem);
-    return this;
-  }
-
-   /**
-   * Get etc
-   * @return etc
-  **/
-  @ApiModelProperty(value = "")
-
-
-  public List<String> getEtc() {
-    return etc;
-  }
-
-  public void setEtc(List<String> etc) {
-    this.etc = etc;
-  }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -129,23 +105,22 @@ public class Global   {
     return Objects.equals(this.name, global.name) &&
         Objects.equals(this.mode, global.mode) &&
         Objects.equals(this.maxconn, global.maxconn) &&
-        Objects.equals(this.etc, global.etc);
+        super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, mode, maxconn, etc);
+    return Objects.hash(name, mode, maxconn, super.hashCode());
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Global {\n");
-    
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    maxconn: ").append(toIndentedString(maxconn)).append("\n");
-    sb.append("    etc: ").append(toIndentedString(etc)).append("\n");
     sb.append("}");
     return sb.toString();
   }
