@@ -30,7 +30,6 @@ public class TempleteEngine {
     private String subffix;
 
 
-    private String templatePath = "template/temp/";
     private String tempPath     = "";
     private String tempFileName = "";
 
