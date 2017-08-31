@@ -1,5 +1,6 @@
 package io.swagger.model;
 
+import java.util.Map;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -24,10 +25,7 @@ public class Backend   {
   private String mode = null;
 
   @JsonProperty("servers")
-  private Servers servers = null;
-
-  @JsonProperty("etc")
-  private List<String> etc = null;
+  private Map<String, Server> servers = null;
 
   public Backend name(String name) {
     this.name = name;
@@ -69,7 +67,7 @@ public class Backend   {
     this.mode = mode;
   }
 
-  public Backend servers(Servers servers) {
+  public Backend servers(Map<String, Server> servers) {
     this.servers = servers;
     return this;
   }
@@ -82,40 +80,12 @@ public class Backend   {
 
   @Valid
 
-  public Servers getServers() {
+  public Map<String, Server> getServers() {
     return servers;
   }
 
-  public void setServers(Servers servers) {
+  public void setServers(Map<String, Server> servers) {
     this.servers = servers;
-  }
-
-  public Backend etc(List<String> etc) {
-    this.etc = etc;
-    return this;
-  }
-
-  public Backend addEtcItem(String etcItem) {
-    if (this.etc == null) {
-      this.etc = new ArrayList<String>();
-    }
-    this.etc.add(etcItem);
-    return this;
-  }
-
-   /**
-   * Get etc
-   * @return etc
-  **/
-  @ApiModelProperty(value = "")
-
-
-  public List<String> getEtc() {
-    return etc;
-  }
-
-  public void setEtc(List<String> etc) {
-    this.etc = etc;
   }
 
 
@@ -130,24 +100,21 @@ public class Backend   {
     Backend backend = (Backend) o;
     return Objects.equals(this.name, backend.name) &&
         Objects.equals(this.mode, backend.mode) &&
-        Objects.equals(this.servers, backend.servers) &&
-        Objects.equals(this.etc, backend.etc);
+        Objects.equals(this.servers, backend.servers);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, mode, servers, etc);
+    return Objects.hash(name, mode, servers);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Backend {\n");
-    
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    servers: ").append(toIndentedString(servers)).append("\n");
-    sb.append("    etc: ").append(toIndentedString(etc)).append("\n");
     sb.append("}");
     return sb.toString();
   }

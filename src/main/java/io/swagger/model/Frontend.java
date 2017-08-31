@@ -1,5 +1,6 @@
 package io.swagger.model;
 
+import java.util.Map;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -17,7 +18,7 @@ import javax.validation.constraints.*;
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-30T06:16:08.273Z")
 
-public class Frontend   {
+public class Frontend {
   @JsonProperty("name")
   private String name = null;
 
@@ -43,16 +44,7 @@ public class Frontend   {
   private String timeoutServer = null;
 
   @JsonProperty("acls")
-  private ACLs acls = null;
-
-  @JsonProperty("httpSpikeLimit")
-  private SpikeLimit httpSpikeLimit = null;
-
-  @JsonProperty("tcpSpikeLimit")
-  private SpikeLimit tcpSpikeLimit = null;
-
-  @JsonProperty("etc")
-  private List<String> etc = null;
+  private Map<String, ACL> acls = null;
 
   public Frontend name(String name) {
     this.name = name;
@@ -227,84 +219,13 @@ public class Frontend   {
 
   @Valid
 
-  public ACLs getAcls() {
+  public Map<String, ACL> getAcls() {
     return acls;
   }
 
-  public void setAcls(ACLs acls) {
+  public void setAcls(Map<String, ACL> acls) {
     this.acls = acls;
   }
-
-  public Frontend httpSpikeLimit(SpikeLimit httpSpikeLimit) {
-    this.httpSpikeLimit = httpSpikeLimit;
-    return this;
-  }
-
-   /**
-   * Get httpSpikeLimit
-   * @return httpSpikeLimit
-  **/
-  @ApiModelProperty(value = "")
-
-  @Valid
-
-  public SpikeLimit getHttpSpikeLimit() {
-    return httpSpikeLimit;
-  }
-
-  public void setHttpSpikeLimit(SpikeLimit httpSpikeLimit) {
-    this.httpSpikeLimit = httpSpikeLimit;
-  }
-
-  public Frontend tcpSpikeLimit(SpikeLimit tcpSpikeLimit) {
-    this.tcpSpikeLimit = tcpSpikeLimit;
-    return this;
-  }
-
-   /**
-   * Get tcpSpikeLimit
-   * @return tcpSpikeLimit
-  **/
-  @ApiModelProperty(value = "")
-
-  @Valid
-
-  public SpikeLimit getTcpSpikeLimit() {
-    return tcpSpikeLimit;
-  }
-
-  public void setTcpSpikeLimit(SpikeLimit tcpSpikeLimit) {
-    this.tcpSpikeLimit = tcpSpikeLimit;
-  }
-
-  public Frontend etc(List<String> etc) {
-    this.etc = etc;
-    return this;
-  }
-
-  public Frontend addEtcItem(String etcItem) {
-    if (this.etc == null) {
-      this.etc = new ArrayList<String>();
-    }
-    this.etc.add(etcItem);
-    return this;
-  }
-
-   /**
-   * Get etc
-   * @return etc
-  **/
-  @ApiModelProperty(value = "")
-
-
-  public List<String> getEtc() {
-    return etc;
-  }
-
-  public void setEtc(List<String> etc) {
-    this.etc = etc;
-  }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -323,15 +244,12 @@ public class Frontend   {
         Objects.equals(this.timeoutConnect, frontend.timeoutConnect) &&
         Objects.equals(this.timeoutClient, frontend.timeoutClient) &&
         Objects.equals(this.timeoutServer, frontend.timeoutServer) &&
-        Objects.equals(this.acls, frontend.acls) &&
-        Objects.equals(this.httpSpikeLimit, frontend.httpSpikeLimit) &&
-        Objects.equals(this.tcpSpikeLimit, frontend.tcpSpikeLimit) &&
-        Objects.equals(this.etc, frontend.etc);
+        Objects.equals(this.acls, frontend.acls);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, mode, bindPort, bindIp, defaultBackend, timeoutConnect, timeoutClient, timeoutServer, acls, httpSpikeLimit, tcpSpikeLimit, etc);
+    return Objects.hash(name, mode, bindPort, bindIp, defaultBackend, timeoutConnect, timeoutClient, timeoutServer, acls);
   }
 
   @Override
@@ -348,9 +266,6 @@ public class Frontend   {
     sb.append("    timeoutClient: ").append(toIndentedString(timeoutClient)).append("\n");
     sb.append("    timeoutServer: ").append(toIndentedString(timeoutServer)).append("\n");
     sb.append("    acls: ").append(toIndentedString(acls)).append("\n");
-    sb.append("    httpSpikeLimit: ").append(toIndentedString(httpSpikeLimit)).append("\n");
-    sb.append("    tcpSpikeLimit: ").append(toIndentedString(tcpSpikeLimit)).append("\n");
-    sb.append("    etc: ").append(toIndentedString(etc)).append("\n");
     sb.append("}");
     return sb.toString();
   }
