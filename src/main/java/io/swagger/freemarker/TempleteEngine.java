@@ -26,7 +26,7 @@ public class TempleteEngine {
 
     private static Logger logger = LoggerFactory.getLogger(TempleteEngine.class);
 
-    @Value("${freemarker.template.path}")
+//    @Value("${freemarker.template.path}")
     private String templatePath;
     private String subffix;
 

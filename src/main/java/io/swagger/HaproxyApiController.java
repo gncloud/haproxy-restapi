@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.locks.ReadWriteLock;
 
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-30T06:16:08.273Z")
@@ -29,11 +30,11 @@ public class HaproxyApiController implements ConfigApi {
     @Autowired
     private ProxyHelper proxyHelper;
 
-    @Autowired
-    private TempleteEngine templeteEngine;
-
-    @Autowired
-    private HaproxyRuntime HaproxyRuntime;
+//    @Autowired
+//    private TempleteEngine templeteEngine;
+//
+//    @Autowired
+//    private HaproxyRuntime HaproxyRuntime;
 
 
     private static Config config = new Config();
@@ -287,22 +288,30 @@ public class HaproxyApiController implements ConfigApi {
 
     public ResponseEntity<Backend> newBackend(@ApiParam(value = "The backend to create." ,required=true )  @Valid @RequestBody Backend backend) {
         // do some magic!
+
+
+
+
+
+
+
+
         return new ResponseEntity<Backend>(HttpStatus.OK);
     }
 
     public ResponseEntity<Frontend> newFrontend(@ApiParam(value = "The frontend to create." ,required=true )  @Valid @RequestBody Frontend frontend) throws ConfigInvalidException {
         // do some magic!
         Config c = cloneConfig();
-        String name = frontend.getName();
-        if(name == null) {
-            throw new ResourceException(HttpStatus.BAD_REQUEST, "Name attribute is empty.");
-        }
-        Frontend oldFrontend = c.getFrontends().get(name);
-        if(oldFrontend != null) {
-            throw new ResourceException(HttpStatus.BAD_REQUEST, String.format("Frontend %s already exists.", name));
-        }
+//        String name = frontend.getName();
+//        if(name == null) {
+//            throw new ResourceException(HttpStatus.BAD_REQUEST, "Name attribute is empty.");
+//        }
+//        Frontend oldFrontend = c.getFrontends().get(name);
+//        if(oldFrontend != null) {
+//            throw new ResourceException(HttpStatus.BAD_REQUEST, String.format("Frontend %s already exists.", name));
+//        }
 
-        c.getFrontends().put(name, frontend);
+//        c.getFrontends().put(name, frontend);
 
         Map m = new HashMap();
         Map fes = new HashMap();
@@ -329,17 +338,17 @@ public class HaproxyApiController implements ConfigApi {
     public ResponseEntity<Global> setGlobal(@ApiParam(value = "The global to set." ,required=true )  @Valid @RequestBody Global global) {
         // do some magic!
 
-        config = config.global(global);
-
-        try {
-            templeteEngine.dataWrite(this.config);
-        } catch (IOException e) {
-
-        }
-        Config config1 = templeteEngine.dateReader();
-
-
-        System.out.println(config1);
+//        config = config.global(global);
+//
+//        try {
+//            templeteEngine.dataWrite(this.config);
+//        } catch (IOException e) {
+//
+//        }
+//        Config config1 = templeteEngine.dateReader();
+//
+//
+//        System.out.println(config1);
 
         return new ResponseEntity<Global>(global, HttpStatus.OK);
     }
