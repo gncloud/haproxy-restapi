@@ -29,7 +29,7 @@ public interface HaproxyApi {
             produces = { "application/json" },
             method = RequestMethod.DELETE)
     //instance 고유아이디와 backend 정보만 주면.
-    ResponseEntity<Map<String, Object>> deleteService();
+    ResponseEntity<Map<String, Object>> deleteService(String id);
 
 
 
