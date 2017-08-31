@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.api.ConfigApi;
 import io.swagger.freemarker.TempleteEngine;
 import io.swagger.model.*;
-import io.swagger.process.HaproxyRuntime;
+import io.swagger.process.HaproxyProcess;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-30T06:16:08.273Z")
@@ -26,8 +31,8 @@ public class HaproxyApiController implements ConfigApi {
     @Autowired
     private TempleteEngine templeteEngine;
 
-//    @Autowired
-//    private HaproxyRuntime haproxyRuntime;
+    @Autowired
+    private HaproxyProcess haproxyProcess;
 
 
     private static Config config = new Config();
@@ -37,6 +42,150 @@ public class HaproxyApiController implements ConfigApi {
         config = new Config();
     }
 
+    private Config cloneConfig() {
+        Config c = new Config();
+        Global global = config.getGlobal();
+        Defaults defaults = config.getDefaults();
+        Frontends frontends = config.getFrontends();
+        Backends backends = config.getBackends();
+
+        //global
+        Global newGlobal = new Global();
+
+        newGlobal.setMaxconn(global.getMaxconn());
+        newGlobal.setEtc(cloneList(global.getEtc()));
+        c.setGlobal(newGlobal);
+
+        //defaults
+        Defaults newDefaults = new Defaults();
+        newDefaults.setMode(defaults.getMode());
+        newDefaults.setTimeoutClient(defaults.getTimeoutClient());
+        newDefaults.setTimeoutConnect(defaults.getTimeoutConnect());
+        newDefaults.setTimeoutServer(defaults.getTimeoutServer());
+        newDefaults.setEtc(cloneList(defaults.getEtc()));
+        c.setDefaults(newDefaults);
+
+        //frontends
+        Frontends newFrontends = new Frontends();
+        c.setFrontends(newFrontends);
+        if(frontends != null) {
+            Iterator<Map.Entry<String, Frontend>> iter = frontends.entrySet().iterator();
+            while(iter.hasNext()) {
+                Map.Entry<String, Frontend> e = iter.next();
+                String key = e.getKey();
+                Frontend fe = e.getValue();
+                //clone fe
+                Frontend newFe = new Frontend();
+                newFe.setName(fe.getName());
+                newFe.setMode(fe.getMode());
+                newFe.setBindIp(fe.getBindIp());
+                newFe.setBindPort(fe.getBindPort());
+                newFe.setTimeoutClient(fe.getTimeoutClient());
+                newFe.setTimeoutConnect(fe.getTimeoutConnect());
+                newFe.setTimeoutServer(fe.getTimeoutServer());
+                newFe.setDefaultBackend(fe.getDefaultBackend());
+
+                ACLs acls = fe.getAcls();
+                SpikeLimit httpSpikeLimit = fe.getHttpSpikeLimit();
+                SpikeLimit tcpSpikeLimit = fe.getTcpSpikeLimit();
+
+                if(acls != null) {
+                    ACLs newAcls = new ACLs();
+
+                    Iterator<Map.Entry<String, ACL>> aclIter = acls.entrySet().iterator();
+                    while(aclIter.hasNext()) {
+                        Map.Entry<String, ACL> e2 = aclIter.next();
+                        String name = e2.getKey();
+                        ACL acl = e2.getValue();
+                        ACL newAcl = new ACL();
+                        newAcl.setName(acl.getName());
+                        newAcl.setPattern(acl.getPattern());
+                        newAcl.setBackend(acl.getBackend());
+                        newAcls.put(name, newAcl);
+                    }
+                    fe.setAcls(newAcls);
+                }
+
+                if(httpSpikeLimit != null) {
+                    SpikeLimit newHttpSpikeLimit = new SpikeLimit();
+                    newHttpSpikeLimit.setExpiryTime(httpSpikeLimit.getExpiryTime());
+                    newHttpSpikeLimit.setSampleTime(httpSpikeLimit.getSampleTime());
+                    newHttpSpikeLimit.setRate(httpSpikeLimit.getRate());
+                    fe.setHttpSpikeLimit(newHttpSpikeLimit);
+                }
+
+                if(tcpSpikeLimit != null) {
+                    SpikeLimit newTcpSpikeLimit = new SpikeLimit();
+                    newTcpSpikeLimit.setExpiryTime(tcpSpikeLimit.getExpiryTime());
+                    newTcpSpikeLimit.setSampleTime(tcpSpikeLimit.getSampleTime());
+                    newTcpSpikeLimit.setRate(tcpSpikeLimit.getRate());
+                    fe.setTcpSpikeLimit(newTcpSpikeLimit);
+                }
+
+                newFe.setEtc(cloneList(fe.getEtc()));
+
+                newFrontends.put(key, newFe);
+            }
+        }
+
+
+        //backends
+        Backends newBackends = new Backends();
+        c.setBackends(newBackends);
+        if(backends != null) {
+            Iterator<Map.Entry<String, Backend>> iter = backends.entrySet().iterator();
+            while(iter.hasNext()) {
+                Map.Entry<String, Backend> e = iter.next();
+                String key = e.getKey();
+                Backend be = e.getValue();
+                //clone be
+                Backend newBe = new Backend();
+                newBe.setName(be.getName());
+                newBe.setMode(be.getMode());
+
+                newBe.setServers(be.getServers());
+                Servers servers = be.getServers();
+
+                if(servers != null) {
+                    Servers newServers = new Servers();
+                    Iterator<Map.Entry<String, Server>> serverIter = servers.entrySet().iterator();
+                    while(serverIter.hasNext()) {
+                        Map.Entry<String, Server> e2 = serverIter.next();
+                        String name = e2.getKey();
+                        Server server = e2.getValue();
+                        Server newServer = new Server();
+                        newServer.setName(server.getName());
+                        newServer.setHost(server.getHost());
+                        newServer.setPort(server.getPort());
+                        newServer.setCheck(server.getCheck());
+                        newServer.setCheckInterval(server.getCheckInterval());
+                        newServer.setMaxconn(server.getMaxconn());
+                        newServer.setWeight(server.getWeight());
+                    }
+                    be.setServers(newServers);
+                }
+
+                newBe.setEtc(cloneList(be.getEtc()));
+
+                newBackends.put(key, newBe);
+            }
+        }
+
+
+        return c;
+    }
+
+    private List<String> cloneList(List<String> list) {
+        if(list == null) {
+            return list;
+        }
+        List<String> newList = new ArrayList<String>();
+        for(String e : list) {
+            newList.add(e);
+        }
+        return newList;
+    }
+
     public ResponseEntity<Config> configGet() {
         // do some magic!
         return new ResponseEntity<Config>(HttpStatus.OK);
@@ -44,11 +193,8 @@ public class HaproxyApiController implements ConfigApi {
 
     public ResponseEntity<Config> configPost(@ApiParam(value = "The config to write." ,required=true )  @Valid @RequestBody Config config) {
         // do some magic!
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         this.config = config;
-//        this.config.getGlobal().setMaxconn(100l);
-//        this.config.getGlobal().setName("test");
-//        this.config.getGlobal().setMode("aaaa");
+        this.config.getGlobal().setMaxconn(100l);
 
         return new ResponseEntity<Config>(this.config, HttpStatus.OK);
     }
@@ -161,6 +307,19 @@ public class HaproxyApiController implements ConfigApi {
 
     public ResponseEntity<Global> setGlobal(@ApiParam(value = "The global to set." ,required=true )  @Valid @RequestBody Global global) {
         // do some magic!
+
+        config = config.global(global);
+
+        try {
+            templeteEngine.dataWrite(this.config);
+        } catch (IOException e) {
+
+        }
+        Config config1 = templeteEngine.dateReader();
+
+
+        System.out.println(config1);
+
         return new ResponseEntity<Global>(global, HttpStatus.OK);
     }
 
