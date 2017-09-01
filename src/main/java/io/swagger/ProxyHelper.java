@@ -82,7 +82,7 @@ public class ProxyHelper {
                 throw new ConfigInvalidException("port cannot be empty.");
             }
 
-            String name = makeName(mode, port);
+            String name = makeName(mode, bindPort);
             Frontend fe = new Frontend();
             fe.setName(name);
             fe.setBindIp("*");
