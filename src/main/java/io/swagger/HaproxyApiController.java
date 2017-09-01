@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
@@ -52,6 +53,12 @@ public class HaproxyApiController implements HaproxyApi {
             logger.error("bind error", e);
         }
     }
+    @PreDestroy
+    public void destroy() {
+        logger.info("haproxy destroy");
+        proxyHelper.stopProxy();
+    }
+
 
     private void applyConfig(Map<String , Service> newConfig) {
         //1. 적용.
