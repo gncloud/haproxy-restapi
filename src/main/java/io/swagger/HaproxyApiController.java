@@ -177,29 +177,9 @@ public class HaproxyApiController implements HaproxyApi {
                 Backend be = e.getValue();
                 //clone be
                 Backend newBe = new Backend();
-                newBe.setName(be.getName());
                 newBe.setMode(be.getMode());
-                Map<String, Server> servers = be.getServers();
-
-                if (servers != null) {
-                    Map<String, Server> newServers = new HashMap<String, Server>();
-                    Iterator<Map.Entry<String, Server>> serverIter = servers.entrySet().iterator();
-                    while (serverIter.hasNext()) {
-                        Map.Entry<String, Server> e2 = serverIter.next();
-                        String name = e2.getKey();
-                        Server server = e2.getValue();
-                        Server newServer = new Server();
-                        newServer.setName(server.getName());
-                        newServer.setHost(server.getHost());
-                        newServer.setPort(server.getPort());
-                        newServer.setCheck(server.getCheck());
-                        newServer.setCheckInterval(server.getCheckInterval());
-                        newServer.setMaxconn(server.getMaxconn());
-                        newServer.setWeight(server.getWeight());
-                    }
-                    be.setServers(newServers);
-                }
-
+                newBe.setHost(be.getHost());
+                newBe.setPort(be.getPort());
                 newBackends.put(key, newBe);
             }
         }

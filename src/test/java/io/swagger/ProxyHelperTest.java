@@ -2,7 +2,7 @@ package io.swagger;
 
 import io.swagger.model.Backend;
 import io.swagger.model.Frontend;
-import io.swagger.model.Server;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,6 +13,7 @@ import java.util.Map;
  */
 public class ProxyHelperTest {
 
+    @Test
     public void testRenderTemplate() throws IOException {
 
         Map<String, Object> c = new HashMap<String, Object>();
@@ -23,23 +24,18 @@ public class ProxyHelperTest {
 
         Frontend fe = new Frontend();
         fe.setMode("http");
-        fe.setBindIp("192.168.1.5");
-        fe.setBindPort(8080L);
+        fe.setBindIp("*");
+        fe.setBindPort(8080);
         fe.setDefaultBackend("node1");
-        fes.put("12345", fe);
-
+        fe.setAclBackend("be1");
+        fe.setAclPattern("hdr_beg(host) www.");
+        fes.put("service001", fe);
 
         Backend be = new Backend();
-        be.setName("be1");
-        be.setMode("tcp");
-        Map servers = new HashMap<String, Server>();
-        Server s1=new Server();
-        s1.setName("node1");
-        s1.setPort(9999L);
-        s1.setHost("192.168.1.6");
-        servers.put("node1", s1);
-        be.setServers(servers);
-        bes.put("be1", be);
+        be.setMode("http");
+        be.setPort(9999);
+        be.setHost("192.168.1.6");
+        bes.put("service001", be);
 
         ProxyHelper helper = new ProxyHelper();
         String str = helper.renderTemplate(c);
