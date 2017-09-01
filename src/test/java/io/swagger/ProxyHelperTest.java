@@ -1,20 +1,20 @@
-import io.swagger.ProxyHelper;
+package io.swagger;
+
 import io.swagger.model.Backend;
 import io.swagger.model.Frontend;
 import io.swagger.model.Server;
-import org.junit.Test;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by swsong on 17. 8. 31..
+ * Created by swsong on 17. 9. 1..
  */
-public class TemplateTest {
+public class ProxyHelperTest {
 
-    @Test
-    public void simple() throws IOException {
+    public void testRenderTemplate() throws IOException {
+
         Map<String, Object> c = new HashMap<String, Object>();
         Map<String, Frontend> fes = new HashMap<String, Frontend>();
         c.put("frontends", fes);
@@ -22,7 +22,6 @@ public class TemplateTest {
         c.put("backends", bes);
 
         Frontend fe = new Frontend();
-        fe.setName("12345");
         fe.setMode("http");
         fe.setBindIp("192.168.1.5");
         fe.setBindPort(8080L);
@@ -43,8 +42,8 @@ public class TemplateTest {
         bes.put("be1", be);
 
         ProxyHelper helper = new ProxyHelper();
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        Map<String, Object> maps = objectMapper.convertValue(fes, Map.class);
-        helper.applyConfig(c);
+        String str = helper.renderTemplate(c);
+
+        System.out.println(str);
     }
 }

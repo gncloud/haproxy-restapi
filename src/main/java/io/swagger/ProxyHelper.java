@@ -1,10 +1,5 @@
 package io.swagger;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-//import freemarker.template.Configuration;
-//import freemarker.template.DefaultObjectWrapper;
-//import freemarker.template.Template;
-//import freemarker.template.TemplateExceptionHandler;
 import io.swagger.model.Backend;
 import io.swagger.model.Frontend;
 import org.apache.velocity.VelocityContext;
@@ -16,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
@@ -27,12 +21,10 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Created by swsong on 17. 8. 30..
  */
 
-@Component
 public class ProxyHelper {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(ProxyHelper.class);
 
-//    private Configuration cfg;
     private Random random = new Random(System.nanoTime());
     private String tempFilePath = System.getProperty("java.io.tmpdir");
     private String TEMPLATE_NAME = "templates/haproxy.cfg.vm";
@@ -48,45 +40,42 @@ public class ProxyHelper {
     private final Lock writeLock;
 
     private VelocityEngine engine;
-    public ProxyHelper() throws IOException {
+
+    public ProxyHelper() {
         engine = new VelocityEngine();
-//        engine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, "/templates/");
         engine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
         engine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
         engine.init();
 
-//        cfg = new Configuration(Configuration.VERSION_2_3_25);
-//        cfg.setClassForTemplateLoading(this.getClass(), "/templates/");
-//        cfg.setDefaultEncoding("UTF-8");
-//        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-//        cfg.setLogTemplateExceptions(false);
-//        cfg.setObjectWrapper(new DefaultObjectWrapper(Configuration.VERSION_2_3_25));
-
         lock = new ReentrantReadWriteLock();
         writeLock = lock.writeLock();
     }
+
+    protected String renderTemplate(Map config) {
+        VelocityContext context = new VelocityContext();
+        Map<String, Frontend> frontends = (Map<String, Frontend>) config.get("frontends");
+        Map<String, Backend> backends = (Map<String, Backend>) config.get("backends");
+        context.put("frontends", frontends);
+        context.put("backends", backends);
+
+        org.apache.velocity.Template template = engine.getTemplate(TEMPLATE_NAME, "utf-8");
+        StringWriter stringWriter = new StringWriter();
+
+        template.merge(context, stringWriter);
+        String configString = stringWriter.toString();
+
+        return configString;
+    }
+
     public String applyConfig(Map config) throws ConfigInvalidException {
         writeLock.lock();
 
         try {
-            //1. 임시 저장
-            VelocityContext context = new VelocityContext();
-            Map<String, Frontend> frontends = (Map<String, Frontend>) config.get("frontends");
-            Map<String, Backend> backends = (Map<String, Backend>) config.get("backends");
-            context.put("frontends", frontends);
-            context.put("backends", backends);
-
-//            Template temp = cfg.getTemplate(TEMPLATE_NAME);
-            org.apache.velocity.Template template = engine.getTemplate(TEMPLATE_NAME, "utf-8");
-            StringWriter stringWriter = new StringWriter();
-
-            template.merge(context, stringWriter);
-//            temp.process(config, writer);
-            String configString = stringWriter.toString();
-            logger.info("config : \n{}", configString);
-
             String tempFileName = Long.toString(random.nextLong());
             File tempFile = new File(tempFilePath, tempFileName);
+
+            //1. 임시 저장
+            String configString = renderTemplate(config);
             Writer fileWriter = new OutputStreamWriter(new FileOutputStream(tempFile));
             fileWriter.write(configString);
             fileWriter.close();
