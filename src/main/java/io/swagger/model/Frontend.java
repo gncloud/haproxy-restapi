@@ -20,6 +20,9 @@ import javax.validation.constraints.*;
 
 public class Frontend implements Serializable{
 
+  @JsonProperty("name")
+  private String name = null;
+
   @JsonProperty("mode")
   private String mode = null;
 
@@ -44,6 +47,13 @@ public class Frontend implements Serializable{
   @JsonProperty("acls")
   private Map<String, ACL> acls = null;
 
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
 
   /**
    * Get name

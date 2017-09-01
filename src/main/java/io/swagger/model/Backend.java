@@ -20,6 +20,9 @@ import javax.validation.constraints.*;
 
 public class Backend  implements Serializable {
 
+  @JsonProperty("name")
+  private String name = null;
+
   @JsonProperty("mode")
   private String mode = null;
 
@@ -29,17 +32,13 @@ public class Backend  implements Serializable {
   @JsonProperty("port")
   private int port;
 
-  public Backend mode(String mode) {
-    this.mode = mode;
-    return this;
+  public String getName() {
+    return name;
   }
 
-   /**
-   * Get mode
-   * @return mode
-  **/
-  @ApiModelProperty(value = "")
-
+  public void setName(String name) {
+    this.name = name;
+  }
 
   public String getMode() {
     return mode;

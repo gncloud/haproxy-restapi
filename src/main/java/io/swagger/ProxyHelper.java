@@ -84,23 +84,38 @@ public class ProxyHelper {
                 throw new ConfigInvalidException("port cannot be empty.");
             }
 
+            String name = makeName(mode, port);
             Frontend fe = new Frontend();
+            fe.setName(name);
             fe.setBindIp("*");
             fe.setBindPort(bindPort);
             fe.setMode(mode);
             fe.setTimeoutClient(timeout);
+            fe.setTimeoutServer(timeout);
+            fe.setTimeoutConnect(1000); //1000ms
+
 
             if("http".equalsIgnoreCase(mode)) {
                 ACL acl = new ACL();
+                acl.setBackend(name);
+
+                if(subdomain.equals("")) {
+                    subdomain = "_";
+                    //서브도메인이 없으면 패턴도 없다. 즉, default_backend로 처리.
+                } else {
+                    acl.setName(subdomain);
+                    acl.setPattern("hdr_beg(host) " + subdomain + ".");
+                }
                 fe.getAclsNotNull().put(subdomain, acl);
             }
 
+            frontends.add(fe);
+
             Backend be = new Backend();
+            be.setName(name);
             be.setMode(mode);
             be.setHost(host);
             be.setPort(port);
-
-            frontends.add(fe);
             backends.add(be);
         }
 
@@ -111,6 +126,10 @@ public class ProxyHelper {
         String configString = stringWriter.toString();
 
         return configString;
+    }
+
+    private String makeName(String mode, int port) {
+        return mode+"_"+port;
     }
 
     public String applyConfig(Map<String, Service> config) throws ConfigInvalidException {
