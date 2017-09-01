@@ -24,7 +24,7 @@ public class Frontend implements Serializable {
   private String mode = null;
 
   @JsonProperty("bindPort")
-  private Long bindPort = null;
+  private Integer bindPort = null;
 
   @JsonProperty("bindIp")
   private String bindIp = null;
@@ -68,7 +68,7 @@ public class Frontend implements Serializable {
     this.mode = mode;
   }
 
-  public Frontend bindPort(Long bindPort) {
+  public Frontend bindPort(Integer bindPort) {
     this.bindPort = bindPort;
     return this;
   }
@@ -80,11 +80,11 @@ public class Frontend implements Serializable {
   @ApiModelProperty(value = "")
 
 
-  public Long getBindPort() {
+  public Integer getBindPort() {
     return bindPort;
   }
 
-  public void setBindPort(Long bindPort) {
+  public void setBindPort(Integer bindPort) {
     this.bindPort = bindPort;
   }
 

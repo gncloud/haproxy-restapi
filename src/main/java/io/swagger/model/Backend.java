@@ -19,34 +19,15 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-30T06:16:08.273Z")
 
 public class Backend  implements Serializable {
-  @JsonProperty("name")
-  private String name = null;
 
   @JsonProperty("mode")
   private String mode = null;
 
-  @JsonProperty("servers")
-  private Map<String, Server> servers = null;
+  @JsonProperty("host")
+  private String host = null;
 
-  public Backend name(String name) {
-    this.name = name;
-    return this;
-  }
-
-   /**
-   * Get name
-   * @return name
-  **/
-  @ApiModelProperty(value = "")
-
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
+  @JsonProperty("port")
+  private int port;
 
   public Backend mode(String mode) {
     this.mode = mode;
@@ -68,27 +49,21 @@ public class Backend  implements Serializable {
     this.mode = mode;
   }
 
-  public Backend servers(Map<String, Server> servers) {
-    this.servers = servers;
-    return this;
+  public String getHost() {
+    return host;
   }
 
-   /**
-   * Get servers
-   * @return servers
-  **/
-  @ApiModelProperty(value = "")
-
-  @Valid
-
-  public Map<String, Server> getServers() {
-    return servers;
+  public void setHost(String host) {
+    this.host = host;
   }
 
-  public void setServers(Map<String, Server> servers) {
-    this.servers = servers;
+  public int getPort() {
+    return port;
   }
 
+  public void setPort(int port) {
+    this.port = port;
+  }
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -99,23 +74,23 @@ public class Backend  implements Serializable {
       return false;
     }
     Backend backend = (Backend) o;
-    return Objects.equals(this.name, backend.name) &&
-        Objects.equals(this.mode, backend.mode) &&
-        Objects.equals(this.servers, backend.servers);
+    return Objects.equals(this.host, backend.host) &&
+        Objects.equals(this.port, backend.port) &&
+        Objects.equals(this.mode, backend.mode);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, mode, servers);
+    return Objects.hash(mode, host, port);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Backend {\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
-    sb.append("    servers: ").append(toIndentedString(servers)).append("\n");
+    sb.append("    serverHost: ").append(toIndentedString(host)).append("\n");
+    sb.append("    serverPort: ").append(toIndentedString(port)).append("\n");
     sb.append("}");
     return sb.toString();
   }
