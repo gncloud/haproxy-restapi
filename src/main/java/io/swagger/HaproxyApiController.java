@@ -57,6 +57,7 @@ public class HaproxyApiController implements HaproxyApi {
         } catch (IOException e) {
             logger.error("Cannot save memory file.", e);
         }
+
     }
 
     @Override
@@ -76,7 +77,9 @@ public class HaproxyApiController implements HaproxyApi {
         writeLock.lock();
         try {
             Map<String, Service> newConfig = cloneConfig();
-            newConfig.put(id,service);
+            int port = service.getBindPort();
+            String uid = id + "_" + port;
+            newConfig.put(uid, service);
             applyConfig(newConfig);
             return new ResponseEntity<>(service, HttpStatus.OK);
         } finally {
@@ -85,12 +88,13 @@ public class HaproxyApiController implements HaproxyApi {
     }
 
     @Override
-    public ResponseEntity<Service> deleteService(@PathVariable("id") String id) {
+    public ResponseEntity<Service> deleteService(@PathVariable("id") String id, @PathVariable("port") String port) {
         ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
         writeLock.lock();
         try {
             Map<String, Service> newConfig = cloneConfig();
-            Service service = newConfig.remove(id);
+            String uid = id + "_" + port;
+            Service service = newConfig.remove(uid);
             applyConfig(newConfig);
 
             return new ResponseEntity<>(service, HttpStatus.OK);
