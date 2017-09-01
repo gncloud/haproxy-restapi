@@ -144,7 +144,6 @@ public class HaproxyApiController implements HaproxyApi {
                 Frontend fe = e.getValue();
                 //clone fe
                 Frontend newFe = new Frontend();
-                newFe.setName(fe.getName());
                 newFe.setMode(fe.getMode());
                 newFe.setBindIp(fe.getBindIp());
                 newFe.setBindPort(fe.getBindPort());

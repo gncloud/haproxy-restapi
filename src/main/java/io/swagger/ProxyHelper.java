@@ -1,10 +1,5 @@
 package io.swagger;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-//import freemarker.template.Configuration;
-//import freemarker.template.DefaultObjectWrapper;
-//import freemarker.template.Template;
-//import freemarker.template.TemplateExceptionHandler;
 import io.swagger.model.Backend;
 import io.swagger.model.Frontend;
 import org.apache.velocity.VelocityContext;
@@ -16,7 +11,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
@@ -50,17 +44,9 @@ public class ProxyHelper {
     private VelocityEngine engine;
     public ProxyHelper() throws IOException {
         engine = new VelocityEngine();
-//        engine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, "/templates/");
         engine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
         engine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
         engine.init();
-
-//        cfg = new Configuration(Configuration.VERSION_2_3_25);
-//        cfg.setClassForTemplateLoading(this.getClass(), "/templates/");
-//        cfg.setDefaultEncoding("UTF-8");
-//        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-//        cfg.setLogTemplateExceptions(false);
-//        cfg.setObjectWrapper(new DefaultObjectWrapper(Configuration.VERSION_2_3_25));
 
         lock = new ReentrantReadWriteLock();
         writeLock = lock.writeLock();
