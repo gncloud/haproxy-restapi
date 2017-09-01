@@ -14,7 +14,7 @@ crt-base /etc/ssl/private
 defaults
 log	 global
 mode	http
-option  httplog
+#option  httplog
 option  dontlognull
 timeout connect 5000
 timeout client  50000
@@ -38,7 +38,7 @@ frontend $frontend.name
     #end
 
     #foreach($acl in $frontend.acls)
-    use_backend $acl.backendName if $acl.name
+    use_backend $acl.backend if $acl.name
     #end
 
 
@@ -65,7 +65,7 @@ frontend $frontend.name
 backend $backend.name
     mode $backend.mode
     ##balance $backend.balance
-    option forwardfor
+    #option forwardfor
     http-request set-header X-Forwarded-Port %[dst_port]
     #foreach($server in $backend.servers)
     server $server.name $server.host:$server.port check

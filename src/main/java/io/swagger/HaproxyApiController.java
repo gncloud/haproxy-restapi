@@ -74,30 +74,36 @@ public class HaproxyApiController implements HaproxyApi {
         ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
         writeLock.lock();
         try {
-            Map<String, Object> newConfig = cloneConfig();
-            Map<String, Frontend> frontends = (Map<String, Frontend>) newConfig.get("frontends");
-            Map<String, Backend> backends = (Map<String, Backend>) newConfig.get("backends");
+//            Map<String, Object> newConfig = cloneConfig();
+//            Map<String, Frontend> frontends = (Map<String, Frontend>) newConfig.get("frontends");
+//            Map<String, Backend> backends = (Map<String, Backend>) newConfig.get("backends");
+//
+//            frontends.put(id, service.getFrontend());
+//            backends.put(id, service.getBackend());
+//
+//            Frontend frontend = service.getFrontend();
+//            if (frontend != null) {
+//                Frontend old = frontends.put(id, frontend);
+//                if (old != null) {
+//                    logger.warn("frontend replaced : {}", id);
+//                }
+//            }
+//
+//            Backend backend = service.getBackend();
+//            if (backend != null) {
+//                Backend old = backends.put(id, backend);
+//                if (old != null) {
+//                    logger.warn("backend replaced : {}", id);
+//                }
+//            }
+//
+//            applyConfig(newConfig);
+            Map<String, Frontend> frontendMap = (Map<String, Frontend>) config.get("frontends");
+            Map<String, Backend> backendMap = (Map<String, Backend>) config.get("backends");
+            frontendMap.put(id, service.getFrontend());
+            backendMap.put(id, service.getBackend());
 
-            frontends.put(id, service.getFrontend());
-            backends.put(id, service.getBackend());
-
-            Frontend frontend = service.getFrontend();
-            if (frontend != null) {
-                Frontend old = frontends.put(id, frontend);
-                if (old != null) {
-                    logger.warn("frontend replaced : {}", id);
-                }
-            }
-
-            Backend backend = service.getBackend();
-            if (backend != null) {
-                Backend old = backends.put(id, backend);
-                if (old != null) {
-                    logger.warn("backend replaced : {}", id);
-                }
-            }
-
-            applyConfig(newConfig);
+            applyConfig(config);
             return new ResponseEntity<Map<String, Object>>(config, HttpStatus.OK);
         } finally {
             writeLock.unlock();
