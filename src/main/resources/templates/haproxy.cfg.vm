@@ -32,23 +32,31 @@ stats auth gncloud:gncloud1234
 frontend $frontend.name
 bind $frontend.bindIp:$frontend.bindPort
 mode $frontend.mode
-
 #foreach($acl in $frontend.acls)
+| ($acl.pattern) |
+
+#if(!$null.isNull($acl.pattern))
 acl $acl.name $acl.pattern
-#if($acl.pattern)
 use_backend $acl.backend if $acl.name
-#else
+#end
+#if($null.isNull($acl.pattern))
 default_backend $acl.backend
 #end
 #end
+
 #end
+
+
 
 #foreach($backend in $backends)
 backend $backend.name
 mode $backend.mode
-#option forwardfor
+#if($backend.mode == "http")
+option forwardfor
 http-request set-header X-Forwarded-Port %[dst_port]
+#end
 #foreach($server in $backend.servers)
 server $server.name $server.host:$server.port check
 #end
+
 #end
