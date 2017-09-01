@@ -3,6 +3,7 @@ package io.swagger;
 import io.swagger.model.Backend;
 import io.swagger.model.Config;
 import io.swagger.model.Frontend;
+import io.swagger.model.Service;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
@@ -52,15 +53,17 @@ public class ProxyHelper {
         writeLock = lock.writeLock();
     }
 
-    protected String renderTemplate(Config config) {
+    protected String renderTemplate(Map<String, Service> config) {
         VelocityContext context = new VelocityContext();
-        Map<String, Frontend> frontends = (Map<String, Frontend>) config.getFrontends();
-        Map<String, Backend> backends = (Map<String, Backend>) config.getBackends();
-        context.put("frontends", frontends);
-        context.put("backends", backends);
-
-
         ///TODO    변환..
+
+
+
+
+//        Map<String, Frontend> frontends = (Map<String, Frontend>) config.getFrontends();
+//        Map<String, Backend> backends = (Map<String, Backend>) config.getBackends();
+//        context.put("frontends", frontends);
+//        context.put("backends", backends);
 
 
 
@@ -73,7 +76,7 @@ public class ProxyHelper {
         return configString;
     }
 
-    public String applyConfig(Map config) throws ConfigInvalidException {
+    public String applyConfig(Map<String, Service> config) throws ConfigInvalidException {
         writeLock.lock();
 
         try {
