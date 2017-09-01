@@ -33,19 +33,32 @@ frontend $frontend.name
     bind $frontend.bindIp:$frontend.bindPort
     mode $frontend.mode
 
-##    #foreach($acl in $frontend.aclList)
-##    acl $acl.name $acl.criterion -i $acl.value
-##    #end
-##
-##    #foreach($acl in $frontend.aclList)
-##    use_backend $acl.backendName if $acl.name
-##    #end
-    acl $frontend.name $frontend.aclPattern
-    use_backend $frontend.aclBackend if $frontend.name
-
-    #if($frontend.defaultBackend)
-    default_backend $frontend.defaultBackend
+    #foreach($acl in $frontend.acls)
+    acl $acl.name $acl.pattern
     #end
+
+    #foreach($acl in $frontend.acls)
+    use_backend $acl.backendName if $acl.name
+    #end
+
+
+###frontend web80
+###       bind *:80
+###       acl acl1 hdr_beg(host) www.
+###       acl acl2 hdr_beg(host) blog.
+##
+###       use_backend back2 if acl1
+###       use_backend back2 if acl2
+##
+###backend back1
+###       server name1 127.0.0.1:9999 check
+
+##    acl $frontend.name $frontend.aclPattern
+##    use_backend $frontend.aclBackend if $frontend.name
+
+##    #if($frontend.defaultBackend)
+##    default_backend $frontend.defaultBackend
+##    #end
 #end
 
 #foreach($backend in $backends)

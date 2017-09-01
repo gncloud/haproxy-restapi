@@ -1,5 +1,6 @@
 package io.swagger.model;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,8 +19,7 @@ import javax.validation.constraints.*;
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-30T06:16:08.273Z")
 
-public class Frontend {
-
+public class Frontend implements Serializable {
   @JsonProperty("mode")
   private String mode = null;
 

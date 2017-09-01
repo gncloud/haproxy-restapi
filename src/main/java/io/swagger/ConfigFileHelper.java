@@ -17,10 +17,10 @@ import java.util.Map;
 public class ConfigFileHelper {
     private static Logger logger = org.slf4j.LoggerFactory.getLogger(ConfigFileHelper.class);
 
-    @Value("${haproxy.config.bin.path}")
-    private String configBinPath;
+    private String configBinPath = "/var/lib/haproxy-restapi/conf/haproxy.bin";
 
     public ConfigFileHelper() {
+        logger.info("new ConfigFileHelper ");
     }
 
     public File saveObjectFile(Map<String, Object> config) throws IOException {
@@ -54,6 +54,9 @@ public class ConfigFileHelper {
             }
             ObjectInputStream is = new ObjectInputStream(new FileInputStream(configBinPath));
             Map<String, Object> config = (Map<String, Object>) is.readObject();
+
+            logger.info("loadObjectFile config data {}", config);
+
             is.close();
             return config;
         } catch (Exception e) {
