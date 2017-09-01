@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.PostConstruct;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +30,7 @@ public class HaproxyApiController implements HaproxyApi {
     private Map<String, Service> config;
     private ReentrantReadWriteLock lock;
 
-
+    @Autowired
     private ConfigFileHelper configFileHelper;
 
     @Autowired
@@ -38,14 +39,18 @@ public class HaproxyApiController implements HaproxyApi {
 
     public HaproxyApiController() {
         logger.info("new HaproxyApiController ");
+        lock = new ReentrantReadWriteLock();
+    }
+
+    @PostConstruct
+    public void init() {
         try {
-            configFileHelper = new ConfigFileHelper();
+//            configFileHelper = new ConfigFileHelper();
             config = configFileHelper.loadObjectFile();
             proxyHelper.applyConfig(config);
         } catch (Exception e) {
             logger.error("bind error", e);
         }
-        lock = new ReentrantReadWriteLock();
     }
 
     private void applyConfig(Map<String , Service> newConfig) {
