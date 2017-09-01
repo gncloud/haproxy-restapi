@@ -1,10 +1,11 @@
 package io.swagger.model;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
 
-public class FrontendTemp {
+public class FrontendTemp implements Serializable{
   private String name = null;
 
   private String mode = null;
