@@ -20,8 +20,6 @@ import javax.validation.constraints.*;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-30T06:16:08.273Z")
 
 public class Frontend implements Serializable{
-  @JsonProperty("name")
-  private String name = null;
 
   @JsonProperty("mode")
   private String mode = null;
@@ -54,11 +52,6 @@ public class Frontend implements Serializable{
   private String aclBackend = null;
 
 
-  public Frontend name(String name) {
-    this.name = name;
-    return this;
-  }
-
   /**
    * Get name
    * @return name
@@ -66,13 +59,6 @@ public class Frontend implements Serializable{
   @ApiModelProperty(value = "")
 
 
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
 
   public Frontend mode(String mode) {
     this.mode = mode;
@@ -265,8 +251,7 @@ public class Frontend implements Serializable{
       return false;
     }
     Frontend frontend = (Frontend) o;
-    return Objects.equals(this.name, frontend.name) &&
-            Objects.equals(this.mode, frontend.mode) &&
+    return Objects.equals(this.mode, frontend.mode) &&
             Objects.equals(this.bindPort, frontend.bindPort) &&
             Objects.equals(this.bindIp, frontend.bindIp) &&
             Objects.equals(this.defaultBackend, frontend.defaultBackend) &&
@@ -278,7 +263,7 @@ public class Frontend implements Serializable{
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, mode, bindPort, bindIp, defaultBackend, timeoutConnect, timeoutClient, timeoutServer);
+    return Objects.hash(mode, bindPort, bindIp, defaultBackend, timeoutConnect, timeoutClient, timeoutServer);
   }
 
   @Override
@@ -286,7 +271,6 @@ public class Frontend implements Serializable{
     StringBuilder sb = new StringBuilder();
     sb.append("class Frontend {\n");
 
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    bindPort: ").append(toIndentedString(bindPort)).append("\n");
     sb.append("    bindIp: ").append(toIndentedString(bindIp)).append("\n");
