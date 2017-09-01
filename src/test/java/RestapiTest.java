@@ -41,7 +41,7 @@ public class RestapiTest {
         Frontend frontend = new Frontend();
 //        frontend.setName("web80");
         frontend.setBindIp("127.0.0.1");
-        frontend.setBindPort(8080l);
+//        frontend.setBindPort(8080l);
         ACL acl = new ACL();
         acl.setName("acl1");
         acl.setBackend("back2");
