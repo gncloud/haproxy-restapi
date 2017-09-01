@@ -43,23 +43,4 @@ public class Swagger2SpringBoot implements CommandLineRunner {
         }
 
     }
-
-    @Bean
-    protected ServletContextListener listener(final ProxyHelper proxyHelper){
-        return new ServletContextListener() {
-
-            @Override
-            public void contextInitialized(ServletContextEvent sce) {
-                Map<String, Service> blankConfig = new HashMap<>();
-                proxyHelper.applyConfig(blankConfig);
-                logger.info("ServletContext initialized");
-            }
-
-            @Override
-            public void contextDestroyed(ServletContextEvent sce) {
-                logger.info("ServletContext destroyed");
-            }
-
-        };
-    }
 }
