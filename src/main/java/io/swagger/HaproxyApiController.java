@@ -29,7 +29,7 @@ public class HaproxyApiController implements HaproxyApi {
     private Map<String, Service> config;
     private ReentrantReadWriteLock lock;
 
-    @Autowired
+
     private ConfigFileHelper configFileHelper;
 
     @Autowired

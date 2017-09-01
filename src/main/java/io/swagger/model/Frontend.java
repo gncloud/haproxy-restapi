@@ -19,7 +19,10 @@ import javax.validation.constraints.*;
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-08-30T06:16:08.273Z")
 
-public class Frontend implements Serializable {
+public class Frontend implements Serializable{
+  @JsonProperty("name")
+  private String name = null;
+
   @JsonProperty("mode")
   private String mode = null;
 
@@ -41,6 +44,9 @@ public class Frontend implements Serializable {
   @JsonProperty("timeoutServer")
   private String timeoutServer = null;
 
+  @JsonProperty("acls")
+  private Map<String, ACL> acls = null;
+
   @JsonProperty("aclPattern")
   private String aclPattern = null;
 
@@ -48,15 +54,35 @@ public class Frontend implements Serializable {
   private String aclBackend = null;
 
 
+  public Frontend name(String name) {
+    this.name = name;
+    return this;
+  }
+
+  /**
+   * Get name
+   * @return name
+   **/
+  @ApiModelProperty(value = "")
+
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
   public Frontend mode(String mode) {
     this.mode = mode;
     return this;
   }
 
-   /**
+  /**
    * Get mode
    * @return mode
-  **/
+   **/
   @ApiModelProperty(value = "")
 
 
@@ -73,10 +99,10 @@ public class Frontend implements Serializable {
     return this;
   }
 
-   /**
+  /**
    * Get bindPort
    * @return bindPort
-  **/
+   **/
   @ApiModelProperty(value = "")
 
 
@@ -93,10 +119,10 @@ public class Frontend implements Serializable {
     return this;
   }
 
-   /**
+  /**
    * Get bindIp
    * @return bindIp
-  **/
+   **/
   @ApiModelProperty(value = "")
 
 
@@ -113,10 +139,10 @@ public class Frontend implements Serializable {
     return this;
   }
 
-   /**
+  /**
    * Get defaultBackend
    * @return defaultBackend
-  **/
+   **/
   @ApiModelProperty(value = "")
 
 
@@ -133,10 +159,10 @@ public class Frontend implements Serializable {
     return this;
   }
 
-   /**
+  /**
    * Get timeoutConnect
    * @return timeoutConnect
-  **/
+   **/
   @ApiModelProperty(value = "")
 
 
@@ -153,10 +179,10 @@ public class Frontend implements Serializable {
     return this;
   }
 
-   /**
+  /**
    * Get timeoutClient
    * @return timeoutClient
-  **/
+   **/
   @ApiModelProperty(value = "")
 
 
@@ -173,10 +199,10 @@ public class Frontend implements Serializable {
     return this;
   }
 
-   /**
+  /**
    * Get timeoutServer
    * @return timeoutServer
-  **/
+   **/
   @ApiModelProperty(value = "")
 
 
@@ -187,6 +213,12 @@ public class Frontend implements Serializable {
   public void setTimeoutServer(String timeoutServer) {
     this.timeoutServer = timeoutServer;
   }
+
+  public Frontend acls(ACLs acls) {
+    this.acls = acls;
+    return this;
+  }
+
 
   @ApiModelProperty(value = "")
   public String getAclBackend() {
@@ -207,6 +239,23 @@ public class Frontend implements Serializable {
   }
 
 
+
+  /**
+   * Get acls
+   * @return acls
+   **/
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public Map<String, ACL> getAcls() {
+    return acls;
+  }
+
+  public void setAcls(Map<String, ACL> acls) {
+    this.acls = acls;
+  }
+
   @Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
@@ -216,26 +265,28 @@ public class Frontend implements Serializable {
       return false;
     }
     Frontend frontend = (Frontend) o;
-    return Objects.equals(this.mode, frontend.mode) &&
-        Objects.equals(this.bindPort, frontend.bindPort) &&
-        Objects.equals(this.bindIp, frontend.bindIp) &&
-        Objects.equals(this.defaultBackend, frontend.defaultBackend) &&
-        Objects.equals(this.timeoutConnect, frontend.timeoutConnect) &&
-        Objects.equals(this.timeoutClient, frontend.timeoutClient) &&
-        Objects.equals(this.timeoutServer, frontend.timeoutServer) &&
-        Objects.equals(this.aclBackend, frontend.aclBackend) &&
-        Objects.equals(this.aclPattern, frontend.aclPattern);
+    return Objects.equals(this.name, frontend.name) &&
+            Objects.equals(this.mode, frontend.mode) &&
+            Objects.equals(this.bindPort, frontend.bindPort) &&
+            Objects.equals(this.bindIp, frontend.bindIp) &&
+            Objects.equals(this.defaultBackend, frontend.defaultBackend) &&
+            Objects.equals(this.timeoutConnect, frontend.timeoutConnect) &&
+            Objects.equals(this.timeoutClient, frontend.timeoutClient) &&
+            Objects.equals(this.timeoutServer, frontend.timeoutServer) &&
+            Objects.equals(this.acls, frontend.acls);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(mode, bindPort, bindIp, defaultBackend, timeoutConnect, timeoutClient, timeoutServer, aclBackend, aclPattern);
+    return Objects.hash(name, mode, bindPort, bindIp, defaultBackend, timeoutConnect, timeoutClient, timeoutServer);
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class Frontend {\n");
+
+    sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    bindPort: ").append(toIndentedString(bindPort)).append("\n");
     sb.append("    bindIp: ").append(toIndentedString(bindIp)).append("\n");
@@ -245,6 +296,7 @@ public class Frontend implements Serializable {
     sb.append("    timeoutServer: ").append(toIndentedString(timeoutServer)).append("\n");
     sb.append("    aclBackend: ").append(toIndentedString(aclBackend)).append("\n");
     sb.append("    aclPattern: ").append(toIndentedString(aclPattern)).append("\n");
+    sb.append("    acls: ").append(toIndentedString(acls)).append("\n");
     sb.append("}");
     return sb.toString();
   }

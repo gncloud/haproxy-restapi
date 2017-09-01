@@ -21,7 +21,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 /**
  * Created by swsong on 17. 8. 30..
  */
-
+@Component
 public class ProxyHelper {
 
     private org.slf4j.Logger logger = LoggerFactory.getLogger(ProxyHelper.class);
