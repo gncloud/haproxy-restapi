@@ -55,10 +55,8 @@ public class ProxyHelper {
     protected String renderTemplate(Map<String, Service> config) {
         VelocityContext context = new VelocityContext();
 
-        ///TODO    변환..
-
-        List<Frontend> frontends = new ArrayList<Frontend>();
-        List<Backend> backends = new ArrayList<Backend>();
+        List<Frontend> frontends = new ArrayList<>();
+        List<Backend> backends = new ArrayList<>();
         context.put("frontends", frontends);
         context.put("backends", backends);
 
@@ -147,14 +145,14 @@ public class ProxyHelper {
 
 
             //2. validate
-            process = new ProcessBuilder(haproxyBinaryPath
+            Process process = new ProcessBuilder(haproxyBinaryPath
                                         , "-c"
                                         , "-f"
                                         , tempFile.getPath())
                                         .inheritIO().start();
             process.waitFor();
             if(process.exitValue() != 0){
-                throw new Exception("haproxy.cfg invalidate");
+                throw new Exception("haproxy.cfg is invalid! >> \n" + configString);
             }
 
 
@@ -168,7 +166,7 @@ public class ProxyHelper {
             File pidFile = new File(pidFilePath);
             if(pidFile.isFile()){
                 BufferedReader bufferedReader = new BufferedReader(new FileReader(pidFile));
-                String tmp = new String();
+                String tmp = "";
                 while( (tmp = bufferedReader.readLine()) != null){
                     pid += tmp + " ";
                 }
@@ -176,12 +174,7 @@ public class ProxyHelper {
             }
 
             //5. restart -sf
-            process = new ProcessBuilder(haproxyBinaryPath
-                    , "-f", haproxyConfigPath
-                    , "-p", pidFilePath
-                    , "-sf", pid)
-                    .inheritIO().start();
-            logger.info("haproxy update ok!. prevPid[{}]", pid);
+            restartProxy(pid);
 
             return configString;
 
@@ -192,36 +185,17 @@ public class ProxyHelper {
         }
     }
 
+    public void restartProxy(String pid) throws IOException {
+        this.process = new ProcessBuilder(haproxyBinaryPath
+                , "-f", haproxyConfigPath
+                , "-p", pidFilePath
+                , "-sf", pid)
+                .inheritIO().start();
+        logger.info("haproxy update ok!. prevPid[{}]", pid);
+    }
 
-//    protected String makeConfigString(VelocityContext context) {
-//        VelocityEngine engine = new VelocityEngine();
-//        engine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, templateFilePath);
-//        engine.init();
-//
-//        org.apache.velocity.Template template = engine.getTemplate(TEMPLATE_NAME, "utf-8");
-//        StringWriter stringWriter = new StringWriter();
-//
-//        template.merge(context, stringWriter);
-//        return stringWriter.toString();
-//    }
-
-//    public String updateProxyConfig() {
-//        VelocityContext context = new VelocityContext();
-//        List<Frontend> frontendList = new ArrayList<>();
-//        List<Backend> backendList = new ArrayList<>();
-//
-//        //1. topology구성도로 context에 값을 넣어준다.
-//        fillTopologyToContext(frontendList, backendList);
-//
-//        //2. marathon을 통해 app별 listening 상태를 받아와서 context에 넣어준다.
-//        fillServiceToContext(frontendList, backendList);
-//
-//        context.put(FRONTEND_LIST, frontendList);
-//        context.put(BACKEND_LIST, backendList);
-//
-//        String configString = makeConfigString(context);
-//        proxyUpdateQueue.offer(configString);
-//        return configString;
-//    }
+    public void stopProxy() {
+        process.destroy();
+    }
 
 }

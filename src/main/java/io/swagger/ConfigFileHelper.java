@@ -51,6 +51,7 @@ public class ConfigFileHelper {
             ObjectInputStream is = new ObjectInputStream(new FileInputStream(configBinPath));
             Map<String, Service> config = (Map<String, Service>) is.readObject();
 
+
             logger.info("loadObjectFile config data {}", config);
 
             is.close();

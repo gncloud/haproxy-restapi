@@ -41,6 +41,7 @@ public class HaproxyApiController implements HaproxyApi {
         try {
             configFileHelper = new ConfigFileHelper();
             config = configFileHelper.loadObjectFile();
+            proxyHelper.applyConfig(config);
         } catch (Exception e) {
             logger.error("bind error", e);
         }
