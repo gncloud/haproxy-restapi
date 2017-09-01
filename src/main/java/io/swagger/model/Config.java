@@ -1,6 +1,8 @@
 package io.swagger.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -26,17 +28,17 @@ public class Config implements Serializable{
   private Defaults defaults = null;
 
   @JsonProperty("frontends")
-  private Frontends frontends = null;
+  private Map<String, Frontend> frontends = null;
 
   @JsonProperty("backends")
-  private Backends backends = null;
+  private Map<String, Frontend> backends = null;
 
 
   public Config(){
     this.global = new Global();
     this.defaults = new Defaults();
-    this.frontends = new Frontends();
-    this.backends = new Backends();
+    this.frontends = new HashMap<>();
+    this.backends = new HashMap<>();
   }
 
   public Config global(Global global) {
@@ -94,15 +96,15 @@ public class Config implements Serializable{
 
   @Valid
 
-  public Frontends getFrontends() {
+  public Map<String, Frontend> getFrontends() {
     return frontends;
   }
 
-  public void setFrontends(Frontends frontends) {
+  public void setFrontends(Map<String, Frontend> frontends) {
     this.frontends = frontends;
   }
 
-  public Config backends(Backends backends) {
+  public Config backends(Map<String, Frontend> backends) {
     this.backends = backends;
     return this;
   }
@@ -115,11 +117,11 @@ public class Config implements Serializable{
 
   @Valid
 
-  public Backends getBackends() {
+  public Map<String, Frontend> getBackends() {
     return backends;
   }
 
-  public void setBackends(Backends backends) {
+  public void setBackends(Map<String, Frontend> backends) {
     this.backends = backends;
   }
 
