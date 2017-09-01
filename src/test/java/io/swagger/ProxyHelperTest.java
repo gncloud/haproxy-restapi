@@ -1,8 +1,5 @@
 package io.swagger;
 
-import io.swagger.model.Backend;
-import io.swagger.model.Config;
-import io.swagger.model.Frontend;
 import io.swagger.model.Service;
 import org.junit.Test;
 

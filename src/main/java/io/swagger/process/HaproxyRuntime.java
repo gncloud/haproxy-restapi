@@ -1,9 +1,7 @@
 package io.swagger.process;
 
-import io.swagger.model.Config;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.File;

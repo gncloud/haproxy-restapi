@@ -1,7 +1,7 @@
 package io.swagger;
 
+import io.swagger.model.ACL;
 import io.swagger.model.Backend;
-import io.swagger.model.Config;
 import io.swagger.model.Frontend;
 import io.swagger.model.Service;
 import org.apache.velocity.VelocityContext;
@@ -13,8 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.*;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -55,17 +54,55 @@ public class ProxyHelper {
 
     protected String renderTemplate(Map<String, Service> config) {
         VelocityContext context = new VelocityContext();
+
         ///TODO    변환..
 
+        List<Frontend> frontends = new ArrayList<Frontend>();
+        List<Backend> backends = new ArrayList<Backend>();
+        context.put("frontends", frontends);
+        context.put("backends", backends);
 
+        Iterator<Map.Entry<String, Service>> iter = config.entrySet().iterator();
 
+        while(iter.hasNext()) {
+            Map.Entry<String, Service> e = iter.next();
+            String id = e.getKey();
+            Service service = e.getValue();
 
-//        Map<String, Frontend> frontends = (Map<String, Frontend>) config.getFrontends();
-//        Map<String, Backend> backends = (Map<String, Backend>) config.getBackends();
-//        context.put("frontends", frontends);
-//        context.put("backends", backends);
+            Integer bindPort = service.getBindPort();
+            String mode = service.getMode();
+            String subdomain = service.getSubdomain();
+            Integer timeout = service.getTimeout();
+            String host = service.getHost();
+            Integer port = service.getPort();
 
+            if(bindPort == null){
+                throw new ConfigInvalidException("bindPort cannot be empty.");
+            } else if(host == null) {
+                throw new ConfigInvalidException("host cannot be empty.");
+            } else if(port == null) {
+                throw new ConfigInvalidException("port cannot be empty.");
+            }
 
+            Frontend fe = new Frontend();
+            fe.setBindIp("*");
+            fe.setBindPort(bindPort);
+            fe.setMode(mode);
+            fe.setTimeoutClient(timeout);
+
+            if("http".equalsIgnoreCase(mode)) {
+                ACL acl = new ACL();
+                fe.getAclsNotNull().put(subdomain, acl);
+            }
+
+            Backend be = new Backend();
+            be.setMode(mode);
+            be.setHost(host);
+            be.setPort(port);
+
+            frontends.add(fe);
+            backends.add(be);
+        }
 
         org.apache.velocity.Template template = engine.getTemplate(TEMPLATE_NAME, "utf-8");
         StringWriter stringWriter = new StringWriter();
