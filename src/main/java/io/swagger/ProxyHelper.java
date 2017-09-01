@@ -3,6 +3,7 @@ package io.swagger;
 import io.swagger.model.Backend;
 import io.swagger.model.Config;
 import io.swagger.model.Frontend;
+import io.swagger.model.FrontendTemp;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
@@ -10,8 +11,11 @@ import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
+import springfox.documentation.service.ApiListing;
 
 import java.io.*;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
@@ -132,6 +136,8 @@ public class ProxyHelper {
             writeLock.unlock();
         }
     }
+
+
 
 
 //    protected String makeConfigString(VelocityContext context) {
