@@ -33,15 +33,24 @@ frontend $frontend.name
 bind $frontend.bindIp:$frontend.bindPort
 mode $frontend.mode
 #foreach($acl in $frontend.acls)
-| ($acl.pattern) |
-
-#if(!$null.isNull($acl.pattern))
-acl $acl.name $acl.pattern
-use_backend $acl.backend if $acl.name
-#end
-#if($null.isNull($acl.pattern))
+#if($frontend.mode == "http")
+    #if($acl.pattern)
+    acl $acl.name $acl.pattern
+    use_backend $acl.backend if $acl.name
+        #else
+        default_backend $acl.backend
+    #end
+#else
 default_backend $acl.backend
 #end
+##
+##acl $acl.name $acl.pattern
+##use_backend $acl.backend if $acl.name
+##
+###end
+###if($acl.pattern)
+##default_backend $acl.backend
+###end
 #end
 
 #end
