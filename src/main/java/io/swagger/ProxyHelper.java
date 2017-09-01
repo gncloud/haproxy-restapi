@@ -56,6 +56,7 @@ public class ProxyHelper {
         VelocityContext context = new VelocityContext();
 
         List<Frontend> frontends = new ArrayList<>();
+        Map<String, Frontend> frontendsMap = new HashMap<>();
         List<Backend> backends = new ArrayList<>();
         context.put("frontends", frontends);
         context.put("backends", backends);
@@ -83,32 +84,42 @@ public class ProxyHelper {
             }
 
             String name = makeName(mode, bindPort);
-            Frontend fe = new Frontend();
-            fe.setName(name);
-            fe.setBindIp("*");
-            fe.setBindPort(bindPort);
-            fe.setMode(mode);
-            fe.setTimeoutClient(timeout);
-            fe.setTimeoutServer(timeout);
-            fe.setTimeoutConnect(1000); //1000ms
+            //TODO HTTP_80 가 이미존재하면 frontend를 만들지 않고, 가져와서 acl만 추가.
+            Frontend old = frontendsMap.get(name);
+            if(old != null) {
+                old.getAcls();
+                //TODO 여기에 쑤셔넣는다.
 
 
-            if("http".equalsIgnoreCase(mode)) {
-                ACL acl = new ACL();
-                acl.setBackend(name);
 
-                if(subdomain.equals("") || subdomain == null) {
-                    subdomain = "_";
-                    //서브도메인이 없으면 패턴도 없다. 즉, default_backend로 처리.
-                } else {
-                    acl.setName(subdomain);
-                    acl.setPattern("hdr_beg(host) " + subdomain + ".");
+                
+            } else {
+                Frontend fe = new Frontend();
+                fe.setName(name);
+                fe.setBindIp("*");
+                fe.setBindPort(bindPort);
+                fe.setMode(mode);
+                fe.setTimeoutClient(timeout);
+                fe.setTimeoutServer(timeout);
+                fe.setTimeoutConnect(1000); //1000ms
+
+
+                if ("http".equalsIgnoreCase(mode)) {
+                    ACL acl = new ACL();
+                    acl.setBackend(name);
+
+                    if (subdomain.equals("") || subdomain == null) {
+                        subdomain = "_";
+                        //서브도메인이 없으면 패턴도 없다. 즉, default_backend로 처리.
+                    } else {
+                        acl.setName(subdomain);
+                        acl.setPattern("hdr_beg(host) " + subdomain + ".");
+                    }
+                    fe.getAclsNotNull().put(subdomain, acl);
                 }
-                fe.getAclsNotNull().put(subdomain, acl);
+
+                frontends.add(fe);
             }
-
-            frontends.add(fe);
-
             Backend be = new Backend();
             be.setName(name);
             be.setMode(mode);
