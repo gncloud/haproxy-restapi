@@ -26,7 +26,7 @@ public class HaproxyApiController implements HaproxyApi {
 
     private static Logger logger = org.slf4j.LoggerFactory.getLogger(HaproxyApiController.class);
 
-    private Map<String, Object> config;
+    private Map<String, Service> config;
     private ReentrantReadWriteLock lock;
 
     @Autowired
@@ -47,7 +47,7 @@ public class HaproxyApiController implements HaproxyApi {
         lock = new ReentrantReadWriteLock();
     }
 
-    private void applyConfig(Map<String, Object> newConfig) {
+    private void applyConfig(Config newConfig) {
         //1. 적용.
         proxyHelper.applyConfig(newConfig);
         //2. 메모리 객체 덤프
@@ -59,59 +59,35 @@ public class HaproxyApiController implements HaproxyApi {
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> getConfig() {
+    public ResponseEntity<Service> getConfig() {
         ReentrantReadWriteLock.WriteLock readLock = lock.writeLock();
         readLock.lock();
         try {
-            return new ResponseEntity<Map<String, Object>>(config, HttpStatus.OK);
+            return new ResponseEntity<>(config, HttpStatus.OK);
         } finally {
             readLock.unlock();
         }
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> postService(@PathVariable("id") String id, @Valid @RequestBody Service service) {
+    public ResponseEntity<Service> postService(@PathVariable("id") String id, @Valid @RequestBody Service service) {
         ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
         writeLock.lock();
         try {
-//            Map<String, Object> newConfig = cloneConfig();
-//            Map<String, Frontend> frontends = (Map<String, Frontend>) newConfig.get("frontends");
-//            Map<String, Backend> backends = (Map<String, Backend>) newConfig.get("backends");
-//
-//            frontends.put(id, service.getFrontend());
-//            backends.put(id, service.getBackend());
-//
-//            Frontend frontend = service.getFrontend();
-//            if (frontend != null) {
-//                Frontend old = frontends.put(id, frontend);
-//                if (old != null) {
-//                    logger.warn("frontend replaced : {}", id);
-//                }
-//            }
-//
-//            Backend backend = service.getBackend();
-//            if (backend != null) {
-//                Backend old = backends.put(id, backend);
-//                if (old != null) {
-//                    logger.warn("backend replaced : {}", id);
-//                }
-//            }
-//
-//            applyConfig(newConfig);
-            Map<String, Frontend> frontendMap = (Map<String, Frontend>) config.get("frontends");
-            Map<String, Backend> backendMap = (Map<String, Backend>) config.get("backends");
-            frontendMap.put(id, service.getFrontend());
-            backendMap.put(id, service.getBackend());
+            Config newConfig = cloneConfig();
+            Map<String, Frontend> frontendMap = (Map<String, Frontend>) newConfig.get("frontends");
+            Map<String, Backend> backendMap = (Map<String, Backend>) newConfig.get("backends");
+
 
             applyConfig(config);
-            return new ResponseEntity<Map<String, Object>>(config, HttpStatus.OK);
+            return new ResponseEntity<>(service, HttpStatus.OK);
         } finally {
             writeLock.unlock();
         }
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> deleteService(@PathVariable("id") String id) {
+    public ResponseEntity<Service> deleteService(@PathVariable("id") String id) {
         ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
         writeLock.lock();
         try {
@@ -124,7 +100,7 @@ public class HaproxyApiController implements HaproxyApi {
 
             applyConfig(newConfig);
 
-            return new ResponseEntity<Map<String, Object>>(config, HttpStatus.OK);
+            return new ResponseEntity<>(service, HttpStatus.OK);
         } finally {
             writeLock.unlock();
         }

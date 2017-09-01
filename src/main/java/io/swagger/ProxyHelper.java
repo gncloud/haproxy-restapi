@@ -1,6 +1,7 @@
 package io.swagger;
 
 import io.swagger.model.Backend;
+import io.swagger.model.Config;
 import io.swagger.model.Frontend;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -51,12 +52,17 @@ public class ProxyHelper {
         writeLock = lock.writeLock();
     }
 
-    protected String renderTemplate(Map config) {
+    protected String renderTemplate(Config config) {
         VelocityContext context = new VelocityContext();
-        Map<String, Frontend> frontends = (Map<String, Frontend>) config.get("frontends");
-        Map<String, Backend> backends = (Map<String, Backend>) config.get("backends");
+        Map<String, Frontend> frontends = (Map<String, Frontend>) config.getFrontends();
+        Map<String, Backend> backends = (Map<String, Backend>) config.getBackends();
         context.put("frontends", frontends);
         context.put("backends", backends);
+
+
+        ///TODO    변환..
+
+
 
         org.apache.velocity.Template template = engine.getTemplate(TEMPLATE_NAME, "utf-8");
         StringWriter stringWriter = new StringWriter();

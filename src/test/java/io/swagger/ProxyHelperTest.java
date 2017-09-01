@@ -1,6 +1,7 @@
 package io.swagger;
 
 import io.swagger.model.Backend;
+import io.swagger.model.Config;
 import io.swagger.model.Frontend;
 import org.junit.Test;
 
@@ -16,11 +17,12 @@ public class ProxyHelperTest {
     @Test
     public void testRenderTemplate() throws IOException {
 
-        Map<String, Object> c = new HashMap<String, Object>();
+        Config c  = new Config();
         Map<String, Frontend> fes = new HashMap<String, Frontend>();
-        c.put("frontends", fes);
         Map<String, Backend> bes = new HashMap<String, Backend>();
-        c.put("backends", bes);
+
+        c.setFrontends(fes);
+        c.setBackends(bes);
 
         Frontend fe = new Frontend();
         fe.setMode("http");
