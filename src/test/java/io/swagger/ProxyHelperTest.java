@@ -26,6 +26,9 @@ public class ProxyHelperTest {
         Service serviceOne = new Service();
         Service serviceTwo = new Service();
         Service serviceThree = new Service();
+        Service serviceFour = new Service();
+
+
 
         // Case 1
         serviceOne.setMode("http");
@@ -51,9 +54,22 @@ public class ProxyHelperTest {
         serviceThree.setSubdomain("blog.");
         serviceThree.setTimeout(70000);
 
+        // Casr 4
+        serviceFour.setMode("tcp");
+        serviceFour.setPort(22);
+        serviceFour.setBindPort(2222);
+        serviceFour.setHost("*");
+        serviceFour.setSubdomain("");
+        serviceFour.setTimeout(6000);
+
+
+
+
+
         config.put("case1", serviceOne);
         config.put("case2", serviceTwo);
         config.put("case3", serviceThree);
+        config.put("case4", serviceFour);
 
         ProxyHelper helper = new ProxyHelper();
         String str = helper.renderTemplate(config);
