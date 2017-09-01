@@ -22,10 +22,10 @@ public interface HaproxyApi {
             method = RequestMethod.POST)
     ResponseEntity<Service> postService(String id, Service service);
 
-    @RequestMapping(value = "/config/services/{id}",
+    @RequestMapping(value = "/config/services/{id}/ports/{port}",
             produces = { "application/json" },
             method = RequestMethod.DELETE)
-    ResponseEntity<Service> deleteService(String id);
+    ResponseEntity<Service> deleteService(String id, String port);
 
 
 
