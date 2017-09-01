@@ -31,15 +31,18 @@ public class HaproxyApiController implements HaproxyApi {
 
     @Autowired
     private ConfigFileHelper configFileHelper;
+
     @Autowired
     private ProxyHelper proxyHelper;
 
-    public HaproxyApiController() {
 
+    public HaproxyApiController() {
+        logger.info("new HaproxyApiController ");
         try {
+            configFileHelper = new ConfigFileHelper();
             config = configFileHelper.loadObjectFile();
         } catch (Exception e) {
-
+            logger.error("bind error", e);
         }
         lock = new ReentrantReadWriteLock();
     }
@@ -74,6 +77,9 @@ public class HaproxyApiController implements HaproxyApi {
             Map<String, Object> newConfig = cloneConfig();
             Map<String, Frontend> frontends = (Map<String, Frontend>) newConfig.get("frontends");
             Map<String, Backend> backends = (Map<String, Backend>) newConfig.get("backends");
+
+            frontends.put(id, service.getFrontend());
+            backends.put(id, service.getBackend());
 
             Frontend frontend = service.getFrontend();
             if (frontend != null) {
