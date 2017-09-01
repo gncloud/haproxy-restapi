@@ -32,7 +32,7 @@ public class ProxyHelperTest {
         serviceOne.setPort(80);
         serviceOne.setBindPort(8080);
         serviceOne.setHost("*");
-        serviceOne.setSubdomain("www.");
+        serviceOne.setSubdomain("www");
         serviceOne.setTimeout(500);
 
         // Case 2
@@ -40,7 +40,7 @@ public class ProxyHelperTest {
         serviceTwo.setPort(22);
         serviceTwo.setBindPort(2222);
         serviceTwo.setHost("*");
-        serviceTwo.setSubdomain("tcp.");
+        serviceTwo.setSubdomain("tcp");
         serviceTwo.setTimeout(6000);
 
         // Case 3
@@ -48,15 +48,15 @@ public class ProxyHelperTest {
         serviceThree.setPort(53);
         serviceThree.setBindPort(5553);
         serviceThree.setHost("127.0.0.1");
-        serviceThree.setSubdomain("blog.");
+        serviceThree.setSubdomain("blog");
         serviceThree.setTimeout(70000);
 
         // Casr 4
         serviceFour.setMode("tcp");
         serviceFour.setPort(22);
         serviceFour.setBindPort(2222);
+        serviceThree.setSubdomain("");
         serviceFour.setHost("*");
-        serviceFour.setSubdomain("");
         serviceFour.setTimeout(6000);
 
 
