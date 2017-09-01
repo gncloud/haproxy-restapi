@@ -31,7 +31,7 @@ public class ProxyHelperTest {
         serviceOne.setMode("http");
         serviceOne.setPort(80);
         serviceOne.setBindPort(8080);
-        serviceOne.setHost("*");
+        serviceOne.setHost("192.168.1.3");
         serviceOne.setSubdomain("www");
         serviceOne.setTimeout(500);
 
@@ -39,14 +39,14 @@ public class ProxyHelperTest {
         serviceTwo.setMode("tcp");
         serviceTwo.setPort(22);
         serviceTwo.setBindPort(2222);
-        serviceTwo.setHost("*");
+        serviceTwo.setHost("192.168.1.4");
         serviceTwo.setTimeout(6000);
 
         // Case 3
         serviceThree.setMode("http");
         serviceThree.setPort(53);
         serviceThree.setBindPort(5553);
-        serviceThree.setHost("127.0.0.1");
+        serviceThree.setHost("192.168.1.5");
         serviceThree.setSubdomain("");
         serviceThree.setTimeout(70000);
 
@@ -55,11 +55,8 @@ public class ProxyHelperTest {
         serviceFour.setMode("tcp");
         serviceFour.setPort(22);
         serviceFour.setBindPort(2222);
-        serviceFour.setHost("*");
+        serviceFour.setHost("192.168.1.6");
         serviceFour.setTimeout(6000);
-
-
-
 
 
         config.put("case1", serviceOne);
