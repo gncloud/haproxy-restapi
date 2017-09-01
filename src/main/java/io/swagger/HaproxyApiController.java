@@ -59,6 +59,7 @@ public class HaproxyApiController implements HaproxyApi {
         //2. 메모리 객체 덤프
         try {
             File tempFile = configFileHelper.saveObjectFile(newConfig);
+            config = newConfig;
         } catch (IOException e) {
             logger.error("Cannot save memory file.", e);
         }
@@ -110,7 +111,7 @@ public class HaproxyApiController implements HaproxyApi {
 
     private Map<String, Service> cloneConfig() {
         Map<String, Service> newConfig = new HashMap<>();
-        Iterator<Map.Entry<String, Service>> iter = newConfig.entrySet().iterator();
+        Iterator<Map.Entry<String, Service>> iter = config.entrySet().iterator();
         while(iter.hasNext()) {
             Map.Entry<String, Service> e = iter.next();
             String id = e.getKey();

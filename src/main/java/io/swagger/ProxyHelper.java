@@ -139,6 +139,7 @@ public class ProxyHelper {
 
             //1. 임시 저장
             String configString = renderTemplate(config);
+            logger.info("applyConfig => {}", configString);
             Writer fileWriter = new OutputStreamWriter(new FileOutputStream(tempFile));
             fileWriter.write(configString);
             fileWriter.close();

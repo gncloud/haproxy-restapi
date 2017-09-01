@@ -56,8 +56,6 @@ mode $backend.mode
 option forwardfor
 http-request set-header X-Forwarded-Port %[dst_port]
 #end
-#foreach($server in $backend.servers)
-server $server.name $server.host:$server.port check
-#end
+server server1 $backend.host:$backend.port check
 
 #end
