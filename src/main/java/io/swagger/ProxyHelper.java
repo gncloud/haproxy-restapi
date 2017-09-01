@@ -99,7 +99,7 @@ public class ProxyHelper {
                 ACL acl = new ACL();
                 acl.setBackend(name);
 
-                if(subdomain.equals("")) {
+                if(subdomain.equals("") || subdomain == null) {
                     subdomain = "_";
                     //서브도메인이 없으면 패턴도 없다. 즉, default_backend로 처리.
                 } else {
