@@ -1,16 +1,15 @@
 package io.swagger.model;
 
 import java.io.Serializable;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.model.ACLs;
 import io.swagger.model.SpikeLimit;
-import java.util.ArrayList;
-import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 
@@ -34,22 +33,16 @@ public class Frontend implements Serializable{
   private String defaultBackend = null;
 
   @JsonProperty("timeoutConnect")
-  private String timeoutConnect = null;
+  private Integer timeoutConnect = null;
 
   @JsonProperty("timeoutClient")
-  private String timeoutClient = null;
+  private Integer timeoutClient = null;
 
   @JsonProperty("timeoutServer")
-  private String timeoutServer = null;
+  private Integer timeoutServer = null;
 
   @JsonProperty("acls")
   private Map<String, ACL> acls = null;
-
-  @JsonProperty("aclPattern")
-  private String aclPattern = null;
-
-  @JsonProperty("aclBackend")
-  private String aclBackend = null;
 
 
   /**
@@ -140,7 +133,7 @@ public class Frontend implements Serializable{
     this.defaultBackend = defaultBackend;
   }
 
-  public Frontend timeoutConnect(String timeoutConnect) {
+  public Frontend timeoutConnect(Integer timeoutConnect) {
     this.timeoutConnect = timeoutConnect;
     return this;
   }
@@ -152,15 +145,15 @@ public class Frontend implements Serializable{
   @ApiModelProperty(value = "")
 
 
-  public String getTimeoutConnect() {
+  public Integer getTimeoutConnect() {
     return timeoutConnect;
   }
 
-  public void setTimeoutConnect(String timeoutConnect) {
+  public void setTimeoutConnect(Integer timeoutConnect) {
     this.timeoutConnect = timeoutConnect;
   }
 
-  public Frontend timeoutClient(String timeoutClient) {
+  public Frontend timeoutClient(Integer timeoutClient) {
     this.timeoutClient = timeoutClient;
     return this;
   }
@@ -172,15 +165,15 @@ public class Frontend implements Serializable{
   @ApiModelProperty(value = "")
 
 
-  public String getTimeoutClient() {
+  public Integer getTimeoutClient() {
     return timeoutClient;
   }
 
-  public void setTimeoutClient(String timeoutClient) {
+  public void setTimeoutClient(Integer timeoutClient) {
     this.timeoutClient = timeoutClient;
   }
 
-  public Frontend timeoutServer(String timeoutServer) {
+  public Frontend timeoutServer(Integer timeoutServer) {
     this.timeoutServer = timeoutServer;
     return this;
   }
@@ -192,36 +185,17 @@ public class Frontend implements Serializable{
   @ApiModelProperty(value = "")
 
 
-  public String getTimeoutServer() {
+  public Integer getTimeoutServer() {
     return timeoutServer;
   }
 
-  public void setTimeoutServer(String timeoutServer) {
+  public void setTimeoutServer(Integer timeoutServer) {
     this.timeoutServer = timeoutServer;
   }
 
   public Frontend acls(ACLs acls) {
     this.acls = acls;
     return this;
-  }
-
-
-  @ApiModelProperty(value = "")
-  public String getAclBackend() {
-    return aclBackend;
-  }
-
-  public void setAclBackend(String aclBackend) {
-    this.aclBackend = aclBackend;
-  }
-
-  @ApiModelProperty(value = "")
-  public String getAclPattern() {
-    return aclPattern;
-  }
-
-  public void setAclPattern(String aclPattern) {
-    this.aclPattern = aclPattern;
   }
 
 
@@ -237,6 +211,14 @@ public class Frontend implements Serializable{
   public Map<String, ACL> getAcls() {
     return acls;
   }
+
+  public Map<String, ACL> getAclsNotNull() {
+    if(acls == null) {
+      acls = new HashMap<>();
+    }
+    return acls;
+  }
+
 
   public void setAcls(Map<String, ACL> acls) {
     this.acls = acls;
@@ -278,8 +260,6 @@ public class Frontend implements Serializable{
     sb.append("    timeoutConnect: ").append(toIndentedString(timeoutConnect)).append("\n");
     sb.append("    timeoutClient: ").append(toIndentedString(timeoutClient)).append("\n");
     sb.append("    timeoutServer: ").append(toIndentedString(timeoutServer)).append("\n");
-    sb.append("    aclBackend: ").append(toIndentedString(aclBackend)).append("\n");
-    sb.append("    aclPattern: ").append(toIndentedString(aclPattern)).append("\n");
     sb.append("    acls: ").append(toIndentedString(acls)).append("\n");
     sb.append("}");
     return sb.toString();

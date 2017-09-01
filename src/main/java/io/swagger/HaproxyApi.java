@@ -1,6 +1,5 @@
 package io.swagger;
 
-import io.swagger.model.Config;
 import io.swagger.model.Service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;

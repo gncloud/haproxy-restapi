@@ -7,4 +7,8 @@ public class ConfigInvalidException extends RuntimeException {
     public ConfigInvalidException(Exception e) {
         super(e);
     }
+
+    public ConfigInvalidException(String message) {
+        super(message);
+    }
 }
