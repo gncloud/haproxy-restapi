@@ -31,7 +31,8 @@ public class Config implements Serializable{
   private Map<String, Frontend> frontends = null;
 
   @JsonProperty("backends")
-  private Map<String, Frontend> backends = null;
+  private Map<String, Backend> backends = null;
+
 
 
   public Config(){
@@ -104,7 +105,7 @@ public class Config implements Serializable{
     this.frontends = frontends;
   }
 
-  public Config backends(Map<String, Frontend> backends) {
+  public Config backends(Map<String, Backend> backends) {
     this.backends = backends;
     return this;
   }
@@ -117,11 +118,11 @@ public class Config implements Serializable{
 
   @Valid
 
-  public Map<String, Frontend> getBackends() {
+  public Map<String, Backend> getBackends() {
     return backends;
   }
 
-  public void setBackends(Map<String, Frontend> backends) {
+  public void setBackends(Map<String, Backend> backends) {
     this.backends = backends;
   }
 
