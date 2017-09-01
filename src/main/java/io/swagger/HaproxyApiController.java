@@ -47,7 +47,7 @@ public class HaproxyApiController implements HaproxyApi {
         lock = new ReentrantReadWriteLock();
     }
 
-    private void applyConfig(Config newConfig) {
+    private void applyConfig(Map<String , Service> newConfig) {
         //1. 적용.
         proxyHelper.applyConfig(newConfig);
         //2. 메모리 객체 덤프
@@ -59,7 +59,7 @@ public class HaproxyApiController implements HaproxyApi {
     }
 
     @Override
-    public ResponseEntity<Service> getConfig() {
+    public ResponseEntity<Map<String, Service>> getConfig() {
         ReentrantReadWriteLock.WriteLock readLock = lock.writeLock();
         readLock.lock();
         try {
@@ -74,11 +74,8 @@ public class HaproxyApiController implements HaproxyApi {
         ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
         writeLock.lock();
         try {
-            Config newConfig = cloneConfig();
-            Map<String, Frontend> frontendMap = (Map<String, Frontend>) newConfig.get("frontends");
-            Map<String, Backend> backendMap = (Map<String, Backend>) newConfig.get("backends");
-
-
+            Map<String, Service> newConfig = cloneConfig();
+            newConfig.put(id, service);
             applyConfig(config);
             return new ResponseEntity<>(service, HttpStatus.OK);
         } finally {
@@ -91,13 +88,8 @@ public class HaproxyApiController implements HaproxyApi {
         ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
         writeLock.lock();
         try {
-            Map<String, Object> newConfig = cloneConfig();
-            Map<String, Frontend> frontends = (Map<String, Frontend>) newConfig.get("frontends");
-            Map<String, Backend> backends = (Map<String, Backend>) newConfig.get("backends");
-
-            frontends.remove(id);
-            backends.remove(id);
-
+            Map<String, Service> newConfig = cloneConfig();
+            Service service = newConfig.remove(id);
             applyConfig(newConfig);
 
             return new ResponseEntity<>(service, HttpStatus.OK);
@@ -106,61 +98,16 @@ public class HaproxyApiController implements HaproxyApi {
         }
     }
 
-
-    private Map<String, Object> cloneConfig() {
-
-        Map<String, Frontend> frontends = (Map<String, Frontend>) config.get("frontends");
-        Map<String, Backend> backends = (Map<String, Backend>) config.get("backends");
-
-        Map<String, Object> newConfig = new HashMap<>();
-
-        //frontends
-        Map<String, Frontend> newFrontends = new HashMap<String, Frontend>();
-        newConfig.put("frontends", newFrontends);
-
-        if (frontends != null) {
-            Iterator<Map.Entry<String, Frontend>> iter = frontends.entrySet().iterator();
-            while (iter.hasNext()) {
-                Map.Entry<String, Frontend> e = iter.next();
-                String key = e.getKey();
-                Frontend fe = e.getValue();
-                //clone fe
-                Frontend newFe = new Frontend();
-                newFe.setMode(fe.getMode());
-                newFe.setBindIp(fe.getBindIp());
-                newFe.setBindPort(fe.getBindPort());
-                newFe.setTimeoutClient(fe.getTimeoutClient());
-                newFe.setTimeoutConnect(fe.getTimeoutConnect());
-                newFe.setTimeoutServer(fe.getTimeoutServer());
-                newFe.setDefaultBackend(fe.getDefaultBackend());
-                newFe.setAclBackend(fe.getAclBackend());
-                newFe.setAclPattern(fe.getAclPattern());
-
-                newFrontends.put(key, newFe);
-            }
+    private Map<String, Service> cloneConfig() {
+        Map<String, Service> newConfig = new HashMap<>();
+        Iterator<Map.Entry<String, Service>> iter = newConfig.entrySet().iterator();
+        while(iter.hasNext()) {
+            Map.Entry<String, Service> e = iter.next();
+            String id = e.getKey();
+            Service service =  e.getValue();
+            Service newService = (Service) service.clone();
+            newConfig.put(id, newService);
         }
-
-
-        //backends
-        Map<String, Backend> newBackends = new HashMap<String, Backend>();
-        newConfig.put("backends", newBackends);
-
-        if (backends != null) {
-            Iterator<Map.Entry<String, Backend>> iter = backends.entrySet().iterator();
-            while (iter.hasNext()) {
-                Map.Entry<String, Backend> e = iter.next();
-                String key = e.getKey();
-                Backend be = e.getValue();
-                //clone be
-                Backend newBe = new Backend();
-                newBe.setMode(be.getMode());
-                newBe.setHost(be.getHost());
-                newBe.setPort(be.getPort());
-                newBackends.put(key, newBe);
-            }
-        }
-
-
         return newConfig;
     }
 }

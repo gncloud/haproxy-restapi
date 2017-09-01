@@ -3,7 +3,7 @@ package io.swagger;
 import io.swagger.model.Backend;
 import io.swagger.model.Config;
 import io.swagger.model.Frontend;
-import io.swagger.model.FrontendTemp;
+import io.swagger.model.Service;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
@@ -11,11 +11,8 @@ import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
-import springfox.documentation.service.ApiListing;
 
 import java.io.*;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
@@ -56,15 +53,17 @@ public class ProxyHelper {
         writeLock = lock.writeLock();
     }
 
-    protected String renderTemplate(Config config) {
+    protected String renderTemplate(Map<String, Service> config) {
         VelocityContext context = new VelocityContext();
-        Map<String, Frontend> frontends = (Map<String, Frontend>) config.getFrontends();
-        Map<String, Backend> backends = (Map<String, Backend>) config.getBackends();
-        context.put("frontends", frontends);
-        context.put("backends", backends);
-
-
         ///TODO    변환..
+
+
+
+
+//        Map<String, Frontend> frontends = (Map<String, Frontend>) config.getFrontends();
+//        Map<String, Backend> backends = (Map<String, Backend>) config.getBackends();
+//        context.put("frontends", frontends);
+//        context.put("backends", backends);
 
 
 
@@ -77,7 +76,7 @@ public class ProxyHelper {
         return configString;
     }
 
-    public String applyConfig(Map config) throws ConfigInvalidException {
+    public String applyConfig(Map<String, Service> config) throws ConfigInvalidException {
         writeLock.lock();
 
         try {
@@ -136,8 +135,6 @@ public class ProxyHelper {
             writeLock.unlock();
         }
     }
-
-
 
 
 //    protected String makeConfigString(VelocityContext context) {

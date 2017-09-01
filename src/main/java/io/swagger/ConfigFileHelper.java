@@ -2,6 +2,7 @@ package io.swagger;
 
 import io.swagger.model.Backend;
 import io.swagger.model.Frontend;
+import io.swagger.model.Service;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ public class ConfigFileHelper {
         logger.info("new ConfigFileHelper ");
     }
 
-    public File saveObjectFile(Map<String, Object> config) throws IOException {
+    public File saveObjectFile(Map<String, Service> config) throws IOException {
         try {
             File file = new File(configBinPath);
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
@@ -38,22 +39,17 @@ public class ConfigFileHelper {
         }
     }
 
-    public Map<String, Object> loadObjectFile() throws Exception {
+    public Map<String, Service> loadObjectFile() throws Exception {
         try {
             File file = new File(configBinPath);
             if(!file.exists()) {
 
-                Map<String, Object> c = new HashMap<String, Object>();
-                Map<String, Frontend> fes = new HashMap<String, Frontend>();
-                c.put("frontends", fes);
-                Map<String, Backend> bes = new HashMap<String, Backend>();
-                c.put("backends", bes);
-
+                Map<String, Service> c = new HashMap<String, Service>();
                 saveObjectFile(c);
                 return c;
             }
             ObjectInputStream is = new ObjectInputStream(new FileInputStream(configBinPath));
-            Map<String, Object> config = (Map<String, Object>) is.readObject();
+            Map<String, Service> config = (Map<String, Service>) is.readObject();
 
             logger.info("loadObjectFile config data {}", config);
 

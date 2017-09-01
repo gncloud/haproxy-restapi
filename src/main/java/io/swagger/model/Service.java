@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by swsong on 17. 8. 31..
  */
-public class Service implements Serializable {
+public class Service implements Serializable, Cloneable {
     @JsonProperty("mode")
     private String mode;
 
@@ -27,6 +27,15 @@ public class Service implements Serializable {
     private String subdomain;
 
     public Service() {
+    }
+
+    public Service(String mode, Integer bindPort, String host, Integer port, Integer timeout, String subdomain) {
+        this.mode = mode;
+        this.bindPort = bindPort;
+        this.host = host;
+        this.port = port;
+        this.timeout = timeout;
+        this.subdomain = subdomain;
     }
 
     public String getMode() {
@@ -75,5 +84,10 @@ public class Service implements Serializable {
 
     public void setSubdomain(String subdomain) {
         this.subdomain = subdomain;
+    }
+
+    @Override
+    public Object clone() {
+        return new Service(mode, bindPort, host, port, timeout, subdomain);
     }
 }

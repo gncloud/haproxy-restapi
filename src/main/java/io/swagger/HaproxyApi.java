@@ -16,7 +16,7 @@ public interface HaproxyApi {
     @RequestMapping(value = "/config",
             produces = { "application/json" },
             method = RequestMethod.GET)
-    ResponseEntity<Config> getConfig();
+    ResponseEntity<Map<String, Service>> getConfig();
 
     @RequestMapping(value = "/config/services/{id}",
             produces = { "application/json" },
