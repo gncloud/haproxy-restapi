@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 
 import java.io.*;
+import java.security.acl.Acl;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -54,9 +55,8 @@ public class ProxyHelper {
 
     protected String renderTemplate(Map<String, Service> config) {
         VelocityContext context = new VelocityContext();
-
+        Map<String, Frontend> frontendMap = new HashMap<>();
         List<Frontend> frontends = new ArrayList<>();
-        Map<String, Frontend> frontendsMap = new HashMap<>();
         List<Backend> backends = new ArrayList<>();
         context.put("frontends", frontends);
         context.put("backends", backends);
@@ -85,15 +85,14 @@ public class ProxyHelper {
 
             String name = makeName(mode, bindPort);
             //TODO HTTP_80 가 이미존재하면 frontend를 만들지 않고, 가져와서 acl만 추가.
-            Frontend old = frontendsMap.get(name);
-            if(old != null) {
-                old.getAcls();
-                //TODO 여기에 쑤셔넣는다.
 
-
-
-                
-            } else {
+            Frontend old = frontendMap.get(name);
+            if(old != null){
+                if ("http".equalsIgnoreCase(mode)) {
+                    ACL acl = createACL(name, subdomain);
+                    old.getAclsNotNull().put(subdomain, acl);
+                }
+            }else{
                 Frontend fe = new Frontend();
                 fe.setName(name);
                 fe.setBindIp("*");
@@ -103,29 +102,22 @@ public class ProxyHelper {
                 fe.setTimeoutServer(timeout);
                 fe.setTimeoutConnect(1000); //1000ms
 
-
                 if ("http".equalsIgnoreCase(mode)) {
-                    ACL acl = new ACL();
-                    acl.setBackend(name);
-
-                    if (subdomain.equals("") || subdomain == null) {
-                        subdomain = "_";
-                        //서브도메인이 없으면 패턴도 없다. 즉, default_backend로 처리.
-                    } else {
-                        acl.setName(subdomain);
-                        acl.setPattern("hdr_beg(host) " + subdomain + ".");
-                    }
+                    ACL acl = createACL(name, subdomain);
                     fe.getAclsNotNull().put(subdomain, acl);
                 }
-
                 frontends.add(fe);
+                frontendMap.put(name, fe);
+
+                Backend be = new Backend();
+                be.setName(name);
+                be.setMode(mode);
+                be.setHost(host);
+                be.setPort(port);
+                backends.add(be);
+
             }
-            Backend be = new Backend();
-            be.setName(name);
-            be.setMode(mode);
-            be.setHost(host);
-            be.setPort(port);
-            backends.add(be);
+
         }
 
         org.apache.velocity.Template template = engine.getTemplate(TEMPLATE_NAME, "utf-8");
@@ -135,6 +127,20 @@ public class ProxyHelper {
         String configString = stringWriter.toString();
 
         return configString;
+    }
+
+    private ACL createACL(String name, String subdomain){
+        ACL acl = new ACL();
+        acl.setBackend(name);
+
+        if (subdomain.equals("") || subdomain == null) {
+            subdomain = "_";
+            //서브도메인이 없으면 패턴도 없다. 즉, default_backend로 처리.
+        } else {
+            acl.setName(subdomain);
+            acl.setPattern("hdr_beg(host) " + subdomain + ".");
+        }
+        return acl;
     }
 
     private String makeName(String mode, int port) {
