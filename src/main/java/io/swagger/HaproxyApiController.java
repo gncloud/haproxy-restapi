@@ -110,7 +110,7 @@ public class HaproxyApiController implements HaproxyApi {
         writeLock.lock();
         try {
             Config newConfig = config.cloneConfig();
-            Service service = config.removeService(id, port, acl);
+            Service service = newConfig.removeService(id, port, acl);
             applyConfig(newConfig);
 
             return new ResponseEntity<>(service, HttpStatus.OK);
