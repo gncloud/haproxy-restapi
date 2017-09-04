@@ -51,14 +51,14 @@ RUN set -x \
 	&& rm -rf /usr/src/haproxy \
 	\
 	&& apt-get purge -y --auto-remove $buildDeps
-RUN apt-get install -y libssl1.0.0 libssl-dev
+RUN apt-get update && apt-get install -y libssl1.0.0 libssl-dev
 
 
 
 RUN mkdir -p /var/lib/haproxy-restapi
 RUN mkdir -p /var/lib/haproxy-restapi/bin
 RUN mkdir -p /var/lib/haproxy-restapi/conf
-COPY haproxy /var/lib/haproxy-restapi/bin/haproxy
+RUN ln -s /usr/local/sbin/haproxy /var/lib/haproxy-restapi/bin/haproxy
 COPY haproxy.cfg /var/lib/haproxy-restapi/conf/haproxy.cfg
 COPY target/haproxy-restapi-1.0.jar /haproxy-restapi.jar
 
