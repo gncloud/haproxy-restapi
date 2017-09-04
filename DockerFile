@@ -28,7 +28,7 @@ RUN set -x \
 		wget \
 	' \
 	&& apt-get update && apt-get install -y $buildDeps --no-install-recommends && rm -rf /var/lib/apt/lists/* \
-	&& libssl1.0.0 && libssl-dev
+
 	\
 	&& wget -O haproxy.tar.gz "http://www.haproxy.org/download/${HAPROXY_MAJOR}/src/haproxy-${HAPROXY_VERSION}.tar.gz" \
 	&& echo "$HAPROXY_MD5 *haproxy.tar.gz" | md5sum -c \
@@ -51,6 +51,9 @@ RUN set -x \
 	&& rm -rf /usr/src/haproxy \
 	\
 	&& apt-get purge -y --auto-remove $buildDeps
+RUN apt-get install -y libssl1.0.0 libssl-dev
+
+
 
 RUN mkdir -p /var/lib/haproxy-restapi
 RUN mkdir -p /var/lib/haproxy-restapi/bin
