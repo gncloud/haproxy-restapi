@@ -103,6 +103,7 @@ public class ProxyHelper {
                 fe.setTimeoutClient(timeout);
                 fe.setTimeoutServer(timeout);
                 fe.setTimeoutConnect(5000); //5000ms
+                fe.setDefaultBackend(beName);
 
                 if ("http".equalsIgnoreCase(mode)) {
                     ACL acl = createACL(beName, subdomain);

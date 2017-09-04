@@ -41,13 +41,12 @@ timeout connect ${frontend.timeoutConnect}ms
 #if ($acl.pattern)
 acl $acl.name $acl.pattern
 use_backend $acl.backend if $acl.name
-#end
-#if (!$acl.pattern)
+#else
 default_backend $acl.backend
 #end
 #end
 #if ($frontend.mode == "tcp")
-default_backend $frontend.name
+default_backend $frontend.defaultBackend
 #end
 
 #end
