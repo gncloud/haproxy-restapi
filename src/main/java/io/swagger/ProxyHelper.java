@@ -224,11 +224,21 @@ public class ProxyHelper {
 
     public void restartProxy(String pid) throws IOException {
 
-        ProcessBuilder processBuilder = new ProcessBuilder(haproxyBinaryPath
-                , "-f", haproxyConfigPath
-                , "-p", pidFilePath
-                , "-sf", pid)
-                .inheritIO();
+        ProcessBuilder processBuilder = null;
+
+        if(pid != null && pid.length() > 0) {
+            processBuilder = new ProcessBuilder(haproxyBinaryPath
+                    , "-f", haproxyConfigPath
+                    , "-p", pidFilePath
+                    , "-sf", pid)
+                    .inheritIO();
+        } else {
+            processBuilder = new ProcessBuilder(haproxyBinaryPath
+                    , "-f", haproxyConfigPath
+                    , "-p", pidFilePath)
+                    .inheritIO();
+        }
+
         logger.info("processBuilder => {}", processBuilder.command());
         this.process = processBuilder.start();
         logger.info("haproxy update ok!. prevPid[{}]", pid);
