@@ -31,12 +31,6 @@ mode $frontend.mode
 #if($frontend.timeoutClient)
 timeout client ${frontend.timeoutClient}ms
 #end
-#if($frontend.timeoutServer)
-timeout server ${frontend.timeoutServer}ms
-#end
-#if($frontend.timeoutConnect)
-timeout connect ${frontend.timeoutConnect}ms
-#end
 #foreach($acl in $frontend.acls)
 #if ($acl.pattern)
 acl $acl.name $acl.pattern
@@ -56,6 +50,12 @@ default_backend $frontend.defaultBackend
 #foreach($backend in $backends)
 backend $backend.name
 mode $backend.mode
+#if($backend.timeoutServer)
+timeout server ${backend.timeoutServer}ms
+#end
+#if($backend.timeoutConnect)
+timeout connect ${backend.timeoutConnect}ms
+#end
 #if($backend.mode == "http")
 option forwardfor
 http-request set-header X-Forwarded-Port %[dst_port]
