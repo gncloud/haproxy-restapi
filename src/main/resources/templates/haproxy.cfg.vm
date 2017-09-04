@@ -16,7 +16,8 @@ timeout connect 5000ms
 timeout client  50000ms
 timeout server  50000ms
 
-listen stats :1900
+listen stats
+bind :1900
 mode http
 stats enable
 stats hide-version
