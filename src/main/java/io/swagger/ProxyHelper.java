@@ -118,15 +118,24 @@ public class ProxyHelper {
                 frontendUniqueMap.put(feName, fe);
             }
 
-
-            Backend be = new Backend();
-            be.setName(beName);
-            be.setMode(mode);
-            be.setHost(host);
-            be.setPort(port);
-            be.setTimeoutServer(timeout);
-            be.setTimeoutConnect(5000); //5000ms
-            backends.add(be);
+            boolean BackEndUniq = true;
+            for(Backend b : backends) {
+                //이름이 동일한 backend가 있다면 무시.
+                if(b.getName().equals(beName)) {
+                    BackEndUniq = false;
+                    break;
+                }
+            }
+            if(BackEndUniq) {
+                Backend be = new Backend();
+                be.setName(beName);
+                be.setMode(mode);
+                be.setHost(host);
+                be.setPort(port);
+                be.setTimeoutServer(timeout);
+                be.setTimeoutConnect(5000); //5000ms
+                backends.add(be);
+            }
 
         }
 
@@ -152,16 +161,7 @@ public class ProxyHelper {
         }
         return acl;
     }
-    private Backend createBackend(String beName, String mode, String host, int port, int timeout){
-        Backend be = new Backend();
-        be.setName(beName);
-        be.setMode(mode);
-        be.setHost(host);
-        be.setPort(port);
-        be.setTimeoutServer(timeout);
-        be.setTimeoutConnect(5000); //5000ms
-        return be;
-    }
+
     private String makeName(String mode, int port) {
         return mode+"_"+port;
     }
