@@ -32,6 +32,12 @@ public class Backend  implements Serializable {
   @JsonProperty("port")
   private int port;
 
+  @JsonProperty("timeoutConnect")
+  private Integer timeoutConnect = null;
+
+  @JsonProperty("timeoutServer")
+  private Integer timeoutServer = null;
+
   public String getName() {
     return name;
   }
@@ -64,6 +70,22 @@ public class Backend  implements Serializable {
     this.port = port;
   }
 
+  public Integer getTimeoutConnect() {
+    return timeoutConnect;
+  }
+
+  public void setTimeoutConnect(Integer timeoutConnect) {
+    this.timeoutConnect = timeoutConnect;
+  }
+
+  public Integer getTimeoutServer() {
+    return timeoutServer;
+  }
+
+  public void setTimeoutServer(Integer timeoutServer) {
+    this.timeoutServer = timeoutServer;
+  }
+
   @Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
@@ -75,7 +97,9 @@ public class Backend  implements Serializable {
     Backend backend = (Backend) o;
     return Objects.equals(this.host, backend.host) &&
         Objects.equals(this.port, backend.port) &&
-        Objects.equals(this.mode, backend.mode);
+        Objects.equals(this.mode, backend.mode) &&
+        Objects.equals(this.timeoutConnect, backend.timeoutConnect) &&
+        Objects.equals(this.timeoutServer, backend.timeoutServer);
   }
 
   @Override
@@ -90,6 +114,8 @@ public class Backend  implements Serializable {
     sb.append("    mode: ").append(toIndentedString(mode)).append("\n");
     sb.append("    serverHost: ").append(toIndentedString(host)).append("\n");
     sb.append("    serverPort: ").append(toIndentedString(port)).append("\n");
+    sb.append("    timeoutConnect: ").append(toIndentedString(timeoutConnect)).append("\n");
+    sb.append("    timeoutServer: ").append(toIndentedString(timeoutServer)).append("\n");
     sb.append("}");
     return sb.toString();
   }
