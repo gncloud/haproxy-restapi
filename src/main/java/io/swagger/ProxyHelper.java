@@ -89,7 +89,18 @@ public class ProxyHelper {
             //HTTP_80 가 이미존재하면 frontend를 만들지 않고, 가져와서 acl만 추가.
             if(old != null && "http".equalsIgnoreCase(mode)){
                 ACL acl = createACL(beName, subdomain);
-                old.getAclsNotNull().put(subdomain, acl);
+                ACL oldAcl = old.getAclsNotNull().put(subdomain, acl);
+                String backendName = oldAcl.getBackend();
+
+
+                Iterator<Backend> backendIter = backends.iterator();
+                while(backendIter.hasNext()) {
+                    Backend be = backendIter.next();
+                    //삭제할 백엔드 이름과 같다면 삭제한다
+                    if(backendName.equals(be.getName())) {
+                        backendIter.remove();
+                    }
+                }
             }else{
                 if(old != null && "tcp".equalsIgnoreCase(mode)){
                   logger.warn("Request frontend {} for tcp override! old = ip[{}] port[{}] defBackend[{}]", feName, old.getBindIp(), old.getBindPort(), old.getDefaultBackend());
