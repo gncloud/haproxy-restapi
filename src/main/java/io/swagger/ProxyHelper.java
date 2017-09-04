@@ -86,24 +86,20 @@ public class ProxyHelper {
             String feName = makeName(mode, bindPort);
             String beName = makeName(host, port);
             Frontend old = frontendUniqueMap.get(feName);
+
+            logger.debug("feName : {}, old : {}", feName, old);
             //HTTP_80 가 이미존재하면 frontend를 만들지 않고, 가져와서 acl만 추가.
             if(old != null && "http".equalsIgnoreCase(mode)){
-                ACL acl = createACL(beName, subdomain);
-                ACL oldAcl = old.getAclsNotNull().put(subdomain, acl);
-                String backendName = oldAcl.getBackend();
-
-
-                Iterator<Backend> backendIter = backends.iterator();
-                while(backendIter.hasNext()) {
-                    Backend be = backendIter.next();
-                    //삭제할 백엔드 이름과 같다면 삭제한다
-                    if(backendName.equals(be.getName())) {
-                        backendIter.remove();
-                    }
+                Map<String, ACL> aclMap = old.getAclsNotNull();
+                if(aclMap.containsKey(subdomain)) {
+                    //reject.
+                    throw new ConfigInvalidException("Frontend acl duplicated. subdomain = " + subdomain);
                 }
-            }else{
-                if(old != null && "tcp".equalsIgnoreCase(mode)){
-                  logger.warn("Request frontend {} for tcp override! old = ip[{}] port[{}] defBackend[{}]", feName, old.getBindIp(), old.getBindPort(), old.getDefaultBackend());
+                ACL acl = createACL(beName, subdomain);
+                aclMap.put(subdomain, acl);
+            } else {
+                if (old != null && "tcp".equalsIgnoreCase(mode)) {
+                    logger.warn("Request frontend {} for tcp override! old = ip[{}] port[{}] defBackend[{}]", feName, old.getBindIp(), old.getBindPort(), old.getDefaultBackend());
                 }
                 //존재하지 않거나,tcp의 경우.
                 Frontend fe = new Frontend();
@@ -119,8 +115,18 @@ public class ProxyHelper {
                     fe.getAclsNotNull().put(subdomain, acl);
                 }
                 frontends.add(fe);
-
+                frontendUniqueMap.put(feName, fe);
             }
+
+
+            Backend be = new Backend();
+            be.setName(beName);
+            be.setMode(mode);
+            be.setHost(host);
+            be.setPort(port);
+            be.setTimeoutServer(timeout);
+            be.setTimeoutConnect(5000); //5000ms
+            backends.add(be);
 
         }
 

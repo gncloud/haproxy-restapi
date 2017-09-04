@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Created by swsong on 17. 8. 31..
  */
 public class Service implements Serializable, Cloneable {
-        @JsonProperty("mode")
+    @JsonProperty("mode")
     private String mode;
 
     @JsonProperty("bindPort")

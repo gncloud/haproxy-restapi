@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
@@ -28,7 +29,7 @@ public class HaproxyApiController implements HaproxyApi {
 
     private static Logger logger = org.slf4j.LoggerFactory.getLogger(HaproxyApiController.class);
 
-    private Map<String, Service> config;
+    private Config config;
     private ReentrantReadWriteLock lock;
 
     @Autowired
@@ -46,13 +47,15 @@ public class HaproxyApiController implements HaproxyApi {
     @PostConstruct
     public void init() {
         try {
-//            configFileHelper = new ConfigFileHelper();
-            config = configFileHelper.loadObjectFile();
-            proxyHelper.applyConfig(config);
+            Map map = configFileHelper.loadObjectFile();
+            proxyHelper.applyConfig(map);
+
+            config = new Config(map);
         } catch (Exception e) {
             logger.error("bind error", e);
         }
     }
+
     @PreDestroy
     public void destroy() {
         logger.info("haproxy destroy");
@@ -60,12 +63,13 @@ public class HaproxyApiController implements HaproxyApi {
     }
 
 
-    private void applyConfig(Map<String , Service> newConfig) {
+    private void applyConfig(Config newConfig) {
         //1. 적용.
-        proxyHelper.applyConfig(newConfig);
+        Map configMap = newConfig.getMap();
+        proxyHelper.applyConfig(configMap);
         //2. 메모리 객체 덤프
         try {
-            File tempFile = configFileHelper.saveObjectFile(newConfig);
+            File tempFile = configFileHelper.saveObjectFile(configMap);
             config = newConfig;
         } catch (IOException e) {
             logger.error("Cannot save memory file.", e);
@@ -79,21 +83,20 @@ public class HaproxyApiController implements HaproxyApi {
         ReentrantReadWriteLock.WriteLock readLock = lock.writeLock();
         readLock.lock();
         try {
-            return new ResponseEntity<>(config, HttpStatus.OK);
+            return new ResponseEntity<>(config.getMap(), HttpStatus.OK);
         } finally {
             readLock.unlock();
         }
     }
+
 
     @Override
     public ResponseEntity<Service> postService(@PathVariable("id") String id, @Valid @RequestBody Service service) {
         ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
         writeLock.lock();
         try {
-            Map<String, Service> newConfig = cloneConfig();
-            int port = service.getBindPort();
-            String uid = id + "_" + port;
-            newConfig.put(uid, service);
+            Config newConfig = config.cloneConfig();
+            newConfig.addService(id, service);
             applyConfig(newConfig);
             return new ResponseEntity<>(service, HttpStatus.OK);
         } finally {
@@ -102,13 +105,12 @@ public class HaproxyApiController implements HaproxyApi {
     }
 
     @Override
-    public ResponseEntity<Service> deleteService(@PathVariable("id") String id, @PathVariable("port") String port) {
+    public ResponseEntity<Service> deleteService(@PathVariable("id") String id, @PathVariable("port") String port, @RequestParam(name = "acl", required = false) String acl) {
         ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
         writeLock.lock();
         try {
-            Map<String, Service> newConfig = cloneConfig();
-            String uid = id + "_" + port;
-            Service service = newConfig.remove(uid);
+            Config newConfig = config.cloneConfig();
+            Service service = config.removeService(id, port, acl);
             applyConfig(newConfig);
 
             return new ResponseEntity<>(service, HttpStatus.OK);
@@ -117,16 +119,5 @@ public class HaproxyApiController implements HaproxyApi {
         }
     }
 
-    private Map<String, Service> cloneConfig() {
-        Map<String, Service> newConfig = new HashMap<>();
-        Iterator<Map.Entry<String, Service>> iter = config.entrySet().iterator();
-        while(iter.hasNext()) {
-            Map.Entry<String, Service> e = iter.next();
-            String id = e.getKey();
-            Service service =  e.getValue();
-            Service newService = (Service) service.clone();
-            newConfig.put(id, newService);
-        }
-        return newConfig;
-    }
+
 }

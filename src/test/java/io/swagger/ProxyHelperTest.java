@@ -1,7 +1,6 @@
 package io.swagger;
 
 import io.swagger.model.Service;
-import jdk.nashorn.internal.runtime.regexp.joni.Config;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -17,18 +16,107 @@ public class ProxyHelperTest {
         config.put(name, service);
     }
 
-    @Test
-    public void testSameHttpPort() throws IOException {
 
-        Map<String, Service> config  = new HashMap<String, Service>();
+    @Test
+    public void testDeleteBoundary() throws IOException {
+        Config config = new Config();
         //String mode, Integer bindPort, String host, Integer port, Integer timeout, String subdomain
-        addService(config, "service1", new Service("tcp", 9999, "192.168.1.50", 9999, 5000, null)); // ok
-        addService(config, "service2", new Service("http", 8080, "192.168.1.51", 8080, 5000, null));
-        addService(config, "service3", new Service("http", 8080, "192.168.1.52", 8080, 5000, null));
-        addService(config, "service4", new Service("http", 8080, "192.168.1.53", 8080, 5000, null));
+        config.addService("vm1", new Service("tcp", 9999, "192.168.1.50", 9999, 5000, null)); // ok
+        config.addService("vm3", new Service("http", 8080, "192.168.1.52", 8080, 5000, "blog"));
+        config.addService("vm4", new Service("http", 8080, "192.168.1.53", 8080, 5000, "data"));
+
+        Service service = config.removeService("vm1", String.valueOf(9999), null);
+        service = config.removeService("vm3", String.valueOf(8080), "blog");
+        service = config.removeService("vm4", String.valueOf(8080), "data");
+        System.out.println("Removed : ");
+        System.out.println(service);
 
         ProxyHelper helper = new ProxyHelper();
-        String str = helper.renderTemplate(config);
+        String str = helper.renderTemplate(config.getMap());
+
+        System.out.println(str);
+    }
+
+
+    @Test
+    public void testDelete() throws IOException {
+
+        Config config = new Config();
+        //String mode, Integer bindPort, String host, Integer port, Integer timeout, String subdomain
+        config.addService("vm1", new Service("tcp", 9999, "192.168.1.50", 9999, 5000, null)); // ok
+        config.addService("vm2", new Service("http", 8080, "192.168.1.51", 8080, 5000, "www"));
+        config.addService("vm3", new Service("http", 8080, "192.168.1.52", 8080, 5000, "blog"));
+        config.addService("vm4", new Service("http", 8080, "192.168.1.53", 8080, 5000, "data"));
+
+        Service service = config.removeService("vm1", String.valueOf(9999), null);
+        service = config.removeService("vm3", String.valueOf(8080), "blog");
+        System.out.println("Removed : ");
+        System.out.println(service);
+
+        ProxyHelper helper = new ProxyHelper();
+        String str = helper.renderTemplate(config.getMap());
+
+        System.out.println(str);
+    }
+
+
+
+    @Test
+    public void testHttpAclWithSameBackend() throws IOException {
+
+        Config config = new Config();
+        //String mode, Integer bindPort, String host, Integer port, Integer timeout, String subdomain
+        config.addService("vm1", new Service("http", 8080, "192.168.1.51", 8080, 5000, "www"));
+        config.addService("vm1", new Service("http", 8080, "192.168.1.51", 8080, 5000, "blog"));
+
+        ProxyHelper helper = new ProxyHelper();
+        String str = helper.renderTemplate(config.getMap());
+
+        System.out.println(str);
+    }
+
+
+    @Test
+    public void testSameHttpPortMultiAcls() throws IOException {
+
+        Config config = new Config();
+        //String mode, Integer bindPort, String host, Integer port, Integer timeout, String subdomain
+        config.addService("vm1", new Service("tcp", 9999, "192.168.1.50", 9999, 5000, null)); // ok
+        config.addService("vm2", new Service("http", 8080, "192.168.1.51", 8080, 5000, "www"));
+        config.addService("vm3", new Service("http", 8080, "192.168.1.52", 8080, 5000, "blog"));
+        config.addService("vm4", new Service("http", 8080, "192.168.1.53", 8080, 5000, "data"));
+
+        ProxyHelper helper = new ProxyHelper();
+        String str = helper.renderTemplate(config.getMap());
+
+        System.out.println(str);
+    }
+
+    @Test
+    public void testSameHttpPortWithNullHostname() throws IOException {
+
+        Config config = new Config();
+        //String mode, Integer bindPort, String host, Integer port, Integer timeout, String subdomain
+        config.addService("vm1", new Service("tcp", 9999, "192.168.1.50", 9999, 5000, null)); // ok
+        config.addService("vm2", new Service("http", 8080, "192.168.1.51", 8080, 5000, null));
+        config.addService("vm3", new Service("http", 8081, "192.168.1.52", 8080, 5000, null));
+
+        ProxyHelper helper = new ProxyHelper();
+        String str = helper.renderTemplate(config.getMap());
+
+        System.out.println(str);
+    }
+
+    @Test
+    public void testSameHttpPortAndSubdomain() throws IOException {
+
+        Config config = new Config();
+        //String mode, Integer bindPort, String host, Integer port, Integer timeout, String subdomain
+        config.addService("vm2", new Service("http", 8080, "192.168.1.51", 8080, 5000, "www"));
+        config.addService("vm3", new Service("http", 8080, "192.168.1.52", 8080, 5000, "www"));
+
+        ProxyHelper helper = new ProxyHelper();
+        String str = helper.renderTemplate(config.getMap());
 
         System.out.println(str);
     }

@@ -25,7 +25,7 @@ public interface HaproxyApi {
     @RequestMapping(value = "/config/services/{id}/ports/{port}",
             produces = { "application/json" },
             method = RequestMethod.DELETE)
-    ResponseEntity<Service> deleteService(String id, String port);
+    ResponseEntity<Service> deleteService(String id, String port, String acl);
 
 
 
