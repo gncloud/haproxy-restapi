@@ -37,7 +37,6 @@ timeout server ${frontend.timeoutServer}ms
 #if($frontend.timeoutConnect)
 timeout connect ${frontend.timeoutConnect}ms
 #end
-
 #foreach($acl in $frontend.acls)
 #if ($acl.pattern)
 acl $acl.name $acl.pattern

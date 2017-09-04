@@ -55,7 +55,7 @@ public class ProxyHelper {
 
     protected String renderTemplate(Map<String, Service> config) {
         VelocityContext context = new VelocityContext();
-        Map<String, Frontend> frontendMap = new HashMap<>();
+        Map<String, Frontend> frontendUniqueMap = new HashMap<>();
         List<Frontend> frontends = new ArrayList<>();
         List<Backend> backends = new ArrayList<>();
         context.put("frontends", frontends);
@@ -83,19 +83,20 @@ public class ProxyHelper {
                 throw new ConfigInvalidException("port cannot be empty.");
             }
 
-            String name = makeName(mode, bindPort);
-            Frontend old = frontendMap.get(name);
+            String feName = makeName(mode, bindPort);
+            String beName = makeName(host, port);
+            Frontend old = frontendUniqueMap.get(feName);
             //HTTP_80 가 이미존재하면 frontend를 만들지 않고, 가져와서 acl만 추가.
             if(old != null && "http".equalsIgnoreCase(mode)){
-                ACL acl = createACL(name, subdomain);
+                ACL acl = createACL(beName, subdomain);
                 old.getAclsNotNull().put(subdomain, acl);
             }else{
                 if(old != null && "tcp".equalsIgnoreCase(mode)){
-                  logger.warn("Request frontend {} for tcp override! old = ip[{}] port[{}] defBackend[{}]", name, old.getBindIp(), old.getBindPort(), old.getDefaultBackend());
+                  logger.warn("Request frontend {} for tcp override! old = ip[{}] port[{}] defBackend[{}]", feName, old.getBindIp(), old.getBindPort(), old.getDefaultBackend());
                 }
                 //존재하지 않거나,tcp의 경우.
                 Frontend fe = new Frontend();
-                fe.setName(name);
+                fe.setName(feName);
                 fe.setBindIp("*");
                 fe.setBindPort(bindPort);
                 fe.setMode(mode);
@@ -104,14 +105,14 @@ public class ProxyHelper {
                 fe.setTimeoutConnect(5000); //5000ms
 
                 if ("http".equalsIgnoreCase(mode)) {
-                    ACL acl = createACL(name, subdomain);
+                    ACL acl = createACL(beName, subdomain);
                     fe.getAclsNotNull().put(subdomain, acl);
                 }
                 frontends.add(fe);
-                frontendMap.put(name, fe);
+                frontendUniqueMap.put(feName, fe);
 
                 Backend be = new Backend();
-                be.setName(name);
+                be.setName(beName);
                 be.setMode(mode);
                 be.setHost(host);
                 be.setPort(port);
@@ -134,7 +135,7 @@ public class ProxyHelper {
         ACL acl = new ACL();
         acl.setBackend(name);
 
-        if (subdomain.equals("") || subdomain == null) {
+        if (subdomain == null || subdomain.equals("")) {
             subdomain = "_";
             //서브도메인이 없으면 패턴도 없다. 즉, default_backend로 처리.
         } else {
