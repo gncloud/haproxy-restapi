@@ -30,8 +30,14 @@ public class Config {
 
     public void addService(String id, Service service) {
         isValidPort(service);
-        String acl = service.getSubdomain();
-        acl = (acl != null ? acl : "");
+        String acl = null;
+        if(service.getMode().equalsIgnoreCase("tcp")) {
+            acl = "";
+        } else {
+            acl = service.getSubdomain();
+            acl = (acl != null ? acl : "");
+        }
+
         String uid = id +"_" + service.getBindPort() + "_" + acl;
         logger.debug("ADD uid[{}] id[{}] port[{}]", uid, id, service.getBindPort());
         map.put(uid, service);
@@ -53,6 +59,7 @@ public class Config {
         boolean isHttp = mode.equalsIgnoreCase("http");
         while(iter.hasNext()) {
             Map.Entry<String, Service> e = iter.next();
+            String id = e.getKey();
             Service oldService = e.getValue();
             int oldPort = oldService.getPort();
             String oldSubdomain = oldService.getSubdomain();
@@ -63,10 +70,10 @@ public class Config {
                     if(oldSubdomain == null) oldSubdomain = "";
                     if(newSubdomain == null) newSubdomain = "";
                     if(newSubdomain.equals(oldSubdomain)) {
-                        throw new ConfigInvalidException("Frontend acl already exists : http/" + newPort+ "/" + newSubdomain);
+                        throw new ConfigInvalidException("Frontend acl already exists : "+id+" >> http/" + newPort+ "/" + newSubdomain);
                     }
                 } else {
-                    throw new ConfigInvalidException("Frontend bind port already exists : tcp/" + newPort);
+                    throw new ConfigInvalidException("Frontend bind port already exists : "+id+" >> tcp/" + newPort);
                 }
             }
         }
