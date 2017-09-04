@@ -69,6 +69,7 @@ public class HaproxyApiController implements HaproxyApi {
             config = newConfig;
         } catch (IOException e) {
             logger.error("Cannot save memory file.", e);
+            throw new RuntimeException("Cannot save memory file :" + e.getMessage());
         }
 
     }
