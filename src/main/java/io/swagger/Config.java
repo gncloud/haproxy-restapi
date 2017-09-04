@@ -53,7 +53,7 @@ public class Config {
 
     private void isValidPort(Service service) {
         Iterator<Map.Entry<String, Service>> iter = map.entrySet().iterator();
-        int newPort = service.getPort();
+        int newPort = service.getBindPort();
         String newSubdomain = service.getSubdomain();
         String mode = service.getMode();
         boolean isHttp = mode.equalsIgnoreCase("http");
@@ -61,7 +61,7 @@ public class Config {
             Map.Entry<String, Service> e = iter.next();
             String id = e.getKey();
             Service oldService = e.getValue();
-            int oldPort = oldService.getPort();
+            int oldPort = oldService.getBindPort();
             String oldSubdomain = oldService.getSubdomain();
             if(oldPort == newPort) {
                 //포트충돌. http가 아니면 설정을 받지 않는다.
