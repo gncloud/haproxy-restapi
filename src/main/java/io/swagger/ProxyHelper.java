@@ -90,6 +90,14 @@ public class ProxyHelper {
             if(old != null && "http".equalsIgnoreCase(mode)){
                 ACL acl = createACL(beName, subdomain);
                 old.getAclsNotNull().put(subdomain, acl);
+
+                
+
+
+
+
+
+
             }else{
                 if(old != null && "tcp".equalsIgnoreCase(mode)){
                   logger.warn("Request frontend {} for tcp override! old = ip[{}] port[{}] defBackend[{}]", feName, old.getBindIp(), old.getBindPort(), old.getDefaultBackend());
@@ -108,16 +116,6 @@ public class ProxyHelper {
                     fe.getAclsNotNull().put(subdomain, acl);
                 }
                 frontends.add(fe);
-                frontendUniqueMap.put(feName, fe);
-
-                Backend be = new Backend();
-                be.setName(beName);
-                be.setMode(mode);
-                be.setHost(host);
-                be.setPort(port);
-                be.setTimeoutServer(timeout);
-                be.setTimeoutConnect(5000); //5000ms
-                backends.add(be);
 
             }
 
@@ -145,7 +143,16 @@ public class ProxyHelper {
         }
         return acl;
     }
-
+    private Backend createBackend(String beName, String mode, String host, int port, int timeout){
+        Backend be = new Backend();
+        be.setName(beName);
+        be.setMode(mode);
+        be.setHost(host);
+        be.setPort(port);
+        be.setTimeoutServer(timeout);
+        be.setTimeoutConnect(5000); //5000ms
+        return be;
+    }
     private String makeName(String mode, int port) {
         return mode+"_"+port;
     }
