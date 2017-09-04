@@ -170,7 +170,7 @@ public class ProxyHelper {
         writeLock.lock();
 
         try {
-            String tempFileName = Long.toString(random.nextLong());
+            String tempFileName = Long.toString(Math.abs(random.nextLong()));
             File tempFile = new File(tempFilePath, tempFileName);
 
             //1. 임시 저장
