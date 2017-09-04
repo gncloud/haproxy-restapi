@@ -84,15 +84,16 @@ public class ProxyHelper {
             }
 
             String name = makeName(mode, bindPort);
-            //TODO HTTP_80 가 이미존재하면 frontend를 만들지 않고, 가져와서 acl만 추가.
-
             Frontend old = frontendMap.get(name);
-            if(old != null){
-                if ("http".equalsIgnoreCase(mode)) {
-                    ACL acl = createACL(name, subdomain);
-                    old.getAclsNotNull().put(subdomain, acl);
-                }
+            //HTTP_80 가 이미존재하면 frontend를 만들지 않고, 가져와서 acl만 추가.
+            if(old != null && "http".equalsIgnoreCase(mode)){
+                ACL acl = createACL(name, subdomain);
+                old.getAclsNotNull().put(subdomain, acl);
             }else{
+                if(old != null && "tcp".equalsIgnoreCase(mode)){
+                  logger.warn("Request frontend {} for tcp override! old = ip[{}] port[{}] defBackend[{}]", name, old.getBindIp(), old.getBindPort(), old.getDefaultBackend());
+                }
+                //존재하지 않거나,tcp의 경우.
                 Frontend fe = new Frontend();
                 fe.setName(name);
                 fe.setBindIp("*");
@@ -100,7 +101,7 @@ public class ProxyHelper {
                 fe.setMode(mode);
                 fe.setTimeoutClient(timeout);
                 fe.setTimeoutServer(timeout);
-                fe.setTimeoutConnect(1000); //1000ms
+                fe.setTimeoutConnect(5000); //5000ms
 
                 if ("http".equalsIgnoreCase(mode)) {
                     ACL acl = createACL(name, subdomain);
