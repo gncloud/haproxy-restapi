@@ -1,5 +1,6 @@
 package io.swagger.configuration;
 
+import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -36,6 +37,13 @@ public class SwaggerDocumentationConfig {
                 .directModelSubstitute(org.joda.time.LocalDate.class, java.sql.Date.class)
                 .directModelSubstitute(org.joda.time.DateTime.class, java.util.Date.class)
                 .apiInfo(apiInfo());
+    }
+
+    @Bean
+    public FilterRegistrationBean getFilterRegistrationBean()
+    {
+        FilterRegistrationBean registrationBean = new FilterRegistrationBean(new HaproxyFilter());
+        return registrationBean;
     }
 
 }
