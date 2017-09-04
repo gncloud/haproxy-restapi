@@ -1,6 +1,7 @@
 package io.swagger;
 
 import io.swagger.model.Service;
+import jdk.nashorn.internal.runtime.regexp.joni.Config;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -11,6 +12,27 @@ import java.util.Map;
  * Created by swsong on 17. 9. 1..
  */
 public class ProxyHelperTest {
+
+    private void addService(Map<String, Service>  config, String name, Service service) {
+        config.put(name, service);
+    }
+
+    @Test
+    public void testSameHttpPort() throws IOException {
+
+        Map<String, Service> config  = new HashMap<String, Service>();
+        //String mode, Integer bindPort, String host, Integer port, Integer timeout, String subdomain
+        addService(config, "service1", new Service("tcp", 9999, "192.168.1.50", 9999, 5000, null)); // ok
+        addService(config, "service2", new Service("http", 8080, "192.168.1.51", 8080, 5000, null));
+        addService(config, "service3", new Service("http", 8080, "192.168.1.52", 8080, 5000, null));
+        addService(config, "service4", new Service("http", 8080, "192.168.1.53", 8080, 5000, null));
+
+        ProxyHelper helper = new ProxyHelper();
+        String str = helper.renderTemplate(config);
+
+        System.out.println(str);
+    }
+
 
     @Test
     public void testRenderTemplate() throws IOException {
@@ -74,6 +96,11 @@ public class ProxyHelperTest {
         service5.setPort(80);
 //        service5.setSubdomain("");
         service5.setTimeout(70000);
+
+
+
+
+
 
 
         config.put("vm-1", serviceOne);
