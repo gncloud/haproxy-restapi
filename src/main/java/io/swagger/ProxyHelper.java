@@ -101,8 +101,6 @@ public class ProxyHelper {
                 fe.setBindPort(bindPort);
                 fe.setMode(mode);
                 fe.setTimeoutClient(timeout);
-                fe.setTimeoutServer(timeout);
-                fe.setTimeoutConnect(5000); //5000ms
                 fe.setDefaultBackend(beName);
 
                 if ("http".equalsIgnoreCase(mode)) {
@@ -117,6 +115,8 @@ public class ProxyHelper {
                 be.setMode(mode);
                 be.setHost(host);
                 be.setPort(port);
+                be.setTimeoutServer(timeout);
+                be.setTimeoutConnect(5000); //5000ms
                 backends.add(be);
 
             }

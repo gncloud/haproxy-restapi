@@ -35,14 +35,8 @@ public class Frontend implements Serializable{
   @JsonProperty("defaultBackend")
   private String defaultBackend = null;
 
-  @JsonProperty("timeoutConnect")
-  private Integer timeoutConnect = null;
-
   @JsonProperty("timeoutClient")
   private Integer timeoutClient = null;
-
-  @JsonProperty("timeoutServer")
-  private Integer timeoutServer = null;
 
   @JsonProperty("acls")
   private Map<String, ACL> acls = null;
@@ -143,26 +137,6 @@ public class Frontend implements Serializable{
     this.defaultBackend = defaultBackend;
   }
 
-  public Frontend timeoutConnect(Integer timeoutConnect) {
-    this.timeoutConnect = timeoutConnect;
-    return this;
-  }
-
-  /**
-   * Get timeoutConnect
-   * @return timeoutConnect
-   **/
-  @ApiModelProperty(value = "")
-
-
-  public Integer getTimeoutConnect() {
-    return timeoutConnect;
-  }
-
-  public void setTimeoutConnect(Integer timeoutConnect) {
-    this.timeoutConnect = timeoutConnect;
-  }
-
   public Frontend timeoutClient(Integer timeoutClient) {
     this.timeoutClient = timeoutClient;
     return this;
@@ -183,25 +157,6 @@ public class Frontend implements Serializable{
     this.timeoutClient = timeoutClient;
   }
 
-  public Frontend timeoutServer(Integer timeoutServer) {
-    this.timeoutServer = timeoutServer;
-    return this;
-  }
-
-  /**
-   * Get timeoutServer
-   * @return timeoutServer
-   **/
-  @ApiModelProperty(value = "")
-
-
-  public Integer getTimeoutServer() {
-    return timeoutServer;
-  }
-
-  public void setTimeoutServer(Integer timeoutServer) {
-    this.timeoutServer = timeoutServer;
-  }
 
   public Frontend acls(ACLs acls) {
     this.acls = acls;
@@ -247,15 +202,13 @@ public class Frontend implements Serializable{
             Objects.equals(this.bindPort, frontend.bindPort) &&
             Objects.equals(this.bindIp, frontend.bindIp) &&
             Objects.equals(this.defaultBackend, frontend.defaultBackend) &&
-            Objects.equals(this.timeoutConnect, frontend.timeoutConnect) &&
             Objects.equals(this.timeoutClient, frontend.timeoutClient) &&
-            Objects.equals(this.timeoutServer, frontend.timeoutServer) &&
             Objects.equals(this.acls, frontend.acls);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(mode, bindPort, bindIp, defaultBackend, timeoutConnect, timeoutClient, timeoutServer);
+    return Objects.hash(mode, bindPort, bindIp, defaultBackend, timeoutClient);
   }
 
   @Override
@@ -267,9 +220,7 @@ public class Frontend implements Serializable{
     sb.append("    bindPort: ").append(toIndentedString(bindPort)).append("\n");
     sb.append("    bindIp: ").append(toIndentedString(bindIp)).append("\n");
     sb.append("    defaultBackend: ").append(toIndentedString(defaultBackend)).append("\n");
-    sb.append("    timeoutConnect: ").append(toIndentedString(timeoutConnect)).append("\n");
     sb.append("    timeoutClient: ").append(toIndentedString(timeoutClient)).append("\n");
-    sb.append("    timeoutServer: ").append(toIndentedString(timeoutServer)).append("\n");
     sb.append("    acls: ").append(toIndentedString(acls)).append("\n");
     sb.append("}");
     return sb.toString();
