@@ -39,11 +39,4 @@ public class SwaggerDocumentationConfig {
                 .apiInfo(apiInfo());
     }
 
-    @Bean
-    public FilterRegistrationBean getFilterRegistrationBean()
-    {
-        FilterRegistrationBean registrationBean = new FilterRegistrationBean(new HaproxyFilter());
-        return registrationBean;
-    }
-
 }
