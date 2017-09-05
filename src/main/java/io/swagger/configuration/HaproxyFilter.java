@@ -36,7 +36,7 @@ public class HaproxyFilter implements Filter{
             ip = req.getRemoteAddr();
         }
         List localIP = Arrays.asList("0:0:0:0:0:0:0:1", "127.0.0.1", "::1", "localhost");
-        logger.debug("doFilter {}", ip);
+        logger.info("doFilter {}", ip);
         if(!localIP.contains(ip)){
             throw new ServletException("Deny site access");
         }
