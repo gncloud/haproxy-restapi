@@ -22,11 +22,11 @@ This rest api server runs on a docker base. The haproxy 1.7.9 is installed insid
 
 | # | Name | Type | Description |
 |---|---|---|---|
-|mode|String|TCP or HTTP |
-|bindPort|Integer|Port number|
-|host|String|Hostname or IP Address|
-|timeout|Integer|Timeout for server,client and connection|
-|(Opt) subdomain|String|Subdomain name when mode is HTTP|
+|1|mode|String|TCP or HTTP |
+|2|bindPort|Integer|Port number|
+|3|host|String|Hostname or IP Address|
+|4|timeout|Integer|Timeout for server,client and connection|
+|5|(Opt) subdomain|String|Subdomain name when mode is HTTP|
 
 ## Usage
 
