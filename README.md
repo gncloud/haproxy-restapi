@@ -1,4 +1,4 @@
-# haproxy-restapi 
+# HAProxy REST API
 
 Now, you can call haproxy with the REST API.
 
@@ -27,4 +27,17 @@ This rest api server runs on a docker base. The haproxy 1.7.9 is installed insid
 |host|String|Hostname or IP Address|
 |timeout|Integer|Timeout for server,client and connection|
 |(Opt) subdomain|String|Subdomain name when mode is HTTP|
+
+## Usage
+
+Bind service port on 9999 
+
+```
+docker run 
+-d 
+-v /<host>/conf:/var/lib/haproxy-restapi/conf --restart always 
+--network host 
+-p 9999:9999
+haproxy-restapi
+```
 
