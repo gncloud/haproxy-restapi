@@ -18,7 +18,7 @@ import java.util.Map;
 public class ConfigFileHelper {
     private static Logger logger = org.slf4j.LoggerFactory.getLogger(ConfigFileHelper.class);
 
-    private String configBinPath = "/var/lib/haproxy-restapi/conf/haproxy.bin";
+    private String configBinPath = "/etc/haproxy/haproxy.bin";
 
     public ConfigFileHelper() {
         logger.info("new ConfigFileHelper ");

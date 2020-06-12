@@ -31,10 +31,10 @@ public class ProxyHelper {
     private String tempFilePath = System.getProperty("java.io.tmpdir");
     private String TEMPLATE_NAME = "templates/haproxy.cfg.vm";
 
-    private String appHome           = "/var/lib/haproxy-restapi";
-    private String haproxyBinaryPath = appHome + "/bin/haproxy";
-    private String haproxyConfigPath = appHome + "/conf/haproxy.cfg";
-    private String pidFilePath       = appHome + "/bin/haproxy.pid";
+    // private String appHome           = "/";
+    private String haproxyBinaryPath = "/usr/sbin/haproxy";
+    private String haproxyConfigPath = "/etc/haproxy/haproxy.cfg";
+    private String pidFilePath       = "/run/haproxy.pid";
 
     private Process process;
 
