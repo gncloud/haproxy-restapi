@@ -1,6 +1,8 @@
-package io.swagger;
+package kr.sang.haproxy;
 
-import io.swagger.model.Service;
+import kr.sang.haproxy.Config;
+import kr.sang.haproxy.ProxyHelper;
+import kr.sang.haproxy.model.Service;
 import org.junit.Test;
 
 import java.io.IOException;
