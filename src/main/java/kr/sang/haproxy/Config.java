@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Created by swsong on 17. 9. 4..
+ * HAPROXY 서비스를 여러개 담고 있는 객체
  */
 public class Config {
     private static Logger logger = org.slf4j.LoggerFactory.getLogger(Config.class);

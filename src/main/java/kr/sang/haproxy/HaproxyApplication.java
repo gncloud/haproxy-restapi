@@ -1,20 +1,16 @@
-package io.swagger;
+package kr.sang.haproxy;
 
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
-
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@ComponentScan(basePackages = { "io.swagger", "io.swagger.api" })
-public class HaproxyRestServer implements CommandLineRunner {
+//@ComponentScan(basePackages = { "kr.sang.haproxy" })
+public class HaproxyApplication implements CommandLineRunner {
 
-    private static org.slf4j.Logger logger = LoggerFactory.getLogger(HaproxyRestServer.class);
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(HaproxyApplication.class);
 
     @Override
     public void run(String... arg0) throws Exception {
@@ -24,7 +20,7 @@ public class HaproxyRestServer implements CommandLineRunner {
     }
 
     public static void main(String[] args) throws Exception {
-        new SpringApplication(HaproxyRestServer.class).run(args);
+        new SpringApplication(HaproxyApplication.class).run(args);
     }
 
     class ExitException extends RuntimeException implements ExitCodeGenerator {

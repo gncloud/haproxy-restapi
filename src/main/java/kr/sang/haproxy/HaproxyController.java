@@ -1,5 +1,9 @@
 package kr.sang.haproxy;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import kr.sang.haproxy.model.Service;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +24,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 
 @RestController
+@Api(value = "HAProxy Controller")
+@RequestMapping("/")
 public class HaproxyController {
 
     private static Logger logger = org.slf4j.LoggerFactory.getLogger(HaproxyController.class);
@@ -73,8 +79,9 @@ public class HaproxyController {
 
     }
 
+    @ApiOperation(value = "설정조회", notes = "설정을 조회합니다.")
     @RequestMapping(value = "/config",
-            produces = { "application/json" },
+            produces = {"application/json"},
             method = RequestMethod.GET)
     public ResponseEntity<Map<String, Service>> getConfig() {
         ReentrantReadWriteLock.WriteLock readLock = lock.writeLock();
@@ -86,9 +93,9 @@ public class HaproxyController {
         }
     }
 
-
+    @ApiOperation(value = "설정등록", notes = "설정을 등록합니다.")
     @RequestMapping(value = "/config/services/{id}",
-            produces = { "application/json" },
+            produces = {"application/json"},
             method = RequestMethod.POST)
     public ResponseEntity<Service> postService(@PathVariable("id") String id, @Valid @RequestBody Service service) {
         ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
@@ -103,8 +110,9 @@ public class HaproxyController {
         }
     }
 
+    @ApiOperation(value = "설정삭제", notes = "설정을 삭제합니다.")
     @RequestMapping(value = "/config/services/{id}/ports/{port}",
-            produces = { "application/json" },
+            produces = {"application/json"},
             method = RequestMethod.DELETE)
     public ResponseEntity<Service> deleteService(@PathVariable("id") String id, @PathVariable("port") String port, @RequestParam(name = "acl", required = false) String acl) {
         ReentrantReadWriteLock.WriteLock writeLock = lock.writeLock();
