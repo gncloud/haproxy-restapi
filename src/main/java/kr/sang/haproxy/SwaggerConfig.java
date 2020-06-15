@@ -30,7 +30,7 @@ public class SwaggerConfig {
                 .select()
                 .apis(RequestHandlerSelectors
                         .basePackage("kr.sang.haproxy"))
-                .paths(PathSelectors.ant("/api/**"))
+//                .paths(PathSelectors.ant("/**"))
                 .build();
     }
 

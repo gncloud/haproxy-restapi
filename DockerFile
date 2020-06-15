@@ -3,7 +3,7 @@ FROM centos:8
 RUN yum update -y 
 RUN yum install -y haproxy java-1.8.0-openjdk-devel
 
-COPY target/haproxy-restapi-1.0.jar /haproxy-restapi.jar
+COPY target/haproxy-restapi-2.0.jar /haproxy-restapi.jar
 
 EXPOSE 9999
 
